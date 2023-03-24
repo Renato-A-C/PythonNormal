@@ -5,6 +5,9 @@ class Seconde:
         self.sexo = sexo
     def _mostrarStatus(self):
         print(f"{self.salario} , {self.idade}, {self.sexo}\n")
+    def _colocarIdade(self, idad):
+        idad = input("coloca algo ae ")
+        self.idade = idad
     def _pegaridade(self):
         return self.idade
     def _pegarSalario(self):
