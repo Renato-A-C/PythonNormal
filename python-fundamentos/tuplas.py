@@ -1,0 +1,15 @@
+#tupla = tuple()
+#tupla = (10,)
+#tupla = ("Jamilton",)
+tupla = ("Jamilton", "Pedro", "Ana", "João", "Pedro")
+#print(type(tupla))
+#print(tupla[0])
+#print(tupla[-1])
+#print(tupla[0:2])
+#print(tupla[::-1])
+
+#tupla[0] = "alterado"
+#print(len(tupla))
+#print(tupla.index("Pedro"))
+#print(tupla.count("Pedro"))
+print(tupla)

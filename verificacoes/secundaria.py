@@ -11,4 +11,3 @@ class Seconde:
         return self.nome
     def _pegarSalario(self):
         return self.salario
-    

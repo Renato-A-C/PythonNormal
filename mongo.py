@@ -20,3 +20,7 @@ post_id
 db.list_collection_names()
 ['fanap']
 pprint.pprint(fanap.find_one())
+a=int(input("ajsdiajsdioajdqwijedoqahjsdoqiw"))
+print(f'{a} \n')
+String a="";
+System.out.format("asdasdasdasd  %s \n".format(a));

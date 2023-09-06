@@ -37,4 +37,4 @@ for i in range(total):
         FmenTot+=1
         print("A pessoa {} é de menor, e é do gênero  {}".format(nomes,sexo))
     cont+=1
-print("no total, temos {} pessoas do sexo feminino menores de idade.\nTambém {} do sexo masculino maiores de idade\n{} pessoas menores de idade".format(FmenTot,MaTot,MenTot))
+print(f"no total, temos {FmenTot} pessoas do sexo feminino menores de idade.\nTambém {MaTot} do sexo masculino maiores de idade\n{MenTot} pessoas menores de idade")
