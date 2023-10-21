@@ -22,5 +22,5 @@ db.list_collection_names()
 pprint.pprint(fanap.find_one())
 a=int(input("ajsdiajsdioajdqwijedoqahjsdoqiw"))
 print(f'{a} \n')
-String a="";
+str(a="");
 System.out.format("asdasdasdasd  %s \n".format(a));
