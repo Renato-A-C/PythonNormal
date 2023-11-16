@@ -6,8 +6,12 @@ utilizando o html e css (templates)
 from django.http import HttpResponse
 
 # Create your views here.
-def pagina_produtos(request):
-    return HttpResponse('Página de produtos')
+def index(request):
+    # procesamento banco de dados
+    context = {
+        'nome'='arroz'
+    }
+    return render(request, 'index.html')
 
 def celulares(request):
-    return HttpResponse('Página de celulares')
+    return render(request, 'celulares.html')
