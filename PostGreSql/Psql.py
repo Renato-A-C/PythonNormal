@@ -1,11 +1,10 @@
 import psycopg2
 
-conector = psycopg2.connect(host="localhost",dbname="postgres", user="postgres",password ="Ren@t0", port=5432)
+conector = psycopg2.connect(host="localhost",dbname="postgres", user="postgres",password ="", port=5432)
 
 cur = conector.cursor()
 #cur.execute("""CREATE TABLE IF NOT EXISTS person (    id INT PRIMARY KEY,    name VARCHAR(255),    age INT,    gender CHAR)""")
-cur.execute("""SELECT * FROM person            
-            """)
+cur.execute("""SELECT * FROM funcionario""")
 
 for row in cur.fetchall():
     print(row)

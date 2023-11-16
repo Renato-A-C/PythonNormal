@@ -1,6 +1,8 @@
 from django.urls import path
 from . import views
-#clientes/
+
+# clientes/
 urlpatterns = [
-    path('',),
+    path('', views.index),
+    path('emails/', views.emails),
 ]
