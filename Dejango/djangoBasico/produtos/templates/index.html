@@ -7,27 +7,39 @@
 <body>
 
     <h1>Lista produtos</h1>
+    <p>Nome: {{ nome }}</p>
+    <p>Último acesso: {{ ultimo_acesso }}</p>
+
     <table border="1">
         <thead>
             <tr>
-                <th>Nome</th>
+                <th>Nomadsadase</th>
                 <th>preço</th>
             </tr>
         </thead>
 
         <tbody>
-            <tr>
-                <td>iphone</td>
-                <td>1200</td>
-            </tr>
-            <tr>
-                <td>notecock</td>
-                <td>32000</td>
-            </tr>
+
+            {% for produto in produtos %}
+                <tr>
+                    <td>{{ produto.nome|upper }}</td>
+                    <td>R$ {{ produto.preco }}</td>
+                </tr>
+            {% endfor %}
+
         </tbody>
 
     </table>
 
+    <p>Total Itens: {{ produtos|length }}</p>
+
+    {% if idade < 12 %}
+        <p>Criança</p>
+    {% elif idade >= 12 and idade <= 18 %}
+        <p>Adolescente</p>
+    {% else %}
+        <p>Adulto</p>
+    {% endif %}
 
 </body>
 </html>
