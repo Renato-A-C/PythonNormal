@@ -1,3 +1,0 @@
-function abrir(){
-   alert("funcionou")
-}
