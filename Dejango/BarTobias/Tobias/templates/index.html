@@ -1,56 +1,36 @@
-{% load static %}
-{% block corpo %}
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-br">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-     <title>{% block titulo %}a{% endblock titulo %}</title>
-    <style>
-        body{
-            background-color: {% block corFundo %} rgb(195, 118, 118) {% endblock corFundo %};
+    <!-- Bootstrap CSS -->
 
-        }
-        h1{
-            color: aliceblue;
-        }
-    </style>
-</head>
+    <title>arroz</title>
+  </head>
+  <body>
+    <form action="{% url 'listagem' %}" method="post">
+      {% csrf_token %}
+      <div> 
+        <h1>cadastro</h1>
+        <table>
+            <tr>
+              nome<input type="text" name="nome"><br>
+            </tr>
+            <tr>
+              email<input type="text" name="email"><br>
+            </tr>  
+             
+        </table>
+        <br>
+       
+      </div>
+      aperte para enviar <input type="submit" name="arroz" value="enviar">
+    </form>
+    
 
-<body>
-    {% block conteudo %}
-    <main>
-        <form>
-            <div>
-                <label for="idTexto">Texto:</label>
-                <input type="text" name="textoDigite" id="idTexto">
-            </div>
-            <div>
-                <label for="idsenha">Senha:</label>
-                <input type="password" name="textoDigite" id="idsenha">
-            </div>
-            <div>
-                <label for="cars">Choose a car:</label>
-                <select id="cars" name="cars">
-                    <option value="volvo">Volvo</option>
-                    <option value="saab">Saab</option>
-                    <option value="fiat">Fiat</option>
-                    <option value="audi">Audi</option>
-                </select>
-            </div>
-        </form>
-
-        <form action= {% url "p" %} method="post">{% csrf_token %}
-            <label for="nome">Nome </label>
-            <input type="text" name="nome" id="nome">
-            <br><br>
-            <label for="sobrenome">sobrenome</label>
-            <input type="text" name="sobrenome" id="sobrenome">
-            <input type="submit" value="enviar Formulario">
-        </form>
-    </main>
-    {% endblock conteudo %}
-</body>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  </body>
 </html>
-{% endblock corpo %}

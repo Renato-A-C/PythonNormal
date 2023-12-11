@@ -1,0 +1,20 @@
+
+{% load static %}
+<div class="container">
+<table border="1" align="center">
+    <tr text-align="left">
+        <th>id</th>
+        <th>nome</th>
+        <th>email</th>
+    </tr>
+    
+    {% for produto in produtos %}
+        <tr>
+        <td>{{produto.id}}</td>
+        <td>{{produto.nome}}</td>
+        <td>{{produto.email}}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+</div>
