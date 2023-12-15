@@ -1,0 +1,38 @@
+
+{% extends "base.html" %}
+{% block content %}
+<div class="card-body">
+    <h4>produto List</h4>
+    <table class="table">
+        
+        <thead>
+            <tr>
+                <th scope="col">id</th>
+                <th scope="col">nome</th>
+                <th scope="col">DescProduto</th>
+                <th scope="col">Preco</th>
+                <th scope="col">NumNotaFiscal</th>
+                <th scope="col">data de registro</th>
+                <th scope="col">Quantidade Estoque</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for Produto in Produto %}
+            <tr>
+                <td>{{ Produto.id }}</td>
+                <td>{{ Produto.nome }}</td>
+                <td>{{ Produto.DescProduto }}</td>
+                <td>{{ Produto.Preco }}</td>
+                <td>{{ Produto.NumNotaFiscal }}</td>
+                <td>{{ Produto.dataCadastro }}</td>
+                <td>{{ Produto.QtdProduto }}</td>
+                <td><a type="button" class="btn btn-warning" href="alterar_produto/{{ Produto.id}}">modificar</a>
+                    <a type="button" class="btn btn-danger" href="deletar_produto/{{ Produto.id }}">Deletar</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a type="button" class="btn btn-success" href="{%url 'criar_produto' %}">Criar novo</a>
+</div>
+{% endblock %}
