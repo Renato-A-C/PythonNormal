@@ -5,7 +5,7 @@
     <form method="POST">
         {% csrf_token %}
         {{form.as_p}}
-
+        
         <a type="button" class="btn btn-danger" href="{%url 'lista_produto' %}">Cancelar</a>
         <button type="submit" class="btn btn-success">Alterar</button>
     </form>
