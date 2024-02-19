@@ -30,9 +30,11 @@ def criacaoProduto(request):
 
 def alterar_produto(request,id):
     produto = Produto.objects.get(id=id)
+    
     form = ProdutoForm(initial={'nome': Produto.nome_do_produto, 'descricao': Produto.Descricao_do_Produto, 'preco': Produto.Preco_do_produto, 'numNotaFiscal': Produto.Numero_de_Nota_Fiscal, 'Quantidade_de_produtos': Produto.Quantidade_de_Produtos})
     if request.method == "POST":
         form = ProdutoForm(request.POST, instance=produto)
+        visao = ProdutoForm(request, instance=produto)
         if form.is_valid():
             try:
                 form.save()
@@ -40,7 +42,7 @@ def alterar_produto(request,id):
                 return redirect('lista_produto')
             except Exception as e:
                 pass
-    return render(request,'alterar_produto.html', {'form' : form})
+    return render(request,'alterar_produto.html', {'form' : form, 'Produto': produto})
 
 def deletar_produto(request,id):
     produto = Produto.objects.get(id=id)

@@ -22,11 +22,11 @@
                 <td>{{ Produto.id }}</td>
                 <td>{{ Produto.nome_do_produto }}</td>
                 <td>{{ Produto.Descricao_do_Produto }}</td>
-                <td>{{ Produto.Preco_do_produto }}</td>
+                <td>R${{ Produto.Preco_do_produto }}</td>
                 <td>{{ Produto.Numero_de_Nota_Fiscal }}</td>
                 <td>{{ Produto.dataCadastro }}</td>
                 <td>{{ Produto.Quantidade_de_Produtos }}</td>
-                <td><a type="button" class="btn btn-warning" href="alterar_produto/{{ Produto.id}}">modificar</a>
+                <td><a type="button" class="btn btn-warning" href="alterar_produto/{{ Produto.id }}">modificar</a>
                     <a type="button" class="btn btn-danger" href="deletar_produto/{{ Produto.id }}">Deletar</a>
                 </td>
             </tr>

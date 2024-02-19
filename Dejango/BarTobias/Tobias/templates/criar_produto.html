@@ -5,9 +5,9 @@
     <h5>Cadastrar novo produto</h5>
     
     <form method="POST">
-        {% csrf_token %}
-            <input type="hidden" name="csrfmiddlewaretoken" value="5qabeApQ2DoYMgHAvZ9XrxFWmC9smJYD6Z2Pl6dfolM1LYXPzfZ6eCdeGxU0PghH">
-            <div>
+    {% csrf_token %}
+    <input type="hidden" name="csrfmiddlewaretoken" value="5qabeApQ2DoYMgHAvZ9XrxFWmC9smJYD6Z2Pl6dfolM1LYXPzfZ6eCdeGxU0PghH">
+      <div>
           <label for="id_nome_do_produto">Nome do produto:</label>
         <input type="text" name="nome_do_produto" maxlength="30" required="" id="id_nome_do_produto">
     </div>
