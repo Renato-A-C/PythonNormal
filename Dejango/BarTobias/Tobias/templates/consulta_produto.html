@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="card-body">
-    <h4>Listagem de produtos</h4>
+    <h4>Consulta de produtos</h4>
     <table class="table">
         
         <thead>
@@ -21,18 +21,14 @@
                 <td>{{ Produto.id }}</td>
                 <td>{{ Produto.nome_do_produto }}</td>
                 <td>{{ Produto.Descricao_do_Produto }}</td>
-                <td>R${{ Produto.Preco_do_produto }}</td>
+                <td>{{ Produto.Preco_do_produto }}</td>
                 <td>{{ Produto.Numero_de_Nota_Fiscal }}</td>
                 <td>{{ Produto.dataCadastro }}</td>
                 <td>{{ Produto.Quantidade_de_Produtos }}</td>
-                <td><a type="button" class="btn btn-warning" href="/alterar_produto/{{ Produto.id }}">modificar</a>
-                    <a type="button" class="btn btn-danger" href="/deletar_produto/{{ Produto.id }}">Deletar</a>
-                </td>
+                
             </tr>
+            
             {% endfor %}
+            <a type="button" class="btn btn-danger" href="{%url 'lista_produto' %}">Voltar</a>
         </tbody>
-    </table>
-    <a type="button" class="btn btn-success" href="{%url 'core/criar_produto' %}">Criar novo</a>
-    <a type="button" class="btn btn-success" href="{%url 'core/consulta_produto' %}">Consultar Produtos</a>
-</div>
-{% endblock %}
+        {% endblock content %}

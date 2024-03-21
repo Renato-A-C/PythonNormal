@@ -13,15 +13,7 @@ from .forms import ProdutoForm
 
 def lista_produto(request):
     Produtos = Produto.objects.all()
-    return render(request,"core/lista_produto.html", {'Produto': Produtos})
-@login_required
-def tela_login(requests):
-    Produtos = Produto.objects.all()
-    return render(requests,"registration/tela_login.html")
-@login_required
-def tela_logout(requests):
-    Produtos = Produto.objects.all()
-    return render(requests,"registration/tela_logout.html")
+    return render(request,"lista_produto.html", {'Produto': Produtos})
 
 def criacaoProduto(request):
     if request.method == "POST":
@@ -30,12 +22,12 @@ def criacaoProduto(request):
             try:
                 form.save()
                 model = form.instance
-                return redirect('core/lista_produto')
+                return redirect('lista_produto')
             except:
                 pass
     else:
         form = ProdutoForm()
-    return render(request,'core/criar_Produto.html', {'form': form})
+    return render(request,'criar_Produto.html', {'form': form})
 
 
 def alterar_produto(request,id):
@@ -49,10 +41,10 @@ def alterar_produto(request,id):
             try:
                 form.save()
                 model = form.instance
-                return redirect('core/lista_produto')
+                return redirect('lista_produto')
             except Exception as e:
                 pass
-    return render(request,'core/alterar_produto.html', {'form' : form, 'Produto': produto})
+    return render(request,'alterar_produto.html', {'form' : form, 'Produto': produto})
 
 def deletar_produto(request,id):
     produto = Produto.objects.get(id=id)
@@ -60,9 +52,9 @@ def deletar_produto(request,id):
         produto.delete()
     except:
         pass
-    return redirect('core/lista_produto')
+    return redirect('lista_produto')
 
 
 def consulta_produto(request):
     Produtos = Produto.objects.all()
-    return render(request,"core/consulta_produto.html", {'Produto': Produtos})
+    return render(request,"consulta_produto.html", {'Produto': Produtos})
