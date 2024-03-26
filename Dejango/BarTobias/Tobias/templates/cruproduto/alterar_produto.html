@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% block content %}
+  <div class="card-body">
+    <h5>Alterar Produto</h5>
+
+
+
+    <form action="" method="POST">
+      {% csrf_token %}
+      {{Produto.id}}
+
+      <a type="button" class="btn btn-danger" href="{% url 'lista_produto' %}">voltar</a>
+      
+      <div>
+        <label for="Nome_do_produto">Nome:</label>
+        <input type="text" name="Nome_do_produto" value="{{ Produto.Nome_do_produto }}" maxlength="1000"  id="Nome_do_produto" placeholder="{{ Produto.Nome_do_produto }}"/>
+      </div>
+      
+      <div>
+        <label for="Descricao_do_Produto">Descricao do Produto:</label>
+      
+        <input type="text" name="Descricao_do_Produto" value="{{ Produto.Descricao_do_Produto }}" maxlength="1000"  id="Descricao_do_Produto" placeholder="valor atual é: {{ Produto.Descricao_do_Produto }}"/>
+      
+      </div>
+      
+      <div>
+        <label for="Preco_do_produto">Preço em R$:</label>
+        <input type="number" size="50" name="Preco_do_produto" value="{{Produto.Preco_do_produto}}" id="Preco_do_produto" placeholder="{{ Produto.Preco_do_produto }}"/>
+      
+      </div>
+      
+      <div>
+        <label for="id_Numero_de_Nota_Fiscal">Numero de Nota Fiscal:</label>
+        
+        <input type="text" name="Numero_de_Nota_Fiscal" value="{{ Produto.Numero_de_Nota_Fiscal }}" maxlength="1000"  id="Numero_de_Nota_Fiscal" placeholder="valor atual é: {{ Produto.Numero_de_Nota_Fiscal }}"/>
+      </div>
+      
+      <div>
+        <label for="Quantidade_de_Produtos" size="50">Quantidade de Produtos:</label>
+        <input type="number" name="Quantidade_de_Produtos" value="{{Produto.Quantidade_de_Produtos}}" min="0" max="9223372036854775807" id="id_Quantidade_de_Produtos" placeholder="valor atual é: {{ Produto.Quantidade_de_Produtos }}"/>
+      </div>
+      <button type="submit" class="btn btn-success">Alterar produto</button>
+    </form>
+  </div>
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">id</th>
+        <th scope="col">nome do produto</th>
+        <th scope="col">Descrição do produto</th>
+        <th scope="col">Preço</th>
+        <th scope="col">Numero da Nota-Fiscal</th>
+        <th scope="col">data de registro</th>
+        <th scope="col">Quantidade no Estoque</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>{{ Produto.id }}</td>
+        <td>{{ Produto.Nome_do_produto }}</td>
+        <td>{{ Produto.Descricao_do_Produto }}</td>
+        <td>R${{ Produto.Preco_do_produto }}</td>
+        <td>{{ Produto.Numero_de_Nota_Fiscal }}</td>
+        <td>{{ Produto.dataCadastro }}</td>
+        <td>{{ Produto.Quantidade_de_Produtos }}</td>
+      </tr>
+    </tbody>
+  </table>
+  
+{% endblock %}
