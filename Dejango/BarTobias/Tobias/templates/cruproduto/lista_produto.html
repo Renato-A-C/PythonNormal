@@ -1,14 +1,14 @@
 {% extends 'base.html' %}
 {% block content %}
+<a type="button" class="btn btn-primary" href="{% url 'principal' %}">Voltar</a>
   <div class="card-body">
-    <h3><a type="button" class="btn btn-primary" href="{% url 'logout' %}">deslogar</a></h3>
+    
     <h6>Listagem de produtos</h6>
 
     <table class="table">
       <thead>
         <tr>
           <th scope="col">nome do produto</th>
-          <th scope="col">Descrição do produto</th>
           <th scope="col">Preço</th>
 
           <th scope="col">Quantidade no Estoque</th>
@@ -17,10 +17,9 @@
       <tbody>
         {% for Produto in Produto %}
           <tr>
-            <td>{{ Produto.Nome_do_produto }}</td>
-            <td>{{ Produto.Descricao_do_Produto }}</td>
-            <td>R${{ Produto.Preco_do_produto }}</td>
-            <td>{{ Produto.Quantidade_de_Produtos }}</td>
+            <td>{{ Produto.nomeProduto }}</td>
+            <td>R${{ Produto.precoProduto }}</td>
+            <td>{{ Produto.quantidadeProduto }}</td>
             <td>
               <a type="button" class="btn btn-primary" href="{% url 'alterar_produto' Produto.id %}">modificar</a>
               <!-- Botão para acionar a modal -->
@@ -39,7 +38,7 @@
                         <h4 class="modal-title">Tem certeza? </h4>
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                       </div>
-                      <div class="modal-body">Deseja excluir? o {{ Produto.nome_do_produto }}?
+                      <div class="modal-body">Deseja excluir? o {{ Produto.nomeProduto }}?
                       </div>
                       <div class="modal-footer">
                         <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>

@@ -7,24 +7,18 @@
     <form method="POST">
     {% csrf_token %}
     <div>
-          <label for="id_nome_do_produto">Nome do produto:</label>
-        <input type="text" name="Nome_do_produto" maxlength="30" required="" id="id_nome_do_produto">
+          <label for="nomeProduto">Nome do produto:</label>
+        <input type="text" name="nomePproduto" maxlength="30" required="" id="nomeProduto">
     </div>
+
       <div>
-          <label for="id_Descricao_do_Produto">Descricao do Produto:</label>
-        <input type="text" name="Descricao_do_Produto" maxlength="1000" id="id_Descricao_do_Produto">
+          <label for="precoProduto">Preco do produto:</label>
+        <input type="number" size="50" name="precoProduto" step="0.01"  id="precoProduto">
     </div>
+
       <div>
-          <label for="id_Preco_do_produto">Preco do produto:</label>
-        <input type="number" size="50" name="Preco_do_produto" value="1" step="any" id="id_Preco_do_produto">
-    </div>
-      <div>
-          <label for="id_Numero_de_Nota_Fiscal">Numero de Nota Fiscal:</label>
-        <input type="text" name="Numero_de_Nota_Fiscal" maxlength="1000" id="id_Numero_de_Nota_Fiscal">
-    </div>
-      <div>
-          <label for="id_Quantidade_de_Produtos" size="50">Quantidade de Produtos:</label>
-        <input type="number" name="Quantidade_de_Produtos" value="1" min="0" max="9223372036854775807" id="id_Quantidade_de_Produtos">
+          <label for="quantidadeProduto" size="50">Quantidade de Produtos:</label>
+        <input type="number" name="quantidadeProduto"  min="0" max="9223372036854775807" id="quantidadeProduto">
     </div> 
             <a type="button" class="btn btn-danger" href="{% url 'lista_produto' %}">Cancelar cadastro</a>
             <button type="submit" class="btn btn-success">Criar produto</button>

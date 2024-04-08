@@ -49,14 +49,14 @@ def alterar_produto(request,id):
 
     produto = Produto.objects.get(id=id)
     if request.method == "POST":
-        produto.Nome_do_produto = request.POST.get('Nome_do_produto')
-        produto.Descricao_do_Produto = request.POST.get('Descricao_do_Produto')
-        produto.Preco_do_produto = request.POST.get('Preco_do_produto')
-        produto.Numero_de_Nota_Fiscal = request.POST.get('Numero_de_Nota_Fiscal')
-        produto.Quantidade_de_Produtos = request.POST.get('Quantidade_de_Produtos')
+        produto.nomeProduto = request.POST.get('nomeProduto')
+        
+        produto.precoProduto = request.POST.get('precoProduto')
+      
+        produto.quantidadeProduto = request.POST.get('quantidadeProduto')
         produto.save()
         messages.success(request, "produto alterado")
-        return redirect('/')
+        return redirect('lista_produto')
     context = {
         'Produto': produto,
                

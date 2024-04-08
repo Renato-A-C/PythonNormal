@@ -1,5 +1,32 @@
 {% extends 'base.html' %}
 {% block content %}
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="#">imagem marca</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav">
+      <li class="nav-item active">
+        <a class="nav-link disabled" href="{% url 'principal' %}">Principal <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link disabled" href="{% url 'lista_produto' %}">produtos<span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'venda' %}">venda</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'admin:index' %}">áreaAdmin</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link disabled" href="{% url 'admin:index' %}">suma</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+
   <div class="card-body">
     <h5>Alterar Produto</h5>
 
@@ -12,32 +39,20 @@
       <a type="button" class="btn btn-danger" href="{% url 'lista_produto' %}">voltar</a>
       
       <div>
-        <label for="Nome_do_produto">Nome:</label>
-        <input type="text" name="Nome_do_produto" value="{{ Produto.Nome_do_produto }}" maxlength="1000"  id="Nome_do_produto" placeholder="{{ Produto.Nome_do_produto }}"/>
+        <label for="nomeProduto">Nome:</label>
+        <input type="text" step="0.01" name="nomeProduto" value="{{ Produto.nomeProduto }}" maxlength="1000"  id="nomeProduto" placeholder="{{ Produto.nomeProduto }}"/>
+      </div>
+      
+
+      
+      <div>
+        <label for="precoProduto">Preço em R$:</label>
+        <input type="number" size="50" name="precoProduto" step="0.01"  id="precoProduto" value="{{Produto.precoProduto}}" placeholder="{{Produto.precoProduto}}">
       </div>
       
       <div>
-        <label for="Descricao_do_Produto">Descricao do Produto:</label>
-      
-        <input type="text" name="Descricao_do_Produto" value="{{ Produto.Descricao_do_Produto }}" maxlength="1000"  id="Descricao_do_Produto" placeholder="valor atual é: {{ Produto.Descricao_do_Produto }}"/>
-      
-      </div>
-      
-      <div>
-        <label for="Preco_do_produto">Preço em R$:</label>
-        <input type="number" size="50" name="Preco_do_produto" value="{{Produto.Preco_do_produto}}" id="Preco_do_produto" placeholder="{{ Produto.Preco_do_produto }}"/>
-      
-      </div>
-      
-      <div>
-        <label for="id_Numero_de_Nota_Fiscal">Numero de Nota Fiscal:</label>
-        
-        <input type="text" name="Numero_de_Nota_Fiscal" value="{{ Produto.Numero_de_Nota_Fiscal }}" maxlength="1000"  id="Numero_de_Nota_Fiscal" placeholder="valor atual é: {{ Produto.Numero_de_Nota_Fiscal }}"/>
-      </div>
-      
-      <div>
-        <label for="Quantidade_de_Produtos" size="50">Quantidade de Produtos:</label>
-        <input type="number" name="Quantidade_de_Produtos" value="{{Produto.Quantidade_de_Produtos}}" min="0" max="9223372036854775807" id="id_Quantidade_de_Produtos" placeholder="valor atual é: {{ Produto.Quantidade_de_Produtos }}"/>
+        <label for="quantidadeProduto" size="50">Quantidade de Produtos:</label>
+        <input type="number" name="quantidadeProduto" value="{{Produto.quantidadeProduto}}" min="0" max="9223372036854775807" id="quantidadeProduto" placeholder="valor atual é: {{ Produto.quantidadeProduto }}"/>
       </div>
       <button type="submit" class="btn btn-success">Alterar produto</button>
     </form>
@@ -47,9 +62,9 @@
       <tr>
         <th scope="col">id</th>
         <th scope="col">nome do produto</th>
-        <th scope="col">Descrição do produto</th>
+
         <th scope="col">Preço</th>
-        <th scope="col">Numero da Nota-Fiscal</th>
+
         <th scope="col">data de registro</th>
         <th scope="col">Quantidade no Estoque</th>
       </tr>
@@ -57,12 +72,12 @@
     <tbody>
       <tr>
         <td>{{ Produto.id }}</td>
-        <td>{{ Produto.Nome_do_produto }}</td>
-        <td>{{ Produto.Descricao_do_Produto }}</td>
-        <td>R${{ Produto.Preco_do_produto }}</td>
-        <td>{{ Produto.Numero_de_Nota_Fiscal }}</td>
+        <td>{{ Produto.nomeProduto }}</td>
+ 
+        <td>R${{ Produto.precoProduto }}</td>
+
         <td>{{ Produto.dataCadastro }}</td>
-        <td>{{ Produto.Quantidade_de_Produtos }}</td>
+        <td>{{ Produto.quantidadeProduto }}</td>
       </tr>
     </tbody>
   </table>
