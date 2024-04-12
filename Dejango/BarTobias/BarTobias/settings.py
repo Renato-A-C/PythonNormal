@@ -37,7 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'Tobias.apps.TobiasConfig'
+    'Tobias.apps.TobiasConfig',
+    'crispy_forms',
+    'crispy_bootstrap4',
     
 ]
 
@@ -52,6 +54,9 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'BarTobias.urls'
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"
+CRISPY_TEMPLATE_PACK = "bootstrap4"
 
 TEMPLATES = [
     {
