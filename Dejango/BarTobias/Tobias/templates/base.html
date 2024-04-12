@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="pt-br">
   <head>
@@ -5,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>
       {% block title %}
-      {% endblock title %}
+
+      {% endblock %}
     </title>
     <style>
       label {
@@ -22,7 +24,50 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
   </head>
   <body>
+    <nav class="navbar navbar-expand-lg navbar-dark justify-content-between" style="background-color: black;">
+      <a class="navbar-brand" href="#">
+        <img src="{% static 'logo.png' %}" width="30" height="30" alt="mlk da net ruimkkk">
+      </a>
+
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item {% block active1 %}{% endblock %}">
+            <a class="nav-link {% block desativa1 %}{% endblock %}" href="{% url 'principal' %}">
+              Principal
+            </a>
+          </li>
+          <li class="nav-item {% block active2 %}{% endblock %}">
+            <a class="nav-link {% block desativa2 %}{% endblock %}" href="{% url 'lista_produto' %}">
+              produtos
+            </a>
+          </li>
+          <li class="nav-item {% block active3 %} {% endblock %}">
+            <a class="nav-link {% block desativa3 %}{% endblock %}"href="{% url 'venda' %}">
+              venda 
+            </a>
+          </li>
+          <li class="nav-item {% block active4 %} {% endblock %}">
+            <a class="nav-link {% block desativa4 %}{% endblock %}"href="{% url 'lista_funcionario' %}">
+              funcionario
+            </a>
+          </li>
+          <li class="nav-item">
+            
+            <a class="nav-link" href="{% url 'admin:index' %}">áreaAdmin</a>
+          </li>
+        </ul>
+       
+        
+      </div>
+      <ul class="navbar-nav me-auto">
+        {% if user.is_authenticated %}
+      <a class="nav-link" href="{% url 'logout' %}">deslogar</a>
+      {% endif %}
+      </ul>
+    </nav>
+
     {% block content %}
-    {% endblock content %}
+
+    {% endblock %}
   </body>
 </html>

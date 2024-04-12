@@ -5,8 +5,8 @@ from django.http import HttpResponse, FileResponse, HttpResponseRedirect
 from django.template import loader
 from django.contrib import messages
 import io
-from .models import Produto
-from .forms import ProdutoForm
+from .models import Produto, Cliente, Funcionario, Venda
+from .forms import ProdutoForm, ClienteForm, FuncionarioForm, VendaForm
 
 
 # Create your views here.
@@ -19,15 +19,11 @@ def principal(request):
     Produtos = Produto.objects.all()
     return render(request,"principal.html", {'Produto': Produtos})
 
-@login_required
-def venda(request):
-    Produtos = Produto.objects.all()
-    return render(request,"venda.html", {'Produto': Produtos})
+# views para produtos
 @login_required
 def lista_produto(request):
     Produtos = Produto.objects.all()
     return render(request,"cruproduto/lista_produto.html", {'Produto': Produtos})
-
 @login_required
 def criacaoProduto(request):
     if request.method == "POST":
@@ -42,8 +38,6 @@ def criacaoProduto(request):
     else:
         form = ProdutoForm()
     return render(request,"cruproduto/criar_Produto.html", {'form': form})
-
-
 @login_required
 def alterar_produto(request,id):
 
@@ -63,7 +57,6 @@ def alterar_produto(request,id):
     }
     return render(request,'cruproduto/alterar_produto.html',context)
 
-
 @login_required
 def deletar_produto(request,id):
     produto = Produto.objects.get(id=id)
@@ -72,8 +65,69 @@ def deletar_produto(request,id):
     except:
         pass
     return redirect('lista_produto')
-
 @login_required
 def consulta_produto(request):
     Produtos = Produto.objects.all()
     return render(request,"cruproduto/consulta_produto.html", {'Produto': Produtos})
+
+# views para funcionario
+@login_required
+def lista_funcionario(request):
+    funcionario = Funcionario.objects.all()
+    return render(request,"crufunc/lista_funcionario.html", {'Funcionario': funcionario})
+
+@login_required
+def cad_funcionario(request):
+    if request.method == "POST":
+        form = FuncionarioForm(request.POST)
+        if form.is_valid():
+            try:
+                form.save()
+                
+                return redirect('lista_funcionario')
+            except:
+                pass
+    else:
+        form = FuncionarioForm()
+    return render(request,"crufunc/cad_funcionario.html", {'form': form})
+
+@login_required
+def deletar_funcionario(request,id):
+    funcionario = Funcionario.objects.get(id=id)
+    try:
+        funcionario.delete()
+    except:
+        pass
+    return redirect('lista_funcionario')
+
+@login_required
+def alterar_funcionario(request):
+    func = Funcionario.objects.get(id=id)
+    if request.method == "POST":
+        func.nomeFuncionario = request.POST.get('nomeFuncionario')
+              
+        func.cpfFuncionario = request.POST.get('cpfFuncionario')
+        func.enderecoFuncionario = request.POST.get('enderecoFuncionario')
+        func.save()
+        messages.success(request, "funcionario alterado")
+        return redirect('lista_funcionario')
+    context = {
+        'Func': func,
+               
+    }
+    return render(request,"crufunc/alterar_funcionario.html", context)
+
+# views para cliente
+
+# views para venda
+
+@login_required
+def venda(request):
+    Produtos = Produto.objects.all()
+    return render(request,"cruvenda/venda.html", {'Produto': Produtos})
+
+
+@login_required
+def lista_venda(request):
+    Produtos = Produto.objects.all()
+    return render(request,"cruvenda/lista_venda.html", {'Produto': Produtos})

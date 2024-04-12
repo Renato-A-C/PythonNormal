@@ -1,5 +1,9 @@
 {% extends 'base.html' %}
+{% block navbar %}
+
+{% endblock navbar %}
 {% block content %}
+
 <a type="button" class="btn btn-primary" href="{% url 'principal' %}">Voltar</a>
   <div class="card-body">
     
@@ -8,22 +12,25 @@
     <table class="table">
       <thead>
         <tr>
-          <th scope="col">nome do produto</th>
+          <th scope="col"> Id</th>
+          <th scope="col">Nome do produto</th>
           <th scope="col">Preço</th>
 
-          <th scope="col">Quantidade no Estoque</th>
+          <th scope="col">Quantidade no estoque</th>
         </tr>
       </thead>
       <tbody>
         {% for Produto in Produto %}
           <tr>
+            <td>{{ Produto.id }}</td>
             <td>{{ Produto.nomeProduto }}</td>
             <td>R${{ Produto.precoProduto }}</td>
             <td>{{ Produto.quantidadeProduto }}</td>
             <td>
               <a type="button" class="btn btn-primary" href="{% url 'alterar_produto' Produto.id %}">modificar</a>
               <!-- Botão para acionar a modal -->
-              
+            </td> 
+            <td>
               <div>
                 <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#a{{ Produto.id }}">Excluir</button>
                 <!-- A modal -->
