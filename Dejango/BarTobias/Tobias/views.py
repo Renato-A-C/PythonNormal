@@ -1,12 +1,12 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.http import HttpResponse, FileResponse, HttpResponseRedirect
 from django.template import loader
 from django.contrib import messages
-import io
-from .models import Produto, Cliente, Funcionario, Venda
-from .forms import ProdutoForm, ClienteForm, FuncionarioForm, VendaForm
+from django.contrib.auth import login,logout,authenticate
+from .models import Produto, Cliente, Funcionario, Venda, LinkUser, CustomUser
+from .forms import ProdutoForm, ClienteForm, FuncionarioForm, VendaForm, CustomUserForm
 
 
 # Create your views here.
@@ -23,7 +23,11 @@ def principal(request):
 @login_required
 def lista_produto(request):
     Produtos = Produto.objects.all()
-    return render(request,"cruproduto/lista_produto.html", {'Produto': Produtos})
+    context ={
+        'Produto':Produtos
+        
+    }
+    return render(request,"cruproduto/lista_produto.html", context)
 @login_required
 def criacaoProduto(request):
     if request.method == "POST":
@@ -38,6 +42,7 @@ def criacaoProduto(request):
     else:
         form = ProdutoForm()
     return render(request,"cruproduto/criar_Produto.html", {'form': form})
+
 @login_required
 def alterar_produto(request,id):
 
@@ -60,17 +65,21 @@ def alterar_produto(request,id):
 @login_required
 def deletar_produto(request,id):
     produto = Produto.objects.get(id=id)
-    try:
-        produto.delete()
-    except:
-        pass
+
+    produto.excluido = True
+    produto.save()
     return redirect('lista_produto')
+
 @login_required
 def consulta_produto(request):
     Produtos = Produto.objects.all()
     return render(request,"cruproduto/consulta_produto.html", {'Produto': Produtos})
 
+
+"""
 # views para funcionario
+"""
+
 @login_required
 def lista_funcionario(request):
     funcionario = Funcionario.objects.all()
@@ -79,17 +88,25 @@ def lista_funcionario(request):
 @login_required
 def cad_funcionario(request):
     if request.method == "POST":
-        form = FuncionarioForm(request.POST)
+        form = CustomUserForm(request.POST)
+
         if form.is_valid():
             try:
                 form.save()
                 
-                return redirect('lista_funcionario')
+
+                return redirect('cad_funcionario')
             except:
                 pass
     else:
-        form = FuncionarioForm()
-    return render(request,"crufunc/cad_funcionario.html", {'form': form})
+        form = CustomUserForm()
+
+    context = {
+        'form':form,
+        
+    }
+        
+    return render(request,"registration/cad_funcionario.html", context)
 
 @login_required
 def deletar_funcionario(request,id):

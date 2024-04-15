@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %} Cadastrar novos Funcionarios{% endblock %}{% block active4 %}  active{% endblock %}{% block desativa4 %}  disabled{% endblock %}
+
+
+{% block content %}
+  <form method="post">
+    {% csrf_token %}
+
+    <div>
+      <label for="username">Usuario:</label>
+      <input type="text" name="username" maxlength="30" required="username" id="username" />
+    </div>
+    <div>
+      <label for="email">email:</label>
+      <input type="email" name="email" maxlength="30" required="email" id="email" />
+    </div>
+    <div>
+      <label for="password1">senha:</label>
+      <input type="password" name="password1" maxlength="30" required="password1" id="password1" />
+    </div>
+    <div>
+      <label for="password2">confirme a senha:</label>
+      <input type="password" name="password2" maxlength="30" required="password2" id="password2" />
+    </div>
+
+    <div>
+      <label for="descricao">Descricao:</label>
+      <input type="text" name="descricao" maxlength="30" required="descricao" id="descricao" />
+    </div>
+    <a type="button" class="btn btn-danger" href="{% url 'principal' %}">Cancelar cadastro</a>
+    <button type="submit" class="btn btn-success">Criar funcionario</button>
+  </form>
+{% endblock %}

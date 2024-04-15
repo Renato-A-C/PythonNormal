@@ -58,7 +58,9 @@
         
       </div>
       <ul class="navbar-nav me-auto">
-        {% if user.is_authenticated %}
+      {% if user.is_authenticated %}
+        <span class="navbar-text">Logado como {{user.username}} ||  </span>
+        
       <a class="nav-link" href="{% url 'logout' %}">deslogar</a>
       {% endif %}
       </ul>

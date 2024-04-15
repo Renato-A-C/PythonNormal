@@ -22,7 +22,7 @@ urlpatterns = [
     
     # Crud de funcionários
     path("crufunc/lista_funcionario", views.lista_funcionario, name="lista_funcionario"),
-    path("crufunc/cad_funcionario", views.cad_funcionario, name="cad_funcionario"),
+    path("registration/cad_funcionario", views.cad_funcionario, name="cad_funcionario"),
     path("crufunc/alterar_funcionario", views.alterar_funcionario, name="alterar_func"),
     path("crufunc/alterar_funcionario/<int:id>", views.alterar_funcionario, name="alterar_funcionario"),
     path("crufunc/deletar_funcionario", views.deletar_funcionario, name="deletar_func"),
