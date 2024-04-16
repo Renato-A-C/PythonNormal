@@ -3,7 +3,7 @@ from django.conf import settings
 from django.contrib.postgres.functions import TransactionNow
 from django.contrib.auth.models import User, AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.contrib.auth.base_user import AbstractBaseUser
-
+from django.contrib.auth import get_user_model
 # Create your models here.
 
 class CustomUserManager(BaseUserManager):
@@ -31,6 +31,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
+    telefone = models.CharField(max_length=15)
+    endereco = models.CharField(max_length=50)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     date_joined = models.DateTimeField(auto_now_add=True)
@@ -43,6 +45,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return self.email
     
+CustomUser = get_user_model()
 class Produto(models.Model):
     nomeProduto = models.CharField(db_column='nomeProduto', max_length = 50, blank=True)
     dataCadastro = models.DateField(auto_now_add=TransactionNow(), blank=True)
@@ -55,7 +58,7 @@ class Produto(models.Model):
         return str(self.nomeProduto)
 
 class Funcionario(models.Model):
-    usuario = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    autor = models.ForeignKey(CustomUser,on_delete=models.CASCADE)
     nomeFuncionario = models.CharField(max_length=30,blank = True)
     cpfFuncionario = models.IntegerField(blank =True)
     enderecoFuncionario = models.CharField(max_length=150,blank = True)
@@ -84,7 +87,7 @@ class Venda(models.Model):
         return (f"{self.id} do {self.funcionarioId.nomeFuncionario} ")
  
 class LinkUser(models.Model):
-    autor = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
+    funcionario = models.ForeignKey(Funcionario,on_delete=models.CASCADE)
     descricao = models.CharField(max_length=50)
     
 

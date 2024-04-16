@@ -6,7 +6,7 @@ from django.template import loader
 from django.contrib import messages
 from django.contrib.auth import login,logout,authenticate
 from .models import Produto, Cliente, Funcionario, Venda, LinkUser, CustomUser
-from .forms import ProdutoForm, ClienteForm, FuncionarioForm, VendaForm, CustomUserForm
+from .forms import ProdutoForm, ClienteForm, FuncionarioForm, VendaForm, CustomUserForm, LinkUserForm
 
 
 # Create your views here.
@@ -89,21 +89,32 @@ def lista_funcionario(request):
 def cad_funcionario(request):
     if request.method == "POST":
         form = CustomUserForm(request.POST)
-
-        if form.is_valid():
+        func1 = FuncionarioForm(request.POST)
+        func2 = LinkUserForm(request.POST)
+        if form.is_valid() and func.is_valid() and func1.is_valid():
             try:
                 form.save()
+                func.autor = form
+                func.save()
+                func1.save()
                 
-
+                user = form.save()
+                func = func1.save(commit=False)
+                func.autor = user
+                func.save()
+                
+                funcData = func2.save(commit=False)
+                funcData.funcionario
+                
                 return redirect('cad_funcionario')
             except:
                 pass
     else:
         form = CustomUserForm()
-
+        func = CustomUserForm()
     context = {
         'form':form,
-        
+        'func':func
     }
         
     return render(request,"registration/cad_funcionario.html", context)

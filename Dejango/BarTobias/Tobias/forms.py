@@ -6,6 +6,9 @@ from crispy_forms.layout import Submit
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
+from django.contrib.auth import get_user_model
+CustomUser = get_user_model()
+
 class ProdutoForm(ModelForm):
     class Meta:
         model = Produto
@@ -43,6 +46,8 @@ class LinkUserForm(ModelForm):
         fields = '__all__'  
 
 class CustomUserForm(UserCreationForm):
+    password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
+    password2 = forms.CharField(label='Password confirmation', widget=forms.PasswordInput)
     class Meta:
         model = CustomUser
-        fields = ['email', 'first_name', 'last_name', 'password1', 'password2']
+        fields = ['email','first_name', 'last_name', 'password1', 'password2']
