@@ -91,12 +91,8 @@ def cad_funcionario(request):
         form = CustomUserForm(request.POST)
         func1 = FuncionarioForm(request.POST)
         func2 = LinkUserForm(request.POST)
-        if form.is_valid() and func.is_valid() and func1.is_valid():
+        if form.is_valid() and func1.is_valid() and func2.is_valid():
             try:
-                form.save()
-                func.autor = form
-                func.save()
-                func1.save()
                 
                 user = form.save()
                 func = func1.save(commit=False)
@@ -104,17 +100,20 @@ def cad_funcionario(request):
                 func.save()
                 
                 funcData = func2.save(commit=False)
-                funcData.funcionario
+                funcData.funcionario = func
+                funcData.save()
                 
                 return redirect('cad_funcionario')
             except:
                 pass
     else:
         form = CustomUserForm()
-        func = CustomUserForm()
+        func1 = FuncionarioForm()
+        func2 = LinkUserForm()
     context = {
         'form':form,
-        'func':func
+        'func1':func1,
+        'func2':func2
     }
         
     return render(request,"registration/cad_funcionario.html", context)

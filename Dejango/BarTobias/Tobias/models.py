@@ -58,7 +58,7 @@ class Produto(models.Model):
         return str(self.nomeProduto)
 
 class Funcionario(models.Model):
-    autor = models.ForeignKey(CustomUser,on_delete=models.CASCADE)
+    autor = models.OneToOneField(CustomUser,on_delete=models.CASCADE)
     nomeFuncionario = models.CharField(max_length=30,blank = True)
     cpfFuncionario = models.IntegerField(blank =True)
     enderecoFuncionario = models.CharField(max_length=150,blank = True)
@@ -87,7 +87,7 @@ class Venda(models.Model):
         return (f"{self.id} do {self.funcionarioId.nomeFuncionario} ")
  
 class LinkUser(models.Model):
-    funcionario = models.ForeignKey(Funcionario,on_delete=models.CASCADE)
+    funcionario = models.OneToOneField(Funcionario,on_delete=models.CASCADE)
     descricao = models.CharField(max_length=50)
     
 
