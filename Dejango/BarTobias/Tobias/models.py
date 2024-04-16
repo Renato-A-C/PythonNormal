@@ -29,10 +29,10 @@ class CustomUserManager(BaseUserManager):
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
-    first_name = models.CharField(max_length=30)
-    last_name = models.CharField(max_length=30)
-    telefone = models.CharField(max_length=15)
-    endereco = models.CharField(max_length=50)
+    nome = models.CharField(max_length=30)
+    sobreNome = models.CharField(max_length=30)
+    
+    
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     date_joined = models.DateTimeField(auto_now_add=True)
@@ -40,7 +40,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     objects = CustomUserManager()
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['first_name', 'last_name']
+    REQUIRED_FIELDS = ['nome', 'sobreNome']
 
     def __str__(self):
         return self.email
@@ -87,7 +87,7 @@ class Venda(models.Model):
         return (f"{self.id} do {self.funcionarioId.nomeFuncionario} ")
  
 class LinkUser(models.Model):
-    funcionario = models.OneToOneField(Funcionario,on_delete=models.CASCADE)
+    funcionario = models.ForeignKey(Funcionario,on_delete=models.CASCADE)
     descricao = models.CharField(max_length=50)
     
 

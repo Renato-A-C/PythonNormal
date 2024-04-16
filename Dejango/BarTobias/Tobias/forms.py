@@ -42,7 +42,7 @@ class CustomUserForm(UserCreationForm):
     password2 = forms.CharField(label='Password confirmation', widget=forms.PasswordInput)
     class Meta:
         model = CustomUser
-        fields = ['email','first_name', 'last_name', 'password1', 'password2']
+        fields = ['email','nome', 'sobreNome', 'password1', 'password2']
 
 class LinkUserForm(ModelForm):
     class Meta:
@@ -52,10 +52,6 @@ class LinkUserForm(ModelForm):
 class FuncionarioForm(ModelForm):
     class Meta:
         model = Funcionario
-        fields = '__all__'  
-    def __init__(self, *args, **kwargs):
-        CustomUserForm = kwargs.pop('CustomUserForm', None)
-        super(FuncionarioForm, self).__init__(*args, **kwargs)
-        if CustomUserForm:
-            self.fields['CustomUserForm'].initial = CustomUserForm
+        fields = [ 'nomeFuncionario','cpfFuncionario','enderecoFuncionario'  ]
+
  
