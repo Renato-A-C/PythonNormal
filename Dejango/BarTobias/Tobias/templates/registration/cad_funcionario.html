@@ -1,31 +1,60 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load crispy_forms_tags %}
-{% block title %} Cadastrar novos Funcionarios{% endblock %}{% block active4 %}  active{% endblock %}{% block desativa4 %}  disabled{% endblock %}
-
-
+{% block title %} Cadastrar novos Funcionarios{% endblock %}{% block active4 %} active{% endblock %}{% block desativa4%} disabled{% endblock %}
 {% block content %}
 <form method="post">
-  {% csrf_token %}
-
-
-
+    {% csrf_token %}
     <div class="container">
         <h2>Registrar</h2>
-        <form method="post">
-            {% csrf_token %}
-            aasda
-            {{ form.as_p }}
-            asdad <br>
-            {{ func1.as_p }}
-            asdasd aaa<br>aaa
-            {{ func2.as_ul }} aa
-aa
-            <button type="submit" class="btn btn-primary">Registrarr</button>
-            
-        </form>
+        nome cpf endereco
+
+        'email','nome', 'sobreNome', 'password1', 'password2
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" name="email" class="form-control" id="email" required="email" placeholder="Enter email">
+        </div>
+
+        <div class="form-group">
+            <label for="nome">Nome do usuario :</label>
+            <input type="text" name="nome" class="form-control" id="nome" placeholder="Coloque o nome de usuario">
+        </div>
+        <div class="form-group">
+            <label for=" sobreNome">Sobrenome:</label>
+            <input type="text" name="sobreNome" class="form-control" id=" sobreNome" placeholder="Coloque o sobrenome">
+        </div>
+
+        <div class="form-group">
+            <label for=" nomeFuncionario">Nome do funcionario:</label>
+            <input type="text" name="nomeFuncionario" class="form-control" id=" nomeFuncionario" placeholder="Coloque o nome do funcionario">
+        </div>
+        <div class="form-group">
+            <label for=" cpfFuncionario">CPF:</label>
+            <input type="number" step="1" name="cpfFuncionario" class="form-control" id=" cpfFuncionario" placeholder="Coloque o cpf funcionario">
+        </div>
+        <div class="form-group">
+            <label for=" enderecoFuncionario">ENDERECO:</label>
+            <input type="text" name="enderecoFuncionario" class="form-control" id=" enderecoFuncionario" placeholder="Coloque o endereco do funcionario">
+        </div>
+        <div class="form-group">
+            <label for=" descricao">Descricao:</label>
+            <input type="text" name="descricao" class="form-control" id=" descricao" placeholder="Enter description">
+        </div>
+
+
+
+        <div class="form-group">
+            <label for=" password1">Digite a senha</label>
+            <input type="password" name="password1" class="form-control" id=" password1" placeholder="Digite a senha">
+
+        </div>
+
+        <div class="form-group">
+            <label for=" password2">Confirme a senha</label>
+            <input type="password" name="password2" class="form-control" id=" password2" placeholder="Confirme a senha">
+        </div>
+
+
+        <button type="submit" class="btn btn-primary">Registrar</button>
     </div>
-
-
-
-{% endblock %}
+{% endblock  %}

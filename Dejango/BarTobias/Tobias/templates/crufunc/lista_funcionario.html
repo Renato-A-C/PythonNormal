@@ -4,5 +4,15 @@
 {% load static %}
 {% block content %}
 
-
+    <div class="container mt-5">
+        <h1>Listar Usuários</h1>
+        <ul class="list-group">
+        {% for funcionario in Funcionario %}
+        <li class="list-group-item">
+            {{ funcionario.nome }} {{ funcionario.sobreNome }}
+            <a href="{% url 'alterar_funcionario' funcionario.id %}" class="btn btn-primary btn-sm">Editar</a>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
 {% endblock content %}

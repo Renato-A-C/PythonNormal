@@ -4,5 +4,23 @@
 {% load static %}
 {% block content %}
 
+    <form method="post">
+    {% csrf_token %}
+    <div class="form-group">
+        <label for="id_campo1">nome 1:</label>
+        {{ usuarioAtual.nome }}
+    </div>
+    <div class="form-group">
+        <label for="id_campo2">nomeFunc, cpf, endereco:</label>
+        {{ funcionarioAtual.nomeFuncionario }}
+        {{ funcionarioAtual.cpfFuncionario }}
+        {{ funcionarioAtual.enderecoFuncionario }}
+    </div>
+    <div class="form-group">
+        <label for="id_campo3">Tabela multivalores:</label>
+        {{ multiValoresAtual.descricao }}
+    </div>
+    <button type="submit" class="btn btn-primary">Salvar</button>
+</form>
 
 {% endblock content %}

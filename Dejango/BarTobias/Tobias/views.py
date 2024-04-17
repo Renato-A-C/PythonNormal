@@ -82,7 +82,7 @@ def consulta_produto(request):
 
 @login_required
 def lista_funcionario(request):
-    funcionario = Funcionario.objects.all()
+    funcionario = CustomUser.objects.all()
     return render(request,"crufunc/lista_funcionario.html", {'Funcionario': funcionario})
 
 @login_required
@@ -128,18 +128,30 @@ def deletar_funcionario(request,id):
     return redirect('lista_funcionario')
 
 @login_required
-def alterar_funcionario(request):
-    func = Funcionario.objects.get(id=id)
+def alterar_funcionario(request, id):
+    modeloUser = CustomUser.objects.get(id=id)
+    linhaFuncionario = Funcionario.autor
+    linhaMulti = LinkUser.funcionario
     if request.method == "POST":
-        func.nomeFuncionario = request.POST.get('nomeFuncionario')
-              
-        func.cpfFuncionario = request.POST.get('cpfFuncionario')
-        func.enderecoFuncionario = request.POST.get('enderecoFuncionario')
-        func.save()
-        messages.success(request, "funcionario alterado")
-        return redirect('lista_funcionario')
+        instUser = CustomUserForm(request.POST, instance = modeloUser) 
+        instFuncionario = FuncionarioForm(request.POST, instance = linhaFuncionario)
+        instMulti = LinkUserForm(request.POST, instance = linhaMulti)
+        
+        if instUser.is_valid() and instFuncionario.is_valid() and instMulti.is_valid():
+            instUser.save()
+            instFuncionario.save()
+            instMulti.save()
+            return redirect('lista_funcionario')
+    else:
+        instUser = CustomUserForm(instance = modeloUser) 
+        instFuncionario = FuncionarioForm(instance = linhaFuncionario)
+        instMulti = LinkUserForm(instance = linhaMulti)     
+                                
+  
     context = {
-        'Func': func,
+        'usuarioAtual': instUser,
+        'funcionarioAtual':instFuncionario,
+        'multiValoresAtual':instMulti
                
     }
     return render(request,"crufunc/alterar_funcionario.html", context)
