@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required, permission_required
 from django.http import HttpResponse, FileResponse, HttpResponseRedirect
@@ -129,23 +129,28 @@ def deletar_funcionario(request,id):
 
 @login_required
 def alterar_funcionario(request, id):
+    funcionario = CustomUser.objects.get(id=id)
     modeloUser = CustomUser.objects.get(id=id)
-    linhaFuncionario = Funcionario.autor
-    linhaMulti = LinkUser.funcionario
+    linhaFuncionario = Funcionario.objects.get(autor=funcionario.id)
+    
+    linhaMulti= LinkUser.objects.get(funcionario=linhaFuncionario.id)
+
+    print(f" aaaaa {funcionario.nome}")
     if request.method == "POST":
-        instUser = CustomUserForm(request.POST, instance = modeloUser) 
-        instFuncionario = FuncionarioForm(request.POST, instance = linhaFuncionario)
-        instMulti = LinkUserForm(request.POST, instance = linhaMulti)
+        instUser = CustomUserForm(request.POST) 
+        instFuncionario = FuncionarioForm(request.POST)
+
+        instMulti = LinkUserForm(request.POST)
         
         if instUser.is_valid() and instFuncionario.is_valid() and instMulti.is_valid():
-            instUser.save()
+            instUser.nome.save()
             instFuncionario.save()
             instMulti.save()
             return redirect('lista_funcionario')
     else:
-        instUser = CustomUserForm(instance = modeloUser) 
-        instFuncionario = FuncionarioForm(instance = linhaFuncionario)
-        instMulti = LinkUserForm(instance = linhaMulti)     
+        instUser = CustomUserForm() 
+        instFuncionario = FuncionarioForm()
+        instMulti = LinkUserForm()     
                                 
   
     context = {

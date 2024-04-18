@@ -7,16 +7,16 @@ from django.contrib.auth import get_user_model
 # Create your models here.
 
 class CustomUserManager(BaseUserManager):
-    def create_user(self, email, first_name, last_name, password=None, **extra_fields):
+    def create_user(self, email, nome, sobreNome, password=None, **extra_fields):
         if not email:
             raise ValueError('O email deve ser fornecido')
         email = self.normalize_email(email)
-        user = self.model(email=email, first_name=first_name, last_name=last_name, **extra_fields)
+        user = self.model(email=email, nome=nome, sobreNome=sobreNome, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email, first_name, last_name, password=None, **extra_fields):
+    def create_superuser(self, email, nome, sobreNome, password=None, **extra_fields):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
 
@@ -25,7 +25,7 @@ class CustomUserManager(BaseUserManager):
         if extra_fields.get('is_superuser') is not True:
             raise ValueError('Superuser deve ter is_superuser=True.')
 
-        return self.create_user(email, first_name, last_name, password, **extra_fields)
+        return self.create_user(email, nome, sobreNome, password, **extra_fields)
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
