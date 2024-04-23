@@ -1,6 +1,7 @@
 from django.urls import path, include
 from django.conf import settings
 from . import views
+from .views import relatorio_pdf
 
 urlpatterns = [
     # Janelas principais
@@ -16,10 +17,6 @@ urlpatterns = [
     path('cruproduto/deletar_produto/<int:id>', views.deletar_produto, name='deletar'),
     path('cruproduto/consulta_produto/', views.consulta_produto, name='consulta_produto'), 
     
-    # Crud para vendas
-    path("cruvenda/venda", views.venda, name="venda"),
-    path("cruvenda/lista_venda", views.venda, name="lista_venda"),
-    
     # Crud de funcionários
     path("crufunc/lista_funcionario", views.lista_funcionario, name="lista_funcionario"),
     path("registration/cad_funcionario", views.cad_funcionario, name="cad_funcionario"),
@@ -27,7 +24,14 @@ urlpatterns = [
     path("crufunc/alterar_funcionario/<int:id>", views.alterar_funcionario, name="alterar_funcionario"),
     path("crufunc/deletar_funcionario", views.deletar_funcionario, name="deletar_func"),
     path("crufunc/deletar_funcionario/<int:id>", views.deletar_funcionario, name="deletar_funcionario"),
+    
+    # Crud para vendas
+    path("cruvenda/venda", views.venda, name="venda"),
+    path("cruvenda/lista_venda", views.lista_venda, name="lista_venda"),
+    path("cruvenda/criar_venda", views.criar_venda, name="criar_venda"),
 
+    # Views gerais
+    path('relatorios/relatorio/', relatorio_pdf.as_view(), name='relatorio_pdf'),
     
     #janela de administração geral
     path('accounts/', include('django.contrib.auth.urls')) 

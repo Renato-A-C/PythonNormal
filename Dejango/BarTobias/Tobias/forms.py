@@ -1,6 +1,6 @@
 from django import forms
-from django.forms import Form, ModelForm
-from .models import Produto, Cliente, Venda, Funcionario, LinkUser, CustomUser
+from django.forms import Form, ModelForm, inlineformset_factory
+from .models import Produto, Venda, Funcionario1, Funcionario2, Funcionario, Cliente, ItemVenda
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
 from django.contrib.auth.forms import UserCreationForm
@@ -14,44 +14,43 @@ class ProdutoForm(ModelForm):
         model = Produto
         fields = '__all__'  
 
-        
 class ClienteForm(ModelForm):
     class Meta:
         model = Cliente
         fields = '__all__'  
-
-
-
         
+
 class VendaForm(ModelForm):
     class Meta:
         model = Venda
-        fields = '__all__'  
+        fields = ['funcionarioId','clienteId']  
 
-        
-        
-class CriadorDeConta(UserCreationForm):
-
-    class Meta:
-        model = User
-        fields = ['username','email','password1','password2']
-
-
-class CustomUserForm(UserCreationForm):
+class FuncionarioForm(UserCreationForm):
     password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
     password2 = forms.CharField(label='Password confirmation', widget=forms.PasswordInput)
     class Meta:
-        model = CustomUser
-        fields = ['email','nome', 'sobreNome', 'password1', 'password2']
+        model = Funcionario
+        fields = ['email', 'nome', 'sobreNome', 'password1', 'password2']
 
-class LinkUserForm(ModelForm):
+class Funcionario2Form(ModelForm):
     class Meta:
-        model = LinkUser
+        model = Funcionario2
         fields = ['descricao']  
 
-class FuncionarioForm(ModelForm):
+class Funcionario1Form(ModelForm):
     class Meta:
-        model = Funcionario
-        fields = [ 'nomeFuncionario','cpfFuncionario','enderecoFuncionario'  ]
+        model = Funcionario1
+        fields = ['nomeFuncionario', 'cpfFuncionario', 'enderecoFuncionario']
 
- 
+class ItemVendaForm(ModelForm):
+    class Meta:
+        model = ItemVenda 
+        fields = ['produtoId', 'quantidade']
+        
+ItemVendaFormSet = inlineformset_factory(
+    Venda,  # Modelo pai
+    ItemVenda,  # Modelo filho
+    form=ItemVendaForm,  # Formulário para cada item de venda
+    extra=1,  # Número inicial de formulários a serem exibidos na template
+    can_delete=True,  # Permitir excluir itens de venda
+)

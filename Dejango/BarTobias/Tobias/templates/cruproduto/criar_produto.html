@@ -20,7 +20,18 @@
         <input type="number" size="50" name="precoProduto" step="0.01"  id="precoProduto">
         
       </div>
-
+      <div>
+        <label for="cadastro">Funcionario cadastrante</label>
+        <select name="cadastro" id="cadastro">
+            
+            {% for funcionarios in func %}
+              {% if funcionarios.id == 1 %}
+              {% else %}
+              <option value="{{ funcionarios.id }}">{{ funcionarios.nome }}</option>
+              {% endif %}
+            {% endfor %}
+        </select>
+    </div>
       <div>
           <label for="quantidadeProduto" size="50">Quantidade de Produtos:</label>
         <input type="number" name="quantidadeProduto"  min="0" max="9223372036854775807" id="quantidadeProduto">

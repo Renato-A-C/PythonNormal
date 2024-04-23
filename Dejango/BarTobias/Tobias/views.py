@@ -5,9 +5,12 @@ from django.http import HttpResponse, FileResponse, HttpResponseRedirect
 from django.template import loader
 from django.contrib import messages
 from django.contrib.auth import login,logout,authenticate
-from .models import Produto, Cliente, Funcionario, Venda, LinkUser, CustomUser
-from .forms import ProdutoForm, ClienteForm, FuncionarioForm, VendaForm, CustomUserForm, LinkUserForm
-
+from django.views.generic import View
+from django.forms import formset_factory
+from .models import Produto, Venda, Funcionario, Funcionario1, Funcionario2, ItemVenda, Cliente
+from .forms import ProdutoForm,  VendaForm, FuncionarioForm, Funcionario1Form, Funcionario2Form, ClienteForm, ItemVendaForm, ItemVendaFormSet
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import letter, A4
 
 # Create your views here.
 def home(request):
@@ -32,8 +35,11 @@ def lista_produto(request):
 def criacaoProduto(request):
     if request.method == "POST":
         form = ProdutoForm(request.POST)
+        
         if form.is_valid():
+            print("funciounou")
             try:
+                
                 form.save()
                 
                 return redirect('lista_produto')
@@ -41,7 +47,13 @@ def criacaoProduto(request):
                 pass
     else:
         form = ProdutoForm()
-    return render(request,"cruproduto/criar_Produto.html", {'form': form})
+        print("não funfo")
+    context= {
+        'form':form,
+        'func':Funcionario.objects.all()
+    }
+    
+    return render(request,"cruproduto/criar_Produto.html", context)
 
 @login_required
 def alterar_produto(request,id):
@@ -78,19 +90,19 @@ def consulta_produto(request):
 
 """
 # views para funcionario
-"""
+""" 
 
 @login_required
 def lista_funcionario(request):
-    funcionario = CustomUser.objects.all()
+    funcionario = Funcionario.objects.all()
     return render(request,"crufunc/lista_funcionario.html", {'Funcionario': funcionario})
 
 @login_required
 def cad_funcionario(request):
     if request.method == "POST":
-        form = CustomUserForm(request.POST)
-        func1 = FuncionarioForm(request.POST)
-        func2 = LinkUserForm(request.POST)
+        form = FuncionarioForm(request.POST)
+        func1 = Funcionario1Form(request.POST)
+        func2 = Funcionario2Form(request.POST)
         if form.is_valid() and func1.is_valid() and func2.is_valid():
             try:
                 
@@ -107,9 +119,9 @@ def cad_funcionario(request):
             except:
                 pass
     else:
-        form = CustomUserForm()
-        func1 = FuncionarioForm()
-        func2 = LinkUserForm()
+        form = FuncionarioForm()
+        func1 = Funcionario1Form()
+        func2 = Funcionario2Form()
     context = {
         'form':form,
         'func1':func1,
@@ -119,38 +131,27 @@ def cad_funcionario(request):
     return render(request,"registration/cad_funcionario.html", context)
 
 @login_required
-def deletar_funcionario(request,id):
-    funcionario = Funcionario.objects.get(id=id)
-    try:
-        funcionario.delete()
-    except:
-        pass
-    return redirect('lista_funcionario')
-
-@login_required
 def alterar_funcionario(request, id):
-    funcionario = CustomUser.objects.get(id=id)
-    modeloUser = CustomUser.objects.get(id=id)
-    linhaFuncionario = Funcionario.objects.get(autor=funcionario.id)
-    
-    linhaMulti= LinkUser.objects.get(funcionario=linhaFuncionario.id)
-
-    print(f" aaaaa {funcionario.nome}")
+    modeloUser = Funcionario.objects.get(id=id)
+    linhaFuncionario = Funcionario1.objects.get(autor=modeloUser.id)
+    print(f" aaaaa {linhaFuncionario.id}")
+    linhaMulti= Funcionario2.objects.get(funcionario=linhaFuncionario.id)
+    print(f" aaaaa {linhaMulti.id}")
+    print(f" aaaaa {modeloUser.nome}")
     if request.method == "POST":
-        instUser = CustomUserForm(request.POST) 
-        instFuncionario = FuncionarioForm(request.POST)
-
-        instMulti = LinkUserForm(request.POST)
-        
-        if instUser.is_valid() and instFuncionario.is_valid() and instMulti.is_valid():
-            instUser.nome.save()
-            instFuncionario.save()
-            instMulti.save()
-            return redirect('lista_funcionario')
+        modeloUser.nome = request.POST.get('nome')
+        linhaFuncionario.nomeFuncionario = request.POST.get('nomeFuncionario')
+        linhaFuncionario.cpfFuncionario = request.POST.get('cpfFuncionario')
+        linhaFuncionario.enderecoFuncionario = request.POST.get('enderecoFuncionario')
+        linhaMulti.descricao = request.POST.get('descricao')
+        modeloUser.save()
+        linhaFuncionario.save()
+        linhaMulti.save()
+        return redirect('lista_funcionario')
     else:
-        instUser = CustomUserForm() 
-        instFuncionario = FuncionarioForm()
-        instMulti = LinkUserForm()     
+        instUser = FuncionarioForm() 
+        instFuncionario = Funcionario1Form()
+        instMulti = Funcionario2Form()     
                                 
   
     context = {
@@ -161,17 +162,245 @@ def alterar_funcionario(request, id):
     }
     return render(request,"crufunc/alterar_funcionario.html", context)
 
-# views para cliente
-
-# views para venda
 
 @login_required
+def deletar_funcionario(request,id):
+    funcionario = Funcionario1.objects.get(id=id)
+    try:
+        funcionario.delete()
+    except:
+        pass
+    return redirect('lista_funcionario')
+
+
+"""
+# views para venda
+"""
+@login_required
 def venda(request):
-    Produtos = Produto.objects.all()
-    return render(request,"cruvenda/venda.html", {'Produto': Produtos})
+    venda = Venda.objects.all()
+    
+    context={
+        'Venda': venda
+    }
+    return render(request,"cruvenda/venda.html", context)
 
 
 @login_required
 def lista_venda(request):
+    venda = Venda.objects.all()
+    
+    context={
+        'Venda': venda
+    }
+    return render(request,"cruvenda/lista_venda.html",context)
+
+@login_required
+def criar_venda(request):
+    if request.method == "POST":
+        
+        venda1 = VendaForm(request.POST)
+        venda2 = ItemVendaForm(request.POST)
+        item_venda_forms = [ItemVendaForm(request.POST, prefix=str(i)) for i in range(1, len(request.POST))]
+        print("ate aqui sim")
+        if venda1.is_valid() and all(item_venda_form.is_valid() for item_venda_form in item_venda_forms):
+            print("aaaaaa")
+            try: 
+                
+                venda1.save()
+                for item_venda_form in item_venda_forms:
+                    item_venda = item_venda_form.save(commit=False)
+                    item_venda.venda = venda1.id
+                    item_venda.save()                
+                #venda2.venda = venda1.id
+                #venda2.save()
+                s = 0
+            except:
+                pass
+            return redirect('lista_venda')
+    else:
+        venda1 = VendaForm()
+        venda2 = ItemVendaForm()
+        item_venda_forms = [ItemVendaForm(prefix=str(i)) for i in range(1, 2)]
+    produtos = Produto.objects.all()
+    item_venda_formset = ItemVendaFormSet(initial=[{'produto': produto} for produto in produtos])
+    context = {
+        'venda': venda1,
+        'lista': venda2,
+        'Funcionario':Funcionario.objects.all(),
+        'Produto': Produto.objects.all(),
+        'Cliente': Cliente.objects.all(),
+        'itemVenda': item_venda_formset
+    }
+    return render(request, 'cruvenda/criar_venda.html', context)
+
+
+"""
+@login_required
+def criar_venda(request):
+    venda1 = VendaForm(request.POST)
+    iv = ItemVendaForm(request.POST)
+    produto = Produto.objects.all()
+    funcionario = Funcionario1.objects.all()
+    cliente = Cliente.objects.all()
+    if venda1.is_valid() and iv.is_valid():
+        print("aaaaaa")
+        venda1.funcionarioId = funcionario.id
+        venda1.save()
+        
+        item.venda = venda1.id
+        item.save()
+        itens = produto.save(commit=False)
+        itensListados = []
+        for item in itens.itens.all():
+            novoItensListados = ItemVenda(nome= item.nomeProduto , quantidade = item.quantidadeProduto)
+            itensListados.append(novoItensListados)
+            
+        ItemVenda.objects.bulk_create(itensListados)
+        return redirect('lista_venda')
+          # Redirecionar para a página de sucesso
+    else:
+        print("nao funcionou")
+    context={
+        
+        'Produto': produto,
+        'Funcionario':funcionario,
+        'Cliente': cliente
+    }
+
+    return render(request, 'cruvenda/criar_venda.html', context)
+"""
+
+
+@login_required
+def deletar_venda(request):
     Produtos = Produto.objects.all()
     return render(request,"cruvenda/lista_venda.html", {'Produto': Produtos})
+
+# Views adicionais
+
+
+
+
+
+
+class relatorio_pdf(View):
+    def get(self, request, *args, **kwargs):
+        # Inicialize o objeto Canvas
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="documento.pdf"'
+        c = canvas.Canvas(response, pagesize=A4)
+
+        # Defina as dimensões dos retângulos
+        largura = A4[0] - 100  # 100 é uma margem de 50 unidades em cada lado
+        altura_pagina = A4[1]
+        altura_superior = altura_pagina * 0.1
+        altura_inferior = altura_pagina * 0.8
+
+        # Desenhe os retângulos
+        c.rect(50, altura_pagina - altura_superior - 50, largura, altura_superior)
+        c.rect(50, 50, largura, altura_inferior)
+
+        # Desenhe a estrutura da tabela de vendas no segundo quadrado
+        margem_esquerda = 70
+        margem_superior = 70
+        largura_coluna = (largura - margem_esquerda * 2) / 5
+        altura_linha = 20
+
+        # Cabeçalhos da tabela
+        cabecalhos = ["Item", "Nome", "Quantidade", "Preço Unitário", "Preço Total"]
+        tamanhos_colunas = [30, 180, 65, 80, 100]  # Tamanhos fixos para cada coluna
+        for i, (cabecalho, tamanho_coluna) in enumerate(zip(cabecalhos, tamanhos_colunas)):
+            c.drawString(margem_esquerda + sum(tamanhos_colunas[:i]), altura_pagina - altura_superior - margem_superior, cabecalho)
+
+            # Desenhe as linhas verticais entre as colunas
+            if i > 0:
+                c.line(margem_esquerda + sum(tamanhos_colunas[:i]), altura_pagina - altura_superior - margem_superior,
+                       margem_esquerda + sum(tamanhos_colunas[:i]), altura_superior + margem_superior)
+
+        # Dados da tabela de vendas (exemplo)
+        produtos_venda = [
+            {"nome": "Produto 1", "quantidade": 2, "preco_unitario": 10, "preco_total": 20},
+            {"nome": "Produto 2", "quantidade": 1, "preco_unitario": 15, "preco_total": 15},
+            {"nome": "Produto 3", "quantidade": 3, "preco_unitario": 8, "preco_total": 24},
+        ]
+
+        # Desenhe os produtos na tabela
+        for i, produto in enumerate(produtos_venda):
+            linha = margem_superior + altura_linha * (i + 2)
+            c.drawString(margem_esquerda, altura_pagina - altura_superior - linha, str(i + 1))  # Número do item
+            c.drawString(margem_esquerda + tamanhos_colunas[0], altura_pagina - altura_superior - linha, produto["nome"])
+            c.drawString(margem_esquerda + tamanhos_colunas[0] + tamanhos_colunas[1], altura_pagina - altura_superior - linha, str(produto["quantidade"]))
+            c.drawString(margem_esquerda + tamanhos_colunas[0] + tamanhos_colunas[1] + tamanhos_colunas[2], altura_pagina - altura_superior - linha, str(produto["preco_unitario"]))
+            c.drawString(margem_esquerda + tamanhos_colunas[0] + tamanhos_colunas[1] + tamanhos_colunas[2] + tamanhos_colunas[3], altura_pagina - altura_superior - linha, str(produto["preco_total"]))
+
+            # Desenhe as linhas horizontais entre as linhas da tabela
+            c.line(margem_esquerda, altura_pagina - altura_superior - (linha + altura_linha),
+                   margem_esquerda + sum(tamanhos_colunas), altura_pagina - altura_superior - (linha + altura_linha))
+
+        # Encerre o documento PDF
+        c.showPage()
+        c.save()
+
+        return response
+    
+"""
+class GerarPDF(View):
+    def get(self, request, *args, **kwargs):
+        # Inicialize o objeto Canvas
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="documento.pdf"'
+        c = canvas.Canvas(response, pagesize=A4)
+
+        # Defina as dimensões dos retângulos
+        largura = A4[0] - 100  # 100 é uma margem de 50 unidades em cada lado
+        altura_pagina = A4[1]
+        altura_superior = altura_pagina * 0.1
+        altura_inferior = altura_pagina * 0.8
+
+        # Desenhe os retângulos
+        c.rect(50, altura_pagina - altura_superior - 50, largura, altura_superior)
+        c.rect(50, 50, largura, altura_inferior)
+
+        # Adicione o nome do usuário e do cliente
+        usuario = request.user.username
+        nome_cliente = "Nome do Cliente"  # Substitua pelo nome do cliente
+        c.drawString(100, altura_pagina - 60, f"Usuário: {usuario}")
+        c.drawString(100, altura_pagina - 80, f"Cliente: {nome_cliente}")
+
+        # Desenhe a estrutura da tabela de vendas no segundo quadrado
+        margem_esquerda = 70
+        margem_superior = 70
+        largura_coluna = (largura - margem_esquerda * 2) / 5
+        altura_linha = 20
+
+        # Cabeçalhos da tabela
+        cabecalhos = ["Item", "Nome do Produto", "Quantidade", "Preço Unitário", "Preço Total"]
+        tamanhos_colunas = [30, 180, 65, 80, 100]  # Tamanhos fixos para cada coluna
+        for i, (cabecalho, tamanho_coluna) in enumerate(zip(cabecalhos, tamanhos_colunas)):
+            c.drawString(margem_esquerda + sum(tamanhos_colunas[:i]), altura_pagina - altura_superior - margem_superior, cabecalho)
+
+            # Desenhe as linhas verticais entre as colunas
+            if i > 0:
+                c.line(margem_esquerda + sum(tamanhos_colunas[:i]), altura_pagina - altura_superior - margem_superior,
+                       margem_esquerda + sum(tamanhos_colunas[:i]), altura_superior + margem_superior)
+
+        # Recuperar os dados da tabela listaDeProdutos
+        produtos = ListaDeProdutos.objects.all()
+
+        # Desenhe os produtos na tabela
+        valor_total = 0
+        for i, produto in enumerate(produtos):
+            linha = margem_superior + altura_linha * (i + 2)
+            c.drawString(margem_esquerda, altura_pagina - altura_superior - linha, str(i + 1))  # Número do item
+            c.drawString(margem_esquerda + tamanhos_colunas[0], altura_pagina - altura_superior - linha, produto.nome_produto)
+            c.drawString(margem_esquerda + tamanhos_colunas[0] + tamanhos_colunas[1], altura_pagina - altura_superior - linha, str(produto.quantidade))
+            c.drawString(margem_esquerda + tamanhos_colunas[0] + tamanhos_colunas[1] + tamanhos_colunas[2], altura_pagina - altura_superior - linha, str(produto.preco_unitario))
+            preco_total = produto.quantidade * produto.preco_unitario
+            c.drawString(margem_esquerda + tamanhos_colunas[0] + tamanhos_colunas[1] + tamanhos_colunas[2] + tamanhos_colunas[3], altura_pagina - altura_superior - linha, str(preco_total))
+            valor_total += preco_total
+
+            # Desenhe as linhas horizontais entre as linhas da tabela
+            c.line(margem_esquerda, altura_pagina - altura_superior - (linha + altura_linha),
+                   margem_esquerda + sum(tamanhos_colunas), altura_pagina - altura_superior - (linha + altura_linha))
+"""

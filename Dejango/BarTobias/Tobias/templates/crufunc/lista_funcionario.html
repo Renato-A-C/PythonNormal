@@ -8,10 +8,15 @@
         <h1>Listar Usuários</h1>
         <ul class="list-group">
         {% for funcionario in Funcionario %}
+        {% if funcionario.id == 1 %}
+        {% else %}
         <li class="list-group-item">
             {{ funcionario.nome }} {{ funcionario.sobreNome }}
             <a href="{% url 'alterar_funcionario' funcionario.id %}" class="btn btn-primary btn-sm">Editar</a>
         </li>
+        {% endif %}
+        
+        
         {% endfor %}
     </ul>
 </div>
