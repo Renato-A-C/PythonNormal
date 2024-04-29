@@ -28,8 +28,16 @@ urlpatterns = [
     # Crud para vendas
     path("cruvenda/venda", views.venda, name="venda"),
     path("cruvenda/lista_venda", views.lista_venda, name="lista_venda"),
-    path("cruvenda/criar_venda", views.criar_venda, name="criar_venda"),
-
+    path("cruvenda/criar_venda2", views.criar_venda2, name="criar_venda2"),
+    path("cruvenda/criar_venda/<int:id>", views.criar_venda, name="criar_venda"),
+    path("cruvenda/addp/<int:id>", views.addp, name="addp"),
+    # Crud para cliente
+    
+    path("crucliente/lista_cliente", views.lista_cliente, name="lista_cliente"),
+    path("crucliente/alterar_cliente", views.alterar_cliente, name="alterar_cli"),
+    path("crucliente/alterar_cliente/<int:id>", views.alterar_cliente, name="alterar_cliente"),
+    path("crucliente/deletar_cliente", views.deletar_cliente, name="deletar_cli"),
+    path("crucliente/deletar_cliente/<int:id>", views.deletar_cliente, name="deletar_cliente"),
     # Views gerais
     path('relatorios/relatorio/', relatorio_pdf.as_view(), name='relatorio_pdf'),
     

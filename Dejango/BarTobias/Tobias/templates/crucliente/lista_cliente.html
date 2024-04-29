@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}Clientes{% endblock title %}
+{% block active5 %}active{% endblock active5 %}{% block desativa5 %}disabled{% endblock desativa5 %}
+{% load static %}
+{% block content %}
+
+<div class="container mt-5">
+    <h1>Listar Clientes</h1>
+    <ul class="list-group">
+    {% for cliente in cliente %}
+    
+    
+    <li class="list-group-item">
+        {{ cliente.nomeCliente }} {{ cliente.cpf }}
+        <a href="{% url 'alterar_cliente' cliente.id %}" class="btn btn-primary btn-sm">editar {{ cliente.cpf }}</a>
+    </li>
+    {% endfor %}
+</ul>
+</div>
+
+{% endblock content %}

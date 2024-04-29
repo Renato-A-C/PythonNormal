@@ -50,6 +50,12 @@
               funcionario
             </a>
           </li>
+          <li class="nav-item {% block active5 %} {% endblock %}">
+            <a class="nav-link {% block desativa5 %}{% endblock %}"href="{% url 'lista_cliente' %}">
+              Cliente
+            </a>
+          </li>
+          
           <li class="nav-item">
             
             <a class="nav-link" href="{% url 'admin:index' %}">áreaAdmin</a>

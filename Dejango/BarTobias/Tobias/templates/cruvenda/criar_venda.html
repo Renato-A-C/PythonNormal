@@ -3,57 +3,50 @@
 {% block active3 %}active{% endblock active3 %}{% block desativa3 %}disabled{% endblock desativa3 %}
 {% load static %}
 {% block content %}
-
-    <h1>Criar Venda</h1>
-    <form method="post">
+    <form method="POST">
         {% csrf_token %}
-        <div>
+    
+    <!-- Campo para selecionar o cliente -->
+    <label for="clienteId">Cliente:</label>
+    <select name="clienteId" id="clienteId">
+      {% for cliente in Cliente %}
+        <option value="{{ cliente.id }}">{{ cliente.id }}</option>
+      {% endfor %}
+    </select>
+      <!-- Campo para selecionar o Funcionario -->
+        <label for="funcionarioId">Funcionario:</label>
         <select name="funcionarioId" id="funcionarioId">
-            {% for funcionarios in Funcionario %}
-              {% if funcionarios.id == 1 %}{% else %}
-              <option value="{{ funcionarios.id }}">{{ funcionarios.nome }}</option>
-              {% endif %}
-            {% endfor %}
+          {% for funcionario in Funcionario %}
+            <option value="{{ funcionario.id }}">{{ funcionario.nomeFuncionario }}</option>
+          {% endfor %}
         </select>
-        </div>
+        
+    <!-- Campo para adicionar produtos -->
+  
+    
+    {% for lproduto in LProduto %}
+    <label for="produtoId_{{lproduto.id}}">Produto {{lproduto.id}}:</label>
+    <br>
+    <select name="produtoId_{{lproduto.id}}" id="produtoId_{{lproduto.id}}">      
+        {% for produto in Produto %}
+        <option value="{{ produto.id }}" {% if itemvenda.produto.id == produto.id %} selected {% endif %}>{{produto.id}} | {{ produto.nomeProduto }}</option>
+        {% endfor %}
+    </select>
+    
+    <label for="quantidade_{{lproduto.id}}">Quantidade:</label>
+    <input type="number" name="quantidade_{{lproduto.id}}" id="quantidade_{{lproduto.id}}" min="1">
+          
+        
+    
+    {% endfor %}
+    <br><br>
 
-        <div>
-                <select name="clienteId" id="clienteId">
-                    {% for clientes in Cliente %}
-                      <option value="{{ clientes.id }}">{{ clientes.nomeCliente }}</option>
-                    {% endfor %}
-            </select>
-        </div>
-        <div>
+    <!-- Campo para quantidade -->
 
-            
-            <h2>Produtos:</h2>
-            <div id="produtos-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Produto</th>
-                            <th>Quantidade</th>
-                        </tr>
-                    </thead>
-                    <tbody id="Produto">
-                        {% for form in Produto %}
-                            <tr>
-                                <td>{{form.id}} ,{{ form.nomeProduto }}</td>
-                                <td>{{ form.quantidadeProduto }}</td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-            <button type="button" id="adicionar-produto">Adicionar Produto</button>
-        </div>
-        <button type="submit" class="btn btn-success">Criar venda</button>
-    </form>
-    <script>
-        document.getElementById('adicionar-item').addEventListener('click', function() {
-            var newRow = '<tr><td>{{ itemVenda.Produto.nomeProduto }}</td><td>{{ itemVenda.Produto.quantidadeProduto }}</td></tr>';
-            document.getElementById('Produto').insertAdjacentHTML('beforeend', newRow);
-        });
-    </script>
+    <!-- Botão para adicionar o item ao pedido -->
+    <br>
+    <a type="button" class="btn btn-success" href="{% url 'addp' venda.id %}">adicionar produto</a>
+
+    <button type="submit">finalizar</button>
+  </form>
 {% endblock content %}

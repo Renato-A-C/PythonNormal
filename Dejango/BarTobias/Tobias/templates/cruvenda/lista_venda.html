@@ -3,6 +3,20 @@
 {% block active3 %}active{% endblock active3 %}{% block desativa3 %}disabled{% endblock desativa3 %}
 {% load static %}
 {% block content %}
+    
+<div class="container mt-5">
+    <h1>Listar Vendas</h1>
+    <ul class="list-group">
+    {% for venda in venda %}
+    
+    
+    <li class="list-group-item">
+        {{ venda.id }} venda, feita por {{ venda.funcionarioId }}
+
+    </li>
+    {% endfor %}
+</ul>
+</div>
 
 
 {% endblock content %}

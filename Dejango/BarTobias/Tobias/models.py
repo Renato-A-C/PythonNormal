@@ -87,8 +87,8 @@ class Cliente(models.Model):
   
 class Venda(models.Model):
  
-    funcionarioId = models.ForeignKey(Funcionario1, on_delete=models.PROTECT, related_name="listagemFuncionario", blank=True)
-    clienteId= models.ForeignKey(Cliente, on_delete=models.PROTECT, related_name="listagemCliente", blank=True)
+    funcionarioId = models.ForeignKey(Funcionario1, on_delete=models.PROTECT, related_name="listagemFuncionario",)
+    clienteId= models.ForeignKey(Cliente, on_delete=models.PROTECT, related_name="listagemCliente", )
     dataVenda = models.DateField(auto_now_add=True)
     status = models.BooleanField(default=True)
     excluido = models.BooleanField(default=False)
@@ -100,6 +100,6 @@ class ItemVenda(models.Model):
     produtoId = models.ForeignKey(Produto, on_delete=models.PROTECT, related_name="listagemProduto")
     quantidade = models.IntegerField()
     def __str__(self):
-        return (f"{self.venda.id} do {self.venda.funcionarioId}")
+        return (f"{self.venda.id} ")
 
     

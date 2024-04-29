@@ -7,6 +7,7 @@ from django.contrib import messages
 from django.contrib.auth import login,logout,authenticate
 from django.views.generic import View
 from django.forms import formset_factory
+from django.utils import timezone
 from .models import Produto, Venda, Funcionario, Funcionario1, Funcionario2, ItemVenda, Cliente
 from .forms import ProdutoForm,  VendaForm, FuncionarioForm, Funcionario1Form, Funcionario2Form, ClienteForm, ItemVendaForm, ItemVendaFormSet
 from reportlab.pdfgen import canvas
@@ -39,10 +40,11 @@ def criacaoProduto(request):
         if form.is_valid():
             print("funciounou")
             try:
-                
+                print(f"salvo ")
                 form.save()
                 
                 return redirect('lista_produto')
+                
             except:
                 pass
     else:
@@ -52,7 +54,7 @@ def criacaoProduto(request):
         'form':form,
         'func':Funcionario.objects.all()
     }
-    
+     
     return render(request,"cruproduto/criar_Produto.html", context)
 
 @login_required
@@ -189,19 +191,108 @@ def venda(request):
 @login_required
 def lista_venda(request):
     venda = Venda.objects.all()
-    
+    func = Funcionario.objects.all()
     context={
-        'Venda': venda
+        'venda': venda,
+        'funcionario':func
     }
     return render(request,"cruvenda/lista_venda.html",context)
 
 @login_required
+def criar_venda2(request):
+    
+    print("criação iniciada")
+
+    venda1 = VendaForm(request.POST)
+    venda1 = Venda.objects.create()
+    venda1.save()
+    print(venda1.id)
+
+    return redirect(f'criar_venda/{venda1.id}')
+    
+"""
+    funcionarioId = models.ForeignKey(Funcionario1, on_delete=models.PROTECT, related_name="listagemFuncionario",)
+    clienteId= models.ForeignKey(Cliente, on_delete=models.PROTECT, related_name="listagemCliente", )
+    dataVenda = models.DateField(auto_now_add=True)
+    status = models.BooleanField(default=True)
+    excluido = models.BooleanField(default=False)
+"""
+@login_required
+def addp(request,id):
+    venda1 = Venda.objects.get(id=id)
+    venda2 = ItemVenda.objects.create(venda = venda1)
+    venda2.save()
+    return redirect(request.META.get('HTTP_REFERER', '/'))
+"""
+    funcionarioId = models.ForeignKey(Funcionario1, on_delete=models.PROTECT, related_name="listagemFuncionario",)
+    clienteId= models.ForeignKey(Cliente, on_delete=models.PROTECT, related_name="listagemCliente", )
+    dataVenda = models.DateField(auto_now_add=True)
+    status = models.BooleanField(default=True)
+    excluido = models.BooleanField(default=False)
+"""
+@login_required
+def criar_venda(request, id):
+    venda1 = Venda.objects.get(id=id)
+    funcionario = Funcionario1.objects.all()
+    produto = Produto.objects.all()
+    venda2 = ItemVenda.objects.filter(venda=id)
+    print(ItemVenda.objects.count())
+
+    if request.method == "POST":
+        # = request.POST.get('')
+        funcI = request.POST.get('funcionarioId')
+        func = Funcionario1.objects.get(id=funcI)
+        venda1.funcionarioId = func
+        cliE = request.POST.get('clienteId')
+        cli = Cliente.objects.get(id=cliE)
+        venda1.clienteId = cli
+        venda1.dataVenda = timezone.now()
+        
+        venda1.save()
+        print("post validado")
+
+        for key, value in request.POST.items():
+            if key.startswith('quantidade_'):
+                itemvenda_id = int(key.split('_')[1])
+                itemvenda = ItemVenda.objects.get(id=itemvenda_id)
+                itemvenda.quantidade = value
+                itemvenda.save()
+                print(f"quantidade feita {value}")
+            elif key.startswith('produtoId_'):
+                itemvenda_id = int(key.split('_')[1])
+                itemvenda = ItemVenda.objects.get(id=itemvenda_id)
+                print(f"valor {value}")
+                produto_id = int(value)  # Supondo que o valor enviado seja o ID do produto
+                produto1 = Produto.objects.get(id=produto_id)
+                itemvenda.produtoId = produto1
+                itemvenda.save()
+                print('funcionou')
+        print("aaaaaa")
+        return redirect('venda')
+        
+    context = {
+        'venda':venda1,
+        'Funcionario':funcionario,
+        'Produto': produto,
+        'LProduto':ItemVenda.objects.filter(venda=id),
+        'Cliente': Cliente.objects.all(),
+       
+    }
+    return render(request, f'cruvenda/criar_venda.html', context)
+
+"""
+@login_required
 def criar_venda(request):
     if request.method == "POST":
+        pedido = Produto.objects.create(funcionario=Funcionario)
+        produto = Produto.objects.get(id=1)
         
+        quantidade = 2
+        item = ItemVenda.objects.create(produtoId=produto, quantidade=quantidade)
         venda1 = VendaForm(request.POST)
         venda2 = ItemVendaForm(request.POST)
         item_venda_forms = [ItemVendaForm(request.POST, prefix=str(i)) for i in range(1, len(request.POST))]
+        produto = ItemVenda.objects.filter(venda=Venda)
         print("ate aqui sim")
         if venda1.is_valid() and all(item_venda_form.is_valid() for item_venda_form in item_venda_forms):
             print("aaaaaa")
@@ -235,7 +326,7 @@ def criar_venda(request):
     return render(request, 'cruvenda/criar_venda.html', context)
 
 
-"""
+
 @login_required
 def criar_venda(request):
     venda1 = VendaForm(request.POST)
@@ -271,11 +362,39 @@ def criar_venda(request):
     return render(request, 'cruvenda/criar_venda.html', context)
 """
 
-
 @login_required
 def deletar_venda(request):
-    Produtos = Produto.objects.all()
-    return render(request,"cruvenda/lista_venda.html", {'Produto': Produtos})
+    venda = Venda.objects.get(id=id)
+    venda.excluido = True
+    venda.save()
+    return redirect('lista_venda')
+
+"""
+Views para cliente
+"""
+@login_required
+def lista_cliente(request):
+    cliente = Cliente.objects.all()
+    context = {
+        'cliente': cliente
+    }
+    return render(request,"crucliente/lista_cliente.html", context)
+
+@login_required
+def alterar_cliente(request):
+    cliente = Cliente.objects.all()
+    context = {
+        'cliente': cliente
+    }
+    return render(request,"crucliente/alterar_cliente.html", context)
+
+@login_required
+def deletar_cliente(request,id):
+    cliente = Cliente.objects.get(id=id)
+    cliente.excluido = True
+    cliente.save()
+    return redirect('lista_cliente')
+
 
 # Views adicionais
 
