@@ -9,13 +9,21 @@
     <ul class="list-group">
     {% for cliente in cliente %}
     
+    {% if cliente.excluido  == True %}
     
-    <li class="list-group-item">
+    {% else %}
+        <li class="list-group-item">
         {{ cliente.nomeCliente }} {{ cliente.cpf }}
         <a href="{% url 'alterar_cliente' cliente.id %}" class="btn btn-primary btn-sm">editar {{ cliente.cpf }}</a>
+        <a href="{% url 'deletar_cliente' cliente.id %}" class="btn btn-primary btn-sm">deletar {{ cliente.cpf }}</a>
     </li>
+    {% endif %}
+
     {% endfor %}
 </ul>
 </div>
+<div>
+    <a type="button" class="btn btn-success" href="{% url 'criar_cliente' %}">Criar cliente</a>
 
+</div>
 {% endblock content %}

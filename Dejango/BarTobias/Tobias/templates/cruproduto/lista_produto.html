@@ -11,11 +11,11 @@
     <table class="table">
       <thead>
         <tr>
-          <th scope="col"> Id</th>
-          <th scope="col">Nome do produto</th>
-          <th scope="col">Preço</th>
-
-          <th scope="col">Quantidade no estoque</th>
+          <th scope="col"> Id <a href="{% url 'lista_produtoia' %}">↑</a> | <a href="{% url 'lista_produtoid' %}">↓</a></th>
+          <th scope="col">Nome do produto <a href="{% url 'lista_produto' %}">↑</a> | <a href="{% url 'lista_produtod' %}">↓</a></th>
+          <th scope="col">Preço <a href="{% url 'lista_produtopa' %}">↑</a> | <a href="{% url 'lista_produtopd' %}">↓</a></th>
+          <th scope="col">Quantidade no estoque <a href="{% url 'lista_produtoqa' %}">↑</a> | <a href="{% url 'lista_produtoqd' %}">↓</a></th>
+          <th scope="col">Ultima alteração <a href="{% url 'lista_produtoda' %}">↑</a> | <a href="{% url 'lista_produtodd' %}">↓</a></th>
         </tr>
       </thead>
       
@@ -23,12 +23,14 @@
         
         {% for Produto in Produto %}
         {% if Produto.excluido == False %}
-          <tr>
-            <td>{{ Produto.id }}</td>
-            <td>{{ Produto.nomeProduto }}</td>
-            <td>R${{ Produto.precoProduto }}</td>
-            <td>{{ Produto.quantidadeProduto }}</td>
+          <tr> 
+            <td>{{ Produto.id }}  </td>
+            <td>{{ Produto.nomeProduto }} </td>
+            <td>R${{ Produto.precoProduto }} </td>
+            <td>{{ Produto.quantidadeProduto }} </td>
+            <td>{{ Produto.dataAlteracao }} </td>
             <td>
+              <a type="button" class="btn btn-primary" href="{% url 'lancar_produto' Produto.id %}">lançar</a>
               <a type="button" class="btn btn-primary" href="{% url 'alterar_produto' Produto.id %}">modificar</a>
               <!-- Botão para acionar a modal -->
             </td> 

@@ -65,7 +65,8 @@ Funcionario = get_user_model()
 class Produto(models.Model):
     nomeProduto = models.CharField(db_column='nomeProduto', max_length = 50, blank=True)
     cadastro= models.ForeignKey(Funcionario, on_delete=models.PROTECT, related_name="produtoFuncionario", default=1)
-    dataCadastro = models.DateField(auto_now_add=True, blank=True)
+    dataCadastro = models.DateTimeField(auto_now_add=True)
+    dataAlteracao = models.DateTimeField(blank=True)
     precoProduto = models.FloatField(db_column = 'precoProduto', blank= True)
     quantidadeProduto = models.BigIntegerField(db_column='quantidadeProduto', blank=True, default=1)
     status = models.BooleanField(default=True)
@@ -79,7 +80,6 @@ class Cliente(models.Model):
     nomeCliente= models.CharField(db_column='nomeCliente', max_length=50, blank=False)
     cadastro= models.ForeignKey(Funcionario, on_delete=models.PROTECT, related_name="cadastroFuncionario", default=1)
     cpf = models.CharField(db_column='cpfCliente', max_length=15, blank=True)
-    cnpj = models.CharField(db_column='cnpjCliente', max_length=50, blank=True)
     status = models.BooleanField(default=True)
     excluido = models.BooleanField(default=False)
     def __str__(self):

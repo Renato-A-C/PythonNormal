@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block title %}Alterar Produto {{Produto.id}}{% endblock title %}
+{% block active2 %}active{% endblock active2 %}{% block desativa2 %}disabled{% endblock desativa2 %}
+{% block content %}
+
+  <div class="card-body">
+    <h5>Alterar Produto {{Produto.id}}</h5>
+
+
+
+    <form method="POST">
+      {% csrf_token %}
+      
+
+      <a type="button" class="btn btn-danger" href="{% url 'lista_produto' %}">voltar</a>
+      
+
+      <div>
+        <label for="quantidadeProduto" size="50">Quantidade de Produtos:</label>
+        <input type="number" name="quantidadeProduto"  min="1" max="9223372036854775807" id="quantidadeProduto" placeholder="valor atual é: {{ Produto.quantidadeProduto }}"/>
+      </div>
+      <button type="submit" class="btn btn-success">Alterar produto</button>
+    </form>
+  </div>
+  
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">id</th>
+        <th scope="col">nome do produto</th>
+
+        <th scope="col">Preço</th>
+
+        <th scope="col">data de registro</th>
+        <th scope="col">Quantidade no Estoque</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>{{ Produto.id }}</td>
+        <td>{{ Produto.nomeProduto }}</td>
+ 
+        <td>R${{ Produto.precoProduto }}</td>
+
+        <td>{{ Produto.dataCadastro }}</td>
+        <td>{{ Produto.quantidadeProduto }}</td>
+      </tr>
+    </tbody>
+  </table>
+  
+{% endblock %}

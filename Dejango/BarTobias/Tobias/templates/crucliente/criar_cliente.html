@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block title %}Clientes{% endblock title %}
+{% block active5 %}active{% endblock active5 %}{% block desativa5 %}disabled{% endblock desativa5 %}
+{% load static %}
+{% block content %}
+
+
+<div class="label align-content-sm-center " >
+    <div class="row justify-content-center"></div>
+    <h5>Cadastrar novo cliente</h5> 
+    <form method="POST">
+    {% csrf_token %}
+    <div>
+          <label for="nomeCliente">Nome do cliente:</label>
+        <input type="text" name="nomeCliente" maxlength="30" required="nomeCliente" id="nomeCliente">
+    </div>
+    <div>
+    <label for="cadastro">Funcionario cadastrante</label>
+    <select name="cadastro" id="cadastro">           
+        {% for funcionarios in func %}
+          {% if funcionarios.id == 1 %}
+          {% else %}
+          <option value="{{ funcionarios.id }}">{{ funcionarios.nome }}</option>
+          {% endif %}
+        {% endfor %}
+    </select>
+    </div>
+        <label for="cpf">cpf/cnpj:</label>
+      <input type="number" size="15" name="cpf" step="1"  id="cpf" required="cpf">
+      
+    </div>
+    <button type="submit" class="btn btn-success">Criar cliente</button>
+    </form>
+</div>
+{% endblock content %}

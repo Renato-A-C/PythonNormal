@@ -10,7 +10,18 @@ urlpatterns = [
     
     # Crud produto
     path('cruproduto/lista_produto/', views.lista_produto, name='lista_produto'),
-    path('cruproduto/criar_produto/', views.criacaoProduto , name='criar_produto'),
+    path('cruproduto/lista_produtod/', views.lista_produtod, name='lista_produtod'),
+    path('cruproduto/lista_produtopa/', views.lista_produtopa, name='lista_produtopa'),
+    path('cruproduto/lista_produtopd/', views.lista_produtopd, name='lista_produtopd'),
+    path('cruproduto/lista_produtoda/', views.lista_produtoda, name='lista_produtoda'),
+    path('cruproduto/lista_produtodd/', views.lista_produtodd, name='lista_produtodd'),
+    path('cruproduto/lista_produtoia/', views.lista_produtoia, name='lista_produtoia'),
+    path('cruproduto/lista_produtoid/', views.lista_produtoid, name='lista_produtoid'),
+    path('cruproduto/lista_produtoqa/', views.lista_produtoqa, name='lista_produtoqa'),
+    path('cruproduto/lista_produtoqd/', views.lista_produtoqd, name='lista_produtoqd'),
+    path('cruproduto/criar_produto/', views.criar_produto , name='criar_produto'),
+    path('cruproduto/criar_produto/', views.criar_produto , name='criar_produto'),
+    path('cruproduto/lancar_produto/<int:id>', views.lancar_produto , name='lancar_produto'),
     path('cruproduto/alterar_produto/', views.alterar_produto, name='alterar_prod'),
     path('cruproduto/alterar_produto/<int:id>', views.alterar_produto, name='alterar_produto'),
     path('cruproduto/deletar_produto/', views.deletar_produto, name='deletar_produto'), 
@@ -32,7 +43,7 @@ urlpatterns = [
     path("cruvenda/criar_venda/<int:id>", views.criar_venda, name="criar_venda"),
     path("cruvenda/addp/<int:id>", views.addp, name="addp"),
     # Crud para cliente
-    
+    path("crucliente/criar_cliente", views.criar_cliente, name="criar_cliente"),
     path("crucliente/lista_cliente", views.lista_cliente, name="lista_cliente"),
     path("crucliente/alterar_cliente", views.alterar_cliente, name="alterar_cli"),
     path("crucliente/alterar_cliente/<int:id>", views.alterar_cliente, name="alterar_cliente"),

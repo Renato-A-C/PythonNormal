@@ -12,6 +12,7 @@ from .models import Produto, Venda, Funcionario, Funcionario1, Funcionario2, Ite
 from .forms import ProdutoForm,  VendaForm, FuncionarioForm, Funcionario1Form, Funcionario2Form, ClienteForm, ItemVendaForm, ItemVendaFormSet
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter, A4
+from datetime import datetime
 
 # Create your views here.
 def home(request):
@@ -24,27 +25,114 @@ def principal(request):
     return render(request,"principal.html", {'Produto': Produtos})
 
 # views para produtos
+# views para filtragem
+#  nome
 @login_required
 def lista_produto(request):
-    Produtos = Produto.objects.all()
+    Produtos = Produto.objects.all().order_by("nomeProduto")
+    context ={
+        'Produto':Produtos
+        
+    }
+    return render(request,"cruproduto/lista_produto.html", context)
+
+@login_required
+def lista_produtod(request):
+    Produtos = Produto.objects.all().order_by("-nomeProduto")
+    context ={
+        'Produto':Produtos
+        
+    }
+    return render(request,"cruproduto/lista_produto.html", context)
+
+# preco
+@login_required
+def lista_produtopa(request):
+    Produtos = Produto.objects.all().order_by("precoProduto")
     context ={
         'Produto':Produtos
         
     }
     return render(request,"cruproduto/lista_produto.html", context)
 @login_required
-def criacaoProduto(request):
+def lista_produtopd(request):
+    Produtos = Produto.objects.all().order_by("-precoProduto")
+    context ={
+        'Produto':Produtos
+        
+    }
+    return render(request,"cruproduto/lista_produto.html", context)
+
+# data
+@login_required
+def lista_produtoda(request):
+    Produtos = Produto.objects.all().order_by("dataAlteracao")
+    context ={
+        'Produto':Produtos
+        
+    }
+    return render(request,"cruproduto/lista_produto.html", context)
+
+@login_required
+def lista_produtodd(request):
+    Produtos = Produto.objects.all().order_by("-dataAlteracao")
+    context ={
+        'Produto':Produtos
+        
+    }
+    return render(request,"cruproduto/lista_produto.html", context)
+
+# quantidade
+@login_required
+def lista_produtoqa(request):
+    Produtos = Produto.objects.all().order_by("quantidadeProduto")
+    context ={
+        'Produto':Produtos
+        
+    }
+    return render(request,"cruproduto/lista_produto.html", context)
+
+@login_required
+def lista_produtoqd(request):
+    Produtos = Produto.objects.all().order_by("-quantidadeProduto")
+    context ={
+        'Produto':Produtos
+        
+    }
+    return render(request,"cruproduto/lista_produto.html", context)
+# id
+@login_required
+def lista_produtoia(request):
+    Produtos = Produto.objects.all().order_by("id")
+    context ={
+        'Produto':Produtos
+        
+    }
+    return render(request,"cruproduto/lista_produto.html", context)
+
+@login_required
+def lista_produtoid(request):
+    Produtos = Produto.objects.all().order_by("-id")
+    context ={
+        'Produto':Produtos
+        
+    }
+    return render(request,"cruproduto/lista_produto.html", context)
+
+
+
+# resto do crud produto
+
+@login_required
+def criar_produto(request):
     if request.method == "POST":
         form = ProdutoForm(request.POST)
-        
         if form.is_valid():
             print("funciounou")
             try:
                 print(f"salvo ")
                 form.save()
-                
                 return redirect('lista_produto')
-                
             except:
                 pass
     else:
@@ -67,6 +155,8 @@ def alterar_produto(request,id):
         produto.precoProduto = request.POST.get('precoProduto')
       
         produto.quantidadeProduto = request.POST.get('quantidadeProduto')
+        momento = timezone.now()
+        produto.dataAlteracao = momento
         produto.save()
         messages.success(request, "produto alterado")
         return redirect('lista_produto')
@@ -75,6 +165,24 @@ def alterar_produto(request,id):
                
     }
     return render(request,'cruproduto/alterar_produto.html',context)
+@login_required
+def lancar_produto(request,id):
+    produto = Produto.objects.get(id=id)
+    if request.method == "POST":
+        qtd = produto.quantidadeProduto
+        print(qtd)
+
+        produto.quantidadeProduto = produto.quantidadeProduto + int(request.POST.get('quantidadeProduto'))
+        momento = timezone.now()
+        produto.dataAlteracao = momento
+        produto.save()
+        print('produto lancado')
+        return redirect('lista_produto')
+    context = {
+        'Produto': produto,
+                
+    } 
+    return render(request,'cruproduto/lancar_produto.html',context)
 
 @login_required
 def deletar_produto(request,id):
@@ -247,7 +355,6 @@ def criar_venda(request, id):
         cli = Cliente.objects.get(id=cliE)
         venda1.clienteId = cli
         venda1.dataVenda = timezone.now()
-        
         venda1.save()
         print("post validado")
 
@@ -372,6 +479,55 @@ def deletar_venda(request):
 """
 Views para cliente
 """
+"""
+
+@login_required
+def criacaoProduto(request):
+    if request.method == "POST":
+        form = ProdutoForm(request.POST)
+        if form.is_valid():
+            print("funciounou")
+            try:
+                print(f"salvo ")
+                form.save()
+                return redirect('lista_produto')
+            except:
+                pass
+    else:
+        form = ProdutoForm()
+        print("não funfo")
+    context= {
+        'form':form,
+        'func':Funcionario.objects.all()
+    }
+     
+    return render(request,"cruproduto/criar_Produto.html", context)
+
+"""
+@login_required
+def criar_cliente(request):
+    
+    if request.method == "POST":
+        print("request é post")
+        cliente = ClienteForm(request.POST)
+        if cliente.is_valid():
+            print("até aqui tá funfando")
+            try:
+                print(f"salvo")
+                cliente.save()
+                return redirect("lista_cliente")
+            except:
+                pass
+    else:
+        cliente = ClienteForm()
+        print("não funfo")
+    
+    context= {
+        'cliente':cliente,
+        'func':Funcionario.objects.all()
+    }
+    return render(request,"crucliente/criar_cliente.html", context)
+
 @login_required
 def lista_cliente(request):
     cliente = Cliente.objects.all()
