@@ -12,7 +12,7 @@ from .models import Produto, Venda, Funcionario, Funcionario1, Funcionario2, Ite
 from .forms import ProdutoForm,  VendaForm, FuncionarioForm, Funcionario1Form, Funcionario2Form, ClienteForm, ItemVendaForm, ItemVendaFormSet
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter, A4
-from datetime import datetime
+
 
 # Create your views here.
 def home(request):
@@ -65,7 +65,7 @@ def lista_produtopd(request):
 
 # data
 @login_required
-def lista_produtoda(request):
+def lista_produtoda(request): 
     Produtos = Produto.objects.all().order_by("dataAlteracao")
     context ={
         'Produto':Produtos
@@ -318,26 +318,8 @@ def criar_venda2(request):
 
     return redirect(f'criar_venda/{venda1.id}')
     
-"""
-    funcionarioId = models.ForeignKey(Funcionario1, on_delete=models.PROTECT, related_name="listagemFuncionario",)
-    clienteId= models.ForeignKey(Cliente, on_delete=models.PROTECT, related_name="listagemCliente", )
-    dataVenda = models.DateField(auto_now_add=True)
-    status = models.BooleanField(default=True)
-    excluido = models.BooleanField(default=False)
-"""
-@login_required
-def addp(request,id):
-    venda1 = Venda.objects.get(id=id)
-    venda2 = ItemVenda.objects.create(venda = venda1)
-    venda2.save()
-    return redirect(request.META.get('HTTP_REFERER', '/'))
-"""
-    funcionarioId = models.ForeignKey(Funcionario1, on_delete=models.PROTECT, related_name="listagemFuncionario",)
-    clienteId= models.ForeignKey(Cliente, on_delete=models.PROTECT, related_name="listagemCliente", )
-    dataVenda = models.DateField(auto_now_add=True)
-    status = models.BooleanField(default=True)
-    excluido = models.BooleanField(default=False)
-"""
+
+
 @login_required
 def criar_venda(request, id):
     venda1 = Venda.objects.get(id=id)
@@ -387,7 +369,31 @@ def criar_venda(request, id):
     }
     return render(request, f'cruvenda/criar_venda.html', context)
 
+@login_required
+def addp(request,id):
+    venda1 = Venda.objects.get(id=id)
+    venda2 = ItemVenda.objects.create(venda = venda1)
+    venda2.save()
+    return redirect(request.META.get('HTTP_REFERER', '/'))
+
+@login_required
+def removep(request,id):
+    venda1 = ItemVenda.objects.get(id=id)
+    venda1.delete()
+    
+    return redirect(request.META.get('HTTP_REFERER', '/'))
+
+
 """
+@login_required
+def deletar_produto(request,id):
+    produto = Produto.objects.get(id=id)
+
+    produto.excluido = True
+    produto.save()
+    return redirect('lista_produto')
+
+
 @login_required
 def criar_venda(request):
     if request.method == "POST":
@@ -537,8 +543,18 @@ def lista_cliente(request):
     return render(request,"crucliente/lista_cliente.html", context)
 
 @login_required
-def alterar_cliente(request):
-    cliente = Cliente.objects.all()
+def alterar_cliente(request, id):
+    cliente = Cliente.objects.get(id=id)
+    print(f" aaaaa {cliente.id}")
+    print(f" aaaaa {cliente.nomeCliente}")
+    if request.method == "POST":
+        cliente.nomeCliente = request.POST.get('nomeCliente')
+        cliente.cpf = request.POST.get('cpf')
+        cliente.save()
+        print("Funciounou krai")
+        return redirect(lista_cliente)
+    else:
+        cliente = ClienteForm()
     context = {
         'cliente': cliente
     }

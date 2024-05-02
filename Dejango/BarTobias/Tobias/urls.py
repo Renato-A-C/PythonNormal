@@ -19,6 +19,7 @@ urlpatterns = [
     path('cruproduto/lista_produtoid/', views.lista_produtoid, name='lista_produtoid'),
     path('cruproduto/lista_produtoqa/', views.lista_produtoqa, name='lista_produtoqa'),
     path('cruproduto/lista_produtoqd/', views.lista_produtoqd, name='lista_produtoqd'),
+    
     path('cruproduto/criar_produto/', views.criar_produto , name='criar_produto'),
     path('cruproduto/criar_produto/', views.criar_produto , name='criar_produto'),
     path('cruproduto/lancar_produto/<int:id>', views.lancar_produto , name='lancar_produto'),
@@ -42,6 +43,7 @@ urlpatterns = [
     path("cruvenda/criar_venda2", views.criar_venda2, name="criar_venda2"),
     path("cruvenda/criar_venda/<int:id>", views.criar_venda, name="criar_venda"),
     path("cruvenda/addp/<int:id>", views.addp, name="addp"),
+    path("cruvenda/removep/<int:id>", views.removep, name="removep"),
     # Crud para cliente
     path("crucliente/criar_cliente", views.criar_cliente, name="criar_cliente"),
     path("crucliente/lista_cliente", views.lista_cliente, name="lista_cliente"),

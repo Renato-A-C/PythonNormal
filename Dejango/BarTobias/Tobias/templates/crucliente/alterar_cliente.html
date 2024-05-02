@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}Clientes{% endblock title %}
+{% block active5 %}active{% endblock active5 %}{% block desativa5 %}disabled{% endblock desativa5 %}
+{% load static %}
+{% block content %}
+
+<form method="post">
+    {% csrf_token %}
+    <div class="form-group">
+        <label for="id_campo1"><H1>NOME DO CLIENTE</H1>:</label>
+        {{ cliente.nomeCliente }}
+    </div>
+    <div class="form-group">
+        <label for="id_campo1"><h1>CPF DO CLIENTE</h1></label>
+        {{ cliente.cpf }}
+    </div>
+    <button type="submit" class="btn btn-primary">Salvar</button>
+</form>
+<h1>a</h1>
+<h2>a</h2>
+<h3>a</h3>
+<h4>a</h4>
+<h5>a</h5>
+<h6>a</h6>
+{% endblock content %}
