@@ -8,34 +8,34 @@
     
     <!-- Campo para selecionar o cliente -->
     <label for="clienteId">Cliente:</label>
-    <select name="clienteId" id="clienteId">
+    <select class="form-control select2" name="clienteId" id="clienteId">
       {% for cliente in Cliente %}
         <option value="{{ cliente.id }}">{{ cliente.id }}</option>
       {% endfor %}
     </select>
       <!-- Campo para selecionar o Funcionario -->
         <label for="funcionarioId">Funcionario:</label>
-        <select name="funcionarioId" id="funcionarioId">
+        <select class="form-control select2" name="funcionarioId" id="funcionarioId">
           {% for funcionario in Funcionario %}
             <option value="{{ funcionario.id }}">{{ funcionario.nomeFuncionario }}</option>
           {% endfor %}
         </select>
         
     <!-- Campo para adicionar produtos -->
-  
+   <br><br>
     
     {% for lproduto in LProduto %}
-    <label for="produtoId_{{lproduto.id}}">Produto {{lproduto.id}}:</label>
+    <label for="produtoId_{{lproduto.id}}"><h4>Produto {{lproduto.id}}:</h4></label>
     <br>
-    <select name="produtoId_{{lproduto.id}}" id="produtoId_{{lproduto.id}}">      
+    <select class="form-control select2" name="produtoId_{{lproduto.id}}" id="produtoId_{{lproduto.id}}">      
         {% for produto in Produto %}
         <option value="{{ produto.id }}" {% if itemvenda.produto.id == produto.id %} selected {% endif %}>{{produto.id}} | {{ produto.nomeProduto }}</option>
         {% endfor %}
     </select>
-    
-    <label for="quantidade_{{lproduto.id}}">Quantidade:</label>
+    <br><br>
+    <label for="quantidade_{{lproduto.id}}"><h4>Quantidade:</h4></label>
     <input type="number" name="quantidade_{{lproduto.id}}" id="quantidade_{{lproduto.id}}" min="1">
-
+    <br><br>
     <div>
       <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#a{{ lproduto.id }}">Excluir</button>
       <!-- A modal -->
@@ -61,7 +61,7 @@
         </div>
       </div>
     </div>
-        
+        <br><br>
     
     {% endfor %}
     <br><br>
@@ -74,4 +74,9 @@
 
     <button type="submit">finalizar</button>
   </form>
+<script>
+    $(document).ready(function() {
+        $('.select2').select2();
+    });
+</script>
 {% endblock content %}

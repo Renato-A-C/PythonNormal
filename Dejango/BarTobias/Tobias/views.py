@@ -288,7 +288,7 @@ def deletar_funcionario(request,id):
 """
 @login_required
 def venda(request):
-    venda = Venda.objects.all()
+    venda = Venda.objects.all().order_by('-dataVenda')
     
     context={
         'Venda': venda
@@ -296,15 +296,6 @@ def venda(request):
     return render(request,"cruvenda/venda.html", context)
 
 
-@login_required
-def lista_venda(request):
-    venda = Venda.objects.all()
-    func = Funcionario.objects.all()
-    context={
-        'venda': venda,
-        'funcionario':func
-    }
-    return render(request,"cruvenda/lista_venda.html",context)
 
 @login_required
 def criar_venda2(request):
@@ -356,6 +347,16 @@ def criar_venda(request, id):
                 itemvenda.produtoId = produto1
                 itemvenda.save()
                 print('funcionou')
+            
+        for index in ItemVenda.objects.filter(venda= venda1):
+            prod = Produto.objects.get(id = index.produtoId.id)
+            qtd = prod.quantidadeProduto
+            prod.quantidadeProduto = qtd - index.quantidade
+            momento = timezone.now()
+            prod.dataAlteracao = momento
+            prod.save()
+            print(f"{qtd}, {index.quantidade}")
+
         print("aaaaaa")
         return redirect('venda')
         

@@ -89,7 +89,7 @@ class Venda(models.Model):
  
     funcionarioId = models.ForeignKey(Funcionario1, on_delete=models.PROTECT, related_name="listagemFuncionario",)
     clienteId= models.ForeignKey(Cliente, on_delete=models.PROTECT, related_name="listagemCliente", )
-    dataVenda = models.DateField(auto_now_add=True)
+    dataVenda = models.DateTimeField(auto_now_add=True)
     status = models.BooleanField(default=True)
     excluido = models.BooleanField(default=False)
     def __str__(self):

@@ -4,5 +4,19 @@
 {% load static %}
 {% block content %}
 <a type="button" class="btn btn-success" href="{% url 'criar_venda2' %}">Criar nova venda</a>
-<a type="button" class="btn btn-success" href="{% url 'lista_venda' %}">listar vendas</a>
+
+
+<div class="container mt-5">
+    <h1>Listar Vendas</h1>
+    <ul class="list-group">
+    {% for venda in Venda %}
+    
+    
+    <li class="list-group-item">
+        Id  {{ venda.id }} || feita por {{ venda.funcionarioId }} || data {{venda.dataVenda}}
+
+    </li>
+    {% endfor %}
+</ul>
+</div>
 {% endblock content %}
