@@ -596,7 +596,7 @@ def deletar_cliente(request,id):
 
 
 # Views adicionais
-
+"""
 def generate_danfe_pdf(request, venda_id):
     # Recupere a venda do banco de dados
     venda = Venda.objects.get(pk=venda_id)
@@ -698,7 +698,7 @@ class relatorio_pdf(View):
         c.save()
 
         return response
-
+""" 
 class GerarPDF(View):
     def get(self, request, *args, **kwargs):
         # Inicialize o objeto Canvas
