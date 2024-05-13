@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Vamos vender{% endblock title %}
+{% block active3 %}active{% endblock active3 %}{% block desativa3 %}disabled{% endblock desativa3 %}
+{% load static %}
+{% block content %}
+<div class="container mt-5">
+    <h1>Listar Vendas</h1>
+    <div>
+    Id  {{ Venda.id }} |<br>| feita por {{ Venda.funcionarioId }} |<br>| data {{Venda.dataVenda}}  
+    </div>
+    <div>
+        <h2>produtos vendidos</h2>
+        {% for itens in Item %}
+        <li class="list-group-item">
+        {{ itens.produtoId.nomeProduto }} || {{itens.quantidade}} || {{itens.precoItem}}
+            
+        </li>
+        {% endfor %}
+    </div>
+    
+   
+</ul>
+</div>
+{% endblock content %}

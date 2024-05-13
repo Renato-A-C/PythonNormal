@@ -92,6 +92,7 @@ class Venda(models.Model):
     dataVenda = models.DateTimeField(auto_now_add=True)
     status = models.BooleanField(default=True)
     excluido = models.BooleanField(default=False)
+    precoTotal= models.FloatField()
     def __str__(self):
         return (f"{self.id} do {self.funcionarioId.nomeFuncionario}")
  
@@ -99,7 +100,8 @@ class ItemVenda(models.Model):
     venda = models.ForeignKey(Venda, on_delete=models.CASCADE)
     produtoId = models.ForeignKey(Produto, on_delete=models.PROTECT, related_name="listagemProduto")
     quantidade = models.IntegerField()
+    precoItem= models.FloatField()
     def __str__(self):
-        return (f"{self.venda.id} ")
+        return (f"{self.venda.id}, {self.produtoId}")
 
     

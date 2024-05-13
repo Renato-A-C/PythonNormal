@@ -1,0 +1,31 @@
+cd "local"
+dir
+mkdir "novoLocal"
+del "arquivo"
+copy "arquivo" "localNovo"
+ren "arquivo" "arquivoRenomeado"
+ipconfig
+ping "ip ou nome"
+tasklist
+taskkill "tipo e id do processo"
+systeminfo
+netstat
+sfc /scannow "precisa de adm"
+shutdown /s /t 84600
+chkdsk
+format "disco"
+xcopy "arquivo" "localNovo"
+find "criterio"
+attrib "key"
+assoc "tipoArquivo=aplicativo"
+taskmgr
+regedit
+ver
+cls
+type
+tracert
+pathping
+driverquery
+help
+cipher
+exit

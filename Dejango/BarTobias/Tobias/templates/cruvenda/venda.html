@@ -13,7 +13,7 @@
     
     
     <li class="list-group-item">
-        Id  {{ venda.id }} || feita por {{ venda.funcionarioId }} || data {{venda.dataVenda}}
+        Id  {{ venda.id }} || feita por {{ venda.funcionarioId }} || data {{venda.dataVenda}} <a type="button" class="btn btn-primary" href="{% url 'exib_venda' venda.id %}">visualizar</a>
 
     </li>
     {% endfor %}

@@ -13,6 +13,9 @@ from .forms import ProdutoForm,  VendaForm, FuncionarioForm, Funcionario1Form, F
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter, A4
 
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Table, Spacer
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib import colors
 
 # Create your views here.
 def home(request):
@@ -295,8 +298,18 @@ def venda(request):
     }
     return render(request,"cruvenda/venda.html", context)
 
+@login_required
+def exib_venda(request,id):
+    
+    venda = Venda.objects.get(id=id)
+    item = ItemVenda.objects.filter(venda=id).order_by('produtoId')
+    produto = Produto.objects.all()
 
-
+    context={
+        'Venda':venda,
+        'Item':item
+    } 
+    return render(request,"cruvenda/exib_venda.html",context)
 @login_required
 def criar_venda2(request):
     
@@ -337,17 +350,30 @@ def criar_venda(request, id):
                 itemvenda = ItemVenda.objects.get(id=itemvenda_id)
                 itemvenda.quantidade = value
                 itemvenda.save()
-                print(f"quantidade feita {value}")
+                print(f"quantidade alocada foi {value}")
             elif key.startswith('produtoId_'):
                 itemvenda_id = int(key.split('_')[1])
                 itemvenda = ItemVenda.objects.get(id=itemvenda_id)
-                print(f"valor {value}")
+                
                 produto_id = int(value)  # Supondo que o valor enviado seja o ID do produto
                 produto1 = Produto.objects.get(id=produto_id)
                 itemvenda.produtoId = produto1
                 itemvenda.save()
-                print('funcionou')
-            
+                print('item corrigido')
+        pTot=[]
+        cont=0
+        pTotal=0
+        preco = 0
+        for i in venda2:
+            p = i.quantidade * i.produtoId.precoProduto
+            i.precoItem = p
+            i.save()
+            pTot.append(p)
+            pTotal += p
+            print(f"o preco armazenado aqui é {pTotal}")
+            cont =+1
+        venda1.precoTotal = pTotal
+        venda1.save()
         for index in ItemVenda.objects.filter(venda= venda1):
             prod = Produto.objects.get(id = index.produtoId.id)
             qtd = prod.quantidadeProduto
@@ -357,7 +383,7 @@ def criar_venda(request, id):
             prod.save()
             print(f"{qtd}, {index.quantidade}")
 
-        print("aaaaaa")
+        print("Aqui validou redirect")
         return redirect('venda')
         
     context = {
@@ -571,11 +597,48 @@ def deletar_cliente(request,id):
 
 # Views adicionais
 
+def generate_danfe_pdf(request, venda_id):
+    # Recupere a venda do banco de dados
+    venda = Venda.objects.get(pk=venda_id)
+
+    # Informações da venda
+    venda_info = {
+        "numero": venda.numero,
+        "data": venda.data.strftime("%d/%m/%Y"),
+        "cliente": venda.cliente.nome,
+        "total": f"R$ {venda.total}"
+    }
+
+    # Itens da venda
+    itens_venda = []
+    for item in venda.itens_venda.all():
+        item_info = {
+            "descricao": item.produto.nome,
+            "quantidade": item.quantidade,
+            "valor_unitario": f"R$ {item.valor_unitario}",
+            "valor_total": f"R$ {item.valor_total}"
+        }
+        itens_venda.append(item_info)
+
+    # Renderize o template da DANFE
+    danfe_html = render_to_string('danfe_template.html', {'venda_info': venda_info, 'itens_venda': itens_venda})
+
+    # Crie o documento PDF
+    response = HttpResponse(content_type='application/pdf')
+    pdf_file = SimpleDocTemplate(response, pagesize=letter)
+    pdf_elements = []
+
+    # Adicione o conteúdo HTML renderizado ao PDF
+    pdf_elements.append(Paragraph(danfe_html, style=styles['Normal']))
+
+    # Construa o PDF
+    pdf_file.build(pdf_elements)
+    
+    return response
 
 
 
-
-
+"""
 class relatorio_pdf(View):
     def get(self, request, *args, **kwargs):
         # Inicialize o objeto Canvas
@@ -635,8 +698,7 @@ class relatorio_pdf(View):
         c.save()
 
         return response
-    
-"""
+
 class GerarPDF(View):
     def get(self, request, *args, **kwargs):
         # Inicialize o objeto Canvas
