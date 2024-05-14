@@ -13,12 +13,19 @@
         display: inline-block;
       }
       .fundo {
-        background-color: gray;
+        background-color: white;
       }
       .customSelect{
         max-width: 300px;
         
       }
+      h2{
+        text-align:center;
+      }
+      {% block divEsp %}
+      
+      {% endblock divEsp %}
+
     </style>
     <!-- CSS only -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous" />
@@ -37,7 +44,7 @@
   <body class="fundo">
     <nav class="navbar navbar-expand-lg navbar-dark justify-content-between" style="background-color: black;">
       <a class="navbar-brand" href="#">
-        <img src="{% static 'logo.png' %}" width="30" height="30" alt="mlk da net ruimkkk">
+        <img src="{% static 'logo.png' %}" width="40" height="35" alt="mlk da net ruimkkk">
       </a>
 
       <div class="collapse navbar-collapse" id="navbarNav">

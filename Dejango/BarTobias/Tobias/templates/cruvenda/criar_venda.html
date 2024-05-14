@@ -1,41 +1,68 @@
 {% extends "base.html" %}
-{% block title %}Vamos vender{% endblock title %}
-{% block active3 %}active{% endblock active3 %}{% block desativa3 %}disabled{% endblock desativa3 %}
 {% load static %}
+{% block title %}Vamos vender{% endblock title %}
+{% block divEsp %}
+.especial{
+  display: inline-block;
+  max-width: 300px;
+  
+}
+h2{
+  text-align: center;
+  font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+  
+}
+
+{% endblock divEsp %}
+{% block active3 %}active{% endblock active3 %}{% block desativa3 %}disabled{% endblock desativa3 %}
+
 {% block content %}
     <form method="POST">
         {% csrf_token %}
     
     <!-- Campo para selecionar o cliente -->
-    <label for="clienteId">Cliente:</label>
-    <select class="form-control select2" name="clienteId" id="clienteId">
-      {% for cliente in Cliente %}
-        <option value="{{ cliente.id }}">{{ cliente.id }}</option>
-      {% endfor %}
-    </select>
-      <!-- Campo para selecionar o Funcionario -->
+    <h2>VENDAS</h2>
+
+    <hr>
+    <table>
+      <tr>
+        <td class="especial">
         <label for="funcionarioId">Funcionario:</label>
         <select class="form-control select2" name="funcionarioId" id="funcionarioId">
-          {% for funcionario in Funcionario %}
-            <option value="{{ funcionario.id }}">{{ funcionario.nomeFuncionario }}</option>
-          {% endfor %}
+        {% for funcionario in Funcionario %}
+        <option value="{{ funcionario.id }}">{{ funcionario.nomeFuncionario }}</option>
+        {% endfor %}
         </select>
-        
+      </td>
+      <td class="especial">
+        <label for="clienteId">Cliente:</label>
+        <select class="form-control select2" name="clienteId" id="clienteId">
+        {% for cliente in Cliente %}
+          <option value="{{ cliente.id }}">{{ cliente.nomeCliente}}</option>
+        {% endfor %}
+      </td>
+      </tr>
+    </table>
+
+      <!-- Campo para selecionar o Funcionario -->
+ 
+     
+
     <!-- Campo para adicionar produtos -->
    <br><br>
     
     {% for lproduto in LProduto %}
     <label for="produtoId_{{lproduto.id}}"><h4>Produto {{lproduto.id}}:</h4></label>
     <br>
-    <select class="form-control select2" name="produtoId_{{lproduto.id}}" id="produtoId_{{lproduto.id}}">      
+    <select class="form-control select2" name="produtoId_{{lproduto.id}}" id="produtoId_{{lproduto.id}}" style="max-width: 300px;">      
         {% for produto in Produto %}
-        <option value="{{ produto.id }}" {% if itemvenda.produto.id == produto.id %} selected {% endif %}>{{produto.id}} | {{ produto.nomeProduto }}</option>
+        <option value="{{ produto.id }}" {% if itemvenda.produto.id == produto.id %} selected {% endif %}>{{produto.id}} | {{ produto.nomeProduto }} || {{produto.precoProduto}} || {{produto.quantidadeProduto}}</option>
         {% endfor %}
     </select>
-    <br><br>
+    <br>
     <label for="quantidade_{{lproduto.id}}"><h4>Quantidade:</h4></label>
-    <input type="number" name="quantidade_{{lproduto.id}}" id="quantidade_{{lproduto.id}}" min="1">
-    <br><br>
+    <input type="number" name="quantidade_{{lproduto.id}}" id="quantidade_{{lproduto.id}}" min="1" required>
+    
     <div>
       <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#a{{ lproduto.id }}">Excluir</button>
       <!-- A modal -->
@@ -71,7 +98,7 @@
     <!-- Botão para adicionar o item ao pedido -->
     <br>
     <a type="button" class="btn btn-success" href="{% url 'addp' venda.id %}">adicionar produto</a>
-
+    <button type="submit" href="{% url 'addp' venda.id %}">adicionar v2</button>
     <button type="submit">finalizar</button>
   </form>
 <script>

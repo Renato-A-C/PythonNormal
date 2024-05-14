@@ -34,8 +34,8 @@ def principal(request):
 def lista_produto(request):
     Produtos = Produto.objects.all().order_by("nomeProduto")
     context ={
-        'Produto':Produtos
-        
+        'Produto':Produtos,
+        'func':Funcionario.objects.all(),
     }
     return render(request,"cruproduto/lista_produto.html", context)
 
@@ -43,8 +43,8 @@ def lista_produto(request):
 def lista_produtod(request):
     Produtos = Produto.objects.all().order_by("-nomeProduto")
     context ={
-        'Produto':Produtos
-        
+        'Produto':Produtos,
+        'func':Funcionario.objects.all(),
     }
     return render(request,"cruproduto/lista_produto.html", context)
 
@@ -53,16 +53,16 @@ def lista_produtod(request):
 def lista_produtopa(request):
     Produtos = Produto.objects.all().order_by("precoProduto")
     context ={
-        'Produto':Produtos
-        
+        'Produto':Produtos,
+        'func':Funcionario.objects.all(),
     }
     return render(request,"cruproduto/lista_produto.html", context)
 @login_required
 def lista_produtopd(request):
     Produtos = Produto.objects.all().order_by("-precoProduto")
     context ={
-        'Produto':Produtos
-        
+        'Produto':Produtos,
+        'func':Funcionario.objects.all(),
     }
     return render(request,"cruproduto/lista_produto.html", context)
 
@@ -71,8 +71,8 @@ def lista_produtopd(request):
 def lista_produtoda(request): 
     Produtos = Produto.objects.all().order_by("dataAlteracao")
     context ={
-        'Produto':Produtos
-        
+        'Produto':Produtos,
+        'func':Funcionario.objects.all(),
     }
     return render(request,"cruproduto/lista_produto.html", context)
 
@@ -80,8 +80,8 @@ def lista_produtoda(request):
 def lista_produtodd(request):
     Produtos = Produto.objects.all().order_by("-dataAlteracao")
     context ={
-        'Produto':Produtos
-        
+        'Produto':Produtos,
+        'func':Funcionario.objects.all(),
     }
     return render(request,"cruproduto/lista_produto.html", context)
 
@@ -90,8 +90,8 @@ def lista_produtodd(request):
 def lista_produtoqa(request):
     Produtos = Produto.objects.all().order_by("quantidadeProduto")
     context ={
-        'Produto':Produtos
-        
+        'Produto':Produtos,
+        'func':Funcionario.objects.all(),
     }
     return render(request,"cruproduto/lista_produto.html", context)
 
@@ -99,8 +99,8 @@ def lista_produtoqa(request):
 def lista_produtoqd(request):
     Produtos = Produto.objects.all().order_by("-quantidadeProduto")
     context ={
-        'Produto':Produtos
-        
+        'Produto':Produtos,
+        'func':Funcionario.objects.all(),
     }
     return render(request,"cruproduto/lista_produto.html", context)
 # id
@@ -108,8 +108,8 @@ def lista_produtoqd(request):
 def lista_produtoia(request):
     Produtos = Produto.objects.all().order_by("id")
     context ={
-        'Produto':Produtos
-        
+        'Produto':Produtos,
+        'func':Funcionario.objects.all(),
     }
     return render(request,"cruproduto/lista_produto.html", context)
 
@@ -117,8 +117,8 @@ def lista_produtoia(request):
 def lista_produtoid(request):
     Produtos = Produto.objects.all().order_by("-id")
     context ={
-        'Produto':Produtos
-        
+        'Produto':Produtos,
+        'func':Funcionario.objects.all(),
     }
     return render(request,"cruproduto/lista_produto.html", context)
 
@@ -143,7 +143,8 @@ def criar_produto(request):
         print("não funfo")
     context= {
         'form':form,
-        'func':Funcionario.objects.all()
+        'func':Funcionario.objects.all(),
+        'usuario':Funcionario.objects.get(id=request.user.id)
     }
      
     return render(request,"cruproduto/criar_Produto.html", context)
@@ -158,8 +159,8 @@ def alterar_produto(request,id):
         produto.precoProduto = request.POST.get('precoProduto')
       
         produto.quantidadeProduto = request.POST.get('quantidadeProduto')
-        momento = timezone.now()
-        produto.dataAlteracao = momento
+        #momento = timezone.now()
+        #produto.dataAlteracao = momento
         produto.save()
         messages.success(request, "produto alterado")
         return redirect('lista_produto')
@@ -340,7 +341,7 @@ def criar_venda(request, id):
         cliE = request.POST.get('clienteId')
         cli = Cliente.objects.get(id=cliE)
         venda1.clienteId = cli
-        venda1.dataVenda = timezone.now()
+        #venda1.dataVenda = timezone.now()
         venda1.save()
         print("post validado")
 

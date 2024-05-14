@@ -5,7 +5,8 @@ from .views import relatorio_pdf
 
 urlpatterns = [
     # Janelas principais
-    path("", views.home, name="home"),
+    path("", views.venda, name="base"),
+    path("home", views.home, name="home"),
     path("principal", views.principal, name="principal"),
     
     # Crud produto
