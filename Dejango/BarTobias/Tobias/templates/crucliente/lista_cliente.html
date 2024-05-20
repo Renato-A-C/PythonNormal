@@ -3,25 +3,29 @@
 {% block active5 %}active{% endblock active5 %}{% block desativa5 %}disabled{% endblock desativa5 %}
 {% load static %}
 {% block content %}
-
+<h1 style="text-align: center;">Listar Clientes</h1>
 <div class="container mt-5">
-    <h1>Listar Clientes</h1>
-    <ul class="list-group">
-    {% for cliente in cliente %}
     
-    {% if cliente.excluido  == True %}
-    
-    {% else %}
-        <li class="list-group-item">
-        {{ cliente.nomeCliente }} {{ cliente.cpf }}
-        <a href="{% url 'alterar_cliente' cliente.id %}" class="btn btn-primary btn-sm">editar {{ cliente.cpf }}</a>
-        <a href="{% url 'deletar_cliente' cliente.id %}" class="btn btn-primary btn-sm">deletar {{ cliente.cpf }}</a>
-    </li>
-    {% endif %}
+    <table class="table table-sm table-hover table-dark ">
+        <tr>
+            <th>Nome do Funcionario</th>
+            <th>Sobrenome</th>
+            <th></th>
+        </tr>
+        {% for funcionario in cliente %}
+        <tr>
+            <td>{{funcionario.id}} | {{ funcionario.nomeCliente }}</td>
+            <td>{{ funcionario.cpf }}</td>
+            <td> <a href="{% url 'alterar_cliente' funcionario.id %}" class="btn btn-primary btn-sm">Editar</a></td>
+        </tr>
 
-    {% endfor %}
-    <a type="button" class="btn btn-success" href="{% url 'criar_cliente' %}">Criar cliente</a>
-</ul>
+        {% endfor %}
+        <tr>
+            <td><a href="{% url 'criar_cliente' %}" class="btn btn-primary btn-sm">Cadastrar novo</a></td>
+            <td></td>
+            <td></td>
+        </tr>
+    </table>
 </div>
 <div>
     

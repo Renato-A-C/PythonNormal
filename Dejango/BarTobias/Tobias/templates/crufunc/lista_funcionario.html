@@ -3,25 +3,95 @@
 {% block active4 %}active{% endblock active4 %}{% block desativa4 %}disabled{% endblock desativa4 %}
 {% load static %}
 {% block content %}
+<h1 style="text-align: center;">Listar Usuários</h1>
+<div class="container mt-5">
 
-    <div class="container mt-5">
-        <h1>Listar Usuários</h1>
-        <ul class="list-group">
-        {% for funcionario in Funcionario %}
-        {% if funcionario.id == 1 %}
-        {% else %}
-        <li class="list-group-item">
-        {{ funcionario.nome }} {{ funcionario.sobreNome }}
-        <a href="{% url 'alterar_funcionario' funcionario.id %}" class="btn btn-primary btn-sm">Editar</a>
 
-            
-           
-        </li>
-        {% endif %}
+    <table class="table table-sm table-hover table-dark ">
+        <tr>
+            <th>Nome do Funcionario</th>
+            <th>Sobrenome</th>
+            <th></th>
+        </tr>
         
+        {% for funcionario in funcionario %}
+
         
+        <tr>
+          
+            <td>{{ funcionario.nome }}  </td>
+            <td>{{ funcionario.sobreNome }}</td>
+            <td><a type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#b{{ funcionario.id }}">Alterar</a>
+                <div>
+                  <div class="modal fade" id="b{{ funcionario.id }}" tabindex="-1" role="dialog">
+                    <form action="{% url 'alterar_funcionario' funcionario.id %}" method="POST">
+                      {% csrf_token %} 
+                      <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h4 class="modal-title text-danger">Alterar {{funcionario.nome}} {{ funcionario.sobreNome }}</h4>
+                          </div>
+                          <div class="modal-body text-dark">
+                            <table class="text-dark">
+                              <tr>
+                                <td class="especial" style="width: 310px;">
+                                  <h6 class="text-dark">Nome:</h6> 
+                                  <input type="text"  placeholder="{{funcionario.nome}}" value="{{funcionario.nome}}" class="form-control form-control-sm" name="nome" maxlength="30" required id="nome" autofocus style="width:300px;"> 
+                                </td>
+                                <td class="especial"style="width: 140px;" >
+                                 <h6 class="text-dark">Sobrenome</h6> 
+                          
+                                <input type="text" value="{{ funcionario.sobreNome }}" placeholder="{{ funcionario.sobreNome }}" class="form-control form-control-sm" size="50" name="sobreNome" step="0.01" required id="sobreNome" style="width: 130px;">
+                                </td>
+
+                              </tr>
+                              <tr>
+                                <td class="especial"style="width: 160px;">
+                                    <h6 class="text-dark">Cpf</h6> 
+                                    <input type="number" value="{{ funcionario.funcionario1.cpfFuncionario }}" class="form-control form-control-sm" name="cpfFuncionario"   id="cpfFuncionario"  required style="width: 150px;">
+                                </td>
+                                <td class="especial"style="width: 160px;">
+                                    <h6 class="text-dark">Endereco</h6> 
+                                    <input type="text" value="{{ funcionario.funcionario1.enderecoFuncionario }}" class="form-control form-control-sm" name="enderecoFuncionario"   id="enderecoFuncionario"  required style="width: 150px;">
+                                </td>
+                                
+                                
+                               
+                              </tr>
+                              <tr>
+                                <td>
+                                  <h6 class="text-dark">Descrição adicional</h6>
+                                  {% for desc in desc %}
+                                  {% if desc.funcionarioId.id == funcionario.id %}
+                                  
+                                  <input type="text" value="{{ desc.descricao }}" class="form-control form-control-sm" name="descricao"   id="descricao"  required style="width: 150px;">
+
+                                  {% endif %}
+                                  {% endfor %}
+                                  </td>
+                                  <td></td>
+                                </tr>
+                            </table>
+                          </div>
+                          
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                   
+                            <button type="submit" class="btn btn-primary ">Alterar</button>
+                          </div>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+        </tr>
+
         {% endfor %}
-        <a href="{% url 'cad_funcionario' %}" class="btn btn-primary btn-sm">Cadastrar novo</a>
-    </ul>
+        <tr>
+            <td><a href="{% url 'cad_funcionario' %}" class="btn btn-primary btn-sm">Cadastrar novo</a></td>
+            <td></td>
+            <td></td>
+        </tr>
+    </table>
 </div>
 {% endblock content %}

@@ -45,6 +45,7 @@ urlpatterns = [
     path("cruvenda/criar_venda2", views.criar_venda2, name="criar_venda2"),
     path("cruvenda/criar_venda/<int:id>", views.criar_venda, name="criar_venda"),
     path("cruvenda/addp/<int:id>", views.addp, name="addp"),
+    path("cruvenda/addpV2/<int:id>", views.addpV2, name="addpV2"),
     path("cruvenda/removep/<int:id>", views.removep, name="removep"),
     # Crud para cliente
     path("crucliente/criar_cliente", views.criar_cliente, name="criar_cliente"),

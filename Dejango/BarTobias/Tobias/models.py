@@ -43,7 +43,7 @@ class Funcionario(AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = ['nome', 'sobreNome']
 
     def __str__(self):
-        return self.email
+        return str(self.nome)
     
 
 class Funcionario1(models.Model):
@@ -56,7 +56,7 @@ class Funcionario1(models.Model):
         return str(self.nomeFuncionario)
 
 class Funcionario2(models.Model):
-    funcionario = models.ForeignKey(Funcionario1,on_delete=models.CASCADE)
+    funcionarioId = models.ForeignKey(Funcionario, on_delete=models.PROTECT, related_name="idFuncionario",)
     descricao = models.CharField(max_length=50)
     def __str__(self):
         return str(self.funcionario)    

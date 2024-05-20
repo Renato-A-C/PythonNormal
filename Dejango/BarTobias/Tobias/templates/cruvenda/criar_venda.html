@@ -21,7 +21,7 @@ h2{
         {% csrf_token %}
     
     <!-- Campo para selecionar o cliente -->
-    <h2>VENDAS</h2>
+    <h2 >VENDAS</h2>
 
     <hr>
     <table>
@@ -29,9 +29,14 @@ h2{
         <td class="especial">
         <label for="funcionarioId">Funcionario:</label>
         <select class="form-control select2" name="funcionarioId" id="funcionarioId">
-        {% for funcionario in Funcionario %}
-        <option value="{{ funcionario.id }}">{{ funcionario.nomeFuncionario }}</option>
-        {% endfor %}
+
+        {% for funcionarios in Funcionario %}
+            {% if funcionarios.autor.id == user.id %}
+            <option selected value="{{ funcionarios.id }}">{{ funcionarios.nomeFuncionario }}</option>
+            {% else %}
+            <option value="{{ funcionarios.id }}">{{ funcionarios.nomeFuncionario }}</option>
+            {% endif %}
+            {% endfor %}
         </select>
       </td>
       <td class="especial">
@@ -50,57 +55,71 @@ h2{
 
     <!-- Campo para adicionar produtos -->
    <br><br>
-    
-    {% for lproduto in LProduto %}
-    <label for="produtoId_{{lproduto.id}}"><h4>Produto {{lproduto.id}}:</h4></label>
-    <br>
-    <select class="form-control select2" name="produtoId_{{lproduto.id}}" id="produtoId_{{lproduto.id}}" style="max-width: 300px;">      
+  <div class="container">
+  <table class="table table-sm table-hover table-dark ">
+  <tr>
+    <td>Produto</td>
+    <td>Quantidade</td>
+    <td></td>
+  </tr>
+  {% for lproduto in LProduto %}
+  <tr>
+  
+    <td>
+      <select class="form-control select2" name="produtoId_{{lproduto.id}}" id="produtoId_{{lproduto.id}}" style="max-width: 300px;">      
         {% for produto in Produto %}
-        <option value="{{ produto.id }}" {% if itemvenda.produto.id == produto.id %} selected {% endif %}>{{produto.id}} | {{ produto.nomeProduto }} || {{produto.precoProduto}} || {{produto.quantidadeProduto}}</option>
+        {% if lproduto.produtoId.id == produto.id %}
+        <option  selected value="{{ produto.id }}" >{{produto.id}} | {{ produto.nomeProduto }} || {{produto.precoProduto}} || {{produto.quantidadeProduto}}</option>
+        {% else %}
+        <option value="{{ produto.id }}" >{{produto.id}} | {{ produto.nomeProduto }} || {{produto.precoProduto}} || {{produto.quantidadeProduto}}</option>
+        {% endif %}
         {% endfor %}
     </select>
-    <br>
-    <label for="quantidade_{{lproduto.id}}"><h4>Quantidade:</h4></label>
-    <input type="number" name="quantidade_{{lproduto.id}}" id="quantidade_{{lproduto.id}}" min="1" required>
-    
-    <div>
-      <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#a{{ lproduto.id }}">Excluir</button>
-      <!-- A modal -->
-      
-        <div class="modal" id="a{{ lproduto.id }}">
-          
-        <div class="modal-dialog">
-          
-          <div class="modal-content">
+    </td>
+    <td>
+      <input type="number" name="quantidade_{{lproduto.id}}" class="form-control form-control-sm" id="quantidade_{{lproduto.id}}" min="1" value="{{lproduto.quantidade}}" required="quantidade_{{lproduto.id}}" style="width: 300px;">
+    </td>
+    <td>
+      <div>
+        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#a{{ lproduto.id }}">Excluir</button>
+        <!-- A modal -->
+        
+          <div class="modal" id="a{{ lproduto.id }}"> 
+          <div class="modal-dialog">
             
-            <div class="modal-header">
-              <h4 class="modal-title">Tem certeza? </h4>
-              <button type="button" class="close" data-dismiss="modal">&times;</button>
-            </div>
-            <div class="modal-body">Deseja excluir? o {{ lproduto.Id }}?
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
-             
-              <a type="button" class="btn btn-danger" href="{% url 'removep' lproduto.id %}">Deletar</a>
+            <div class="modal-content">
+              
+              <div class="modal-header">
+                <h4 class="modal-title">Tem certeza? </h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+              </div>
+              <div class="modal-body">Deseja excluir? o {{ lproduto.Id }}?
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+               
+                <a type="button" class="btn btn-danger" href="{% url 'removep' lproduto.id %}">Deletar</a>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-        <br><br>
-    
-    {% endfor %}
-    <br><br>
+          
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+</div>
+   
 
     <!-- Campo para quantidade -->
 
     <!-- Botão para adicionar o item ao pedido -->
     <br>
-    <a type="button" class="btn btn-success" href="{% url 'addp' venda.id %}">adicionar produto</a>
-    <button type="submit" href="{% url 'addp' venda.id %}">adicionar v2</button>
+    <button name="addpV2" class="btn btn-success" type="submit" >adicionar v2</button>
     <button type="submit">finalizar</button>
   </form>
+
 <script>
     $(document).ready(function() {
         $('.select2').select2();

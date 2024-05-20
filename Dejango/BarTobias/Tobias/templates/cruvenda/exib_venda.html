@@ -5,23 +5,35 @@
 {% block content %}
 <div class="container mt-5">
     <h1>Listar Vendas</h1>
-    <div>
-    Id  {{ Venda.id }} |<br>| feita por {{ Venda.funcionarioId }} |<br>| data {{Venda.dataVenda}}  
-    </div>
-    <div>
-        <h2>produtos vendidos</h2>
-        {% for itens in Item %}
-        <li class="list-group-item">
-        {{ itens.produtoId.nomeProduto }} || {{itens.quantidade}} || {{itens.precoItem}}
-            
-        </li>
-        {% endfor %}
-        <li>
-            Preço total : {{Venda.precoTotal}}
-        </li>
-    </div>
-    
-   
-</ul>
+    <table class="table table-sm table-hover table-dark ">
+        <div>
+            <h3 class="text-dark">
+                Venda  {{ Venda.id }} 
+            </h3>
+            <br>| feita por {{ Venda.funcionarioId }} |<br>| data {{Venda.dataVenda}}  
+        </div>
+    <tr>
+        <th scope="col">ID</th> 
+        <th scope="col">Quantidade</th>      
+        <th scope="col">Preço do Produto</th>
+         
+    </tr>
+    {% for venda in Item %}
+    <tr>
+        <td>{{venda.produtoId.nomeProduto}}</td>
+        <td>{{venda.quantidade}}</td> 
+        <td>{{venda.produtoId.precoProduto}}</td>
+    </tr> 
+    {% endfor %}
+    <tr>
+        <td>Preço total</td>
+        <td></td>
+        <td>
+            {{Venda.precoTotal}}
+        </td>
+    </tr>
+    </table>
+
+
 </div>
 {% endblock content %}

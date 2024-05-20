@@ -32,16 +32,16 @@ class FuncionarioForm(UserCreationForm):
         model = Funcionario
         fields = ['email', 'nome', 'sobreNome', 'password1', 'password2']
 
-class Funcionario2Form(ModelForm):
-    class Meta:
-        model = Funcionario2
-        fields = ['descricao']  
-
 class Funcionario1Form(ModelForm):
     class Meta:
         model = Funcionario1
         fields = ['nomeFuncionario', 'cpfFuncionario', 'enderecoFuncionario']
-
+        
+class Funcionario2Form(ModelForm):
+    class Meta:
+        model = Funcionario2
+        fields = '__all__'  
+        
 class ItemVendaForm(ModelForm):
     class Meta:
         model = ItemVenda 

@@ -3,62 +3,55 @@
 {% block divEsp %}
 .especial{
   display: inline-block;
-  
+}
+.h6{
+  class="text-dar"
 }
 {% endblock divEsp %}
-
-
 {% block active2 %}active{% endblock active2 %}{% block desativa2 %}disabled{% endblock desativa2 %}
 {% block content %}
 <h2>LISTAGEM DE PRODUTOS</h2>
 <hr style="margin-top: 5px; margin-bottom: 5px;">
 
   
-<form  method="post">
+<form  method="post" action="{% url 'criar_produto' %}">
   {% csrf_token %}
-
-<table>
-
-  <tr >
-    <td class="especial" style="width: 150px; padding-top: 0px;" >
-      Funcionario <br>
-      <select class="form-control select2" name="cadastro" id="cadastro" style="width: 140px;">
-    
-        {% for funcionarios in func %}
-          {% if funcionarios.autor == user.id %}
-          <option selected value="{{ funcionarios.id }}">{{ funcionarios.nome }}</option>
-          {% else %}
-          <option value="{{ funcionarios.id }}">{{ funcionarios.nome }}</option>
-          {% endif %}
-        {% endfor %}
-    </select>
-    </td>
-    <td class="especial" style="width: 310px;">
-      Produto: <br>
-      <input type="text" class="form-control form-control-sm" name="nomeProduto" maxlength="30" required="nomeProduto" id="nomeProduto" autofocus style="width:300px;"> 
-    </td>
-    <td class="especial"style="width: 140px;" >
-     R$ V.U. <br>
+    <table>
+      <tr>
+        <td class="especial" style="width: 150px; padding-top: 0px;" >
+          Funcionario <br>
+          <select class="form-control select2" name="cadastro" id="cadastro" style="width: 140px;">
+            {% for funcionarios in func %}
+            {% if funcionarios.autor.id == user.id %}
+            <option selected value="{{ funcionarios.id }}">{{ funcionarios.nomeFuncionario }}</option>
+            {% else %}
+            <option value="{{ funcionarios.id }}">{{ funcionarios.nomeFuncionario }}</option>
+            {% endif %}
+            {% endfor %}
+            </select>
+        </td>
+        <td class="especial" style="width: 310px;">
+          Produto: <br>
+          <input type="text" class="form-control form-control-sm" name="nomeProduto" maxlength="30" required="nomeProduto" id="nomeProduto" autofocus style="width:300px;"> 
+        </td>
+        <td class="especial"style="width: 140px;" >
+          R$ V.U. <br>
   
-      <input type="number" class="form-control form-control-sm" size="50" name="precoProduto" step="0.01"  id="precoProduto"style="width: 130px;">
-    </td>
-    <td class="especial"style="width: 160px;">
-    Quantidade <br>
-      <input type="number" class="form-control form-control-sm" name="quantidadeProduto"  min="0" max="9223372036854775807" id="quantidadeProduto" style="width: 150px;">
-    </td>
-    <td class="especial"style="width: 110px;" style="position:;">
-      <br>
-      <button type="submit" class="btn btn-primary btn-sm">Cadastrar</button>
-    </td>
-  </tr>
-
-</table>
-
-
+          <input type="number" class="form-control form-control-sm" size="50" name="precoProduto" step="0.01"  id="precoProduto"style="width: 130px;">
+        </td>
+        <td class="especial"style="width: 160px;">
+          Quantidade <br>
+          <input type="number" class="form-control form-control-sm" name="quantidadeProduto"  min="0" max="9223372036854775807" id="quantidadeProduto" style="width: 150px;">
+        </td>
+        <td class="especial"style="width: 110px;" style="position:;">
+          <br>
+          <button type="submit" class="btn btn-primary btn-sm">Cadastrar</button>
+        </td>
+      </tr>
+    </table>
 </form>
-
 <hr style="margin-top: 5px; margin-bottom: 5px;">
-  <div class="card-body" style="margin-top: 5px; margin-bottom: 5px;" >
+<div class="card-body" style="margin-top: 5px; margin-bottom: 5px;" >
     <table class="table table-sm table-hover table-dark ">
       <thead>
         <tr>
@@ -69,7 +62,6 @@
           <th scope="col">Ultimo Lançamento <a href="{% url 'lista_produtoda' %}">↑</a> | <a href="{% url 'lista_produtodd' %}">↓</a></th>
         </tr>
       </thead>
-      
       <tbody>
         
         {% for Produto in Produto %}
@@ -80,40 +72,117 @@
             <td>R${{ Produto.precoProduto }} </td>
             <td>{{ Produto.quantidadeProduto }} </td>
             <td>{{ Produto.dataAlteracao }} </td>
-            <td style="display: inline-block;">
-              <a type="button" class="btn btn-primary btn-sm" href="{% url 'lancar_produto' Produto.id %}">lançar</a>
-              <a type="button" class="btn btn-primary btn-sm" href="{% url 'alterar_produto' Produto.id %}">modificar</a>
-              <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#a{{ Produto.id }}">Excluir</button>
-              <!-- Botão para acionar a modal -->
-            
-              <div>
-                
-                <!-- A modal -->
-                
-                  <div class="modal" id="a{{ Produto.id }}">
-                    
-                  <div class="modal-dialog">
-                    
-                    <div class="modal-content">
-                      
-                      <div class="modal-header">
-                        <h4 class="modal-title">Tem certeza? </h4>
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                      </div>
-                      <div class="modal-body">Deseja excluir? o {{ Produto.nomeProduto }}?
-                      </div>
-                      <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+            <td style="width: 220px;">
+              <table>
+                <tr>
+                  <td><a type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#c{{ Produto.id }}">Lançar</a>
+                    <div >
+                      <div class="modal fade" id="c{{ Produto.id }}" tabindex="-1" role="dialog">
+                        <form action="{% url 'lancar_produto' Produto.id %}" method="POST">
+                          {% csrf_token %} 
+                          <div class="modal-dialog">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h4 class="modal-title text-danger">Lançar {{Produto.nomeProduto}} </h4>
+                              </div>
+                              <div class="modal-body text-dark">
+                                <table class="text-dark">
+                                  <tr>
+                                    <td class="especial"style="width: 160px;">
+                                      <h6 class="text-dark">Quantidade</h6> 
+                                      <input type="number" class="form-control form-control-sm" name="quantidadeProduto"  min="0" max="9223372036854775807" id="quantidadeProduto" style="width: 150px;">
+                                    </td>
+                                  </tr>
+                                </table>
+                              </div>
+                              
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
                        
-                        <a type="button" class="btn btn-danger" href="{% url 'deletar' Produto.id %}">Deletar</a>
+                                <button type="submit" class="btn btn-primary ">Lançar</button>
+                              </div>
+                              </div>
+                            </div>
+                          </div>
+                        </form>
                       </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+                    </div> 
+                  </td>
+                  <td>
+                  <td><a type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#b{{ Produto.id }}">Alterar</a>
+                    <div>
+                      <div class="modal fade" id="b{{ Produto.id }}" tabindex="-1" role="dialog">
+                        <form action="{% url 'alterar_produto' Produto.id %}" method="POST">
+                          {% csrf_token %} 
+                          <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h4 class="modal-title text-danger">Alterar {{Produto.nomeProduto}} </h4>
+                              </div>
+                              <div class="modal-body text-dark">
+                                <table class="text-dark">
+                                  <tr>
+                                    <td class="especial" style="width: 310px;">
+                                      <h6 class="text-dark">Produto:</h6> 
+                                      <input type="text"  placeholder="{{Produto.nomeProduto}}" value="{{Produto.nomeProduto}}" class="form-control form-control-sm" name="nomeProduto" maxlength="30" required="nomeProduto" id="nomeProduto" autofocus style="width:300px;"> 
+                                    </td>
+                                    <td class="especial"style="width: 140px;" >
+                                     <h6 class="text-dark">R$ V.U.</h6> 
+                              
+                                    <input type="number" value="{{Produto.precoProduto}}" placeholder="{{Produto.precoProduto}}" class="form-control form-control-sm" size="50" name="precoProduto" step="0.01"  id="precoProduto"style="width: 130px;">
+                                    </td>
+                                    <td class="especial"style="width: 160px;">
+                                      <h6 class="text-dark">Quantidade</h6> 
+                                      <input type="number" value="{{Produto.quantidadeProduto}}" class="form-control form-control-sm" name="quantidadeProduto"  min="0" max="9223372036854775807" id="quantidadeProduto" style="width: 150px;">
+                                    </td>
+                                  </tr>
+                                </table>
+                              </div>
+                              
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                       
+                                <button type="submit" class="btn btn-primary ">Alterar</button>
+                              </div>
+                              </div>
+                            </div>
+                          </div>
+                        </form>
+                      </div>
+                    </div> 
+                  </td>
+                  <td>
+                    <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#a{{ Produto.id }}">Excluir</button>
+                      <div class="modal " id="a{{ Produto.id }}">
+                        <div class="modal-dialog ">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h4 class="modal-title text-danger">Tem certeza? </h4>
+                        
+                            </div>
+                            <div class="modal-body text-dark">Deseja excluir? o {{ Produto.nomeProduto }}?
+                            </div>
+                            <div class="modal-footer">
+                              <table>
+                                <tr>
+                                  <td><button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button></td>
+                                  <td><a type="button" class="btn btn-danger" href="{% url 'deletar' Produto.id %}">Deletar</a></td>
+                                </tr>
+                              </table>
+                              
+                              
+                            </div>
+                          </div>  
+                        </div>
+                      </div>
+                  </td>
+                </tr>
+              </table>
+            </td>
+            </div>
             </td>
           </tr>
-          {% endif %}
+        {% endif %}
         {% endfor %}
 
 
@@ -122,7 +191,7 @@
 
     </table>
     
-  </div>
+</div>
   <script>
     $(document).ready(function() {
         $('.select2').select2();
