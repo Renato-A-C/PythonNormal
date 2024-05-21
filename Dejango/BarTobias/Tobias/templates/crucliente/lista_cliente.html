@@ -12,16 +12,67 @@
             <th>Sobrenome</th>
             <th></th>
         </tr>
-        {% for funcionario in cliente %}
+        {% for cliente in cliente %}
         <tr>
-            <td>{{funcionario.id}} | {{ funcionario.nomeCliente }}</td>
-            <td>{{ funcionario.cpf }}</td>
-            <td> <a href="{% url 'alterar_cliente' funcionario.id %}" class="btn btn-primary btn-sm">Editar</a></td>
+            
+            <td>{{cliente.id}} | {{ cliente.nomeCliente }}</td>
+            <td>{{ cliente.cpf }}</td>
+            <td>
+            <table >
+                <tr>
+                    <td><a type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#b{{ cliente.id }}">Alterar</a>
+                <div>
+                    <form action="{% url 'alterar_cliente' cliente.id %}" method="POST">
+                        {% csrf_token %} 
+                        <div class="modal fade" id="b{{ cliente.id }}" tabindex="-1" role="dialog">
+                        <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h4 class="modal-title text-danger">Alterar {{cliente.nomeCliente}} </h4>
+                          </div>
+                            <div class="modal-body text-dark">
+                                <table >
+                                    <tr>
+                                        <td ><h6 class="text-dark">Nome:</h6></td>
+                                        <td><h6 class="text-dark">Cpf</h6> </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="especial" style="width: 200px;">
+                                    
+                                            <input type="text" class="form-control form-control-sm" name="nomeCliente" maxlength="30" required="nomeCliente" id="nomeCliente" autofocus style="width:150px;" value="{{cliente.nomeCliente}}">
+                                        </td>
+                                
+                                        <td class="especial" style="width: 200px;">
+                                    
+                                            <input type="number" class="form-control form-control-sm" name="cpf" maxlength="11" required="cpf" id="cpf"  style="width:150px;" value="{{cliente.cpf}}">
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                          
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                   
+                                <button type="submit" class="btn btn-primary ">Alterar</button>
+                            </div>
+                        </div>
+                        </div>
+                        </div>
+                        </form>
+
+                       
+                    </td>
+                </tr>
+            </table>
+            
+            </td>
         </tr>
 
         {% endfor %}
         <tr>
-            <td><a href="{% url 'criar_cliente' %}" class="btn btn-primary btn-sm">Cadastrar novo</a></td>
+            <td><a href="{% url 'criar_cliente' %}" class="btn btn-primary btn-sm">Cadastrar novo</a>
+                
+            </td>
             <td></td>
             <td></td>
         </tr>

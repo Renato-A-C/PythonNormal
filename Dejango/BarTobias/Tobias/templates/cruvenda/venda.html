@@ -14,8 +14,23 @@
             <th scope="col">Usuario</th>
             <th scope="col">Data</th>
             
+        </tr>        
+        <tr>
+            <td>
+                <select class="form-control select2" name="clienteId" id="clienteId_{{ venda.id }}" style="width: 50px;">
+                    {% for venda in Venda %}
+                    <option value="{{ venda.id }}">{{ venda.id }}</option>
+                    {% endfor %}
+                </select>
+            </td>
+            <td id="funcionario_info"></td>
+            <td id="data_info"></td>
+            <td>  </td>
+
+              
         </tr>
         {% for venda in Venda %}
+
         <tr>
             <td>{{venda.id}}  </td>
             <td> {{venda.funcionarioId}} </td>
@@ -25,4 +40,28 @@
         {% endfor %}
     </table>
 </div>
+<script>
+    $(document).ready(function() {
+        $('.select2').select2();
+
+        $('.select2').on('change', function() {
+            var vendaId = $(this).val();
+
+            // Requisição AJAX para obter os detalhes da venda
+            $.ajax({
+                url: '{% url 'detalhes_venda' %}',
+                type: 'GET',
+                data: {'venda_id': vendaId},
+                success: function(response) {
+                    $('#funcionario_info').text(response.funcionarioId);
+                    $('#data_info').text(response.dataVenda);
+                },
+                error: function(xhr, errmsg, err) {
+                    console.log(xhr.status + ": " + xhr.responseText); // Para debug
+                    // Trate o erro de acordo com sua necessidade
+                }
+            });
+        });
+    });
+</script>
 {% endblock content %}

@@ -60,18 +60,34 @@
           <th scope="col">Preço <a href="{% url 'lista_produtopa' %}">↑</a> | <a href="{% url 'lista_produtopd' %}">↓</a></th>
           <th scope="col">Qtd. Estoque <a href="{% url 'lista_produtoqa' %}">↑</a> | <a href="{% url 'lista_produtoqd' %}">↓</a></th>
           <th scope="col">Ultimo Lançamento <a href="{% url 'lista_produtoda' %}">↑</a> | <a href="{% url 'lista_produtodd' %}">↓</a></th>
+          <th scope="col"> Estado</th>
+          <th scope="col"> Ações</th>
         </tr>
       </thead>
       <tbody>
         
         {% for Produto in Produto %}
         {% if Produto.excluido == False %}
-          <tr> 
+          {% if Produto.quantidadeProduto < 10 %}
+          <tr class="text-danger">
+          {% else %}
+          <tr>
+          {% endif %}
+           
             <td>{{ Produto.id }}  </td>
             <td>{{ Produto.nomeProduto }} </td>
             <td>R${{ Produto.precoProduto }} </td>
             <td>{{ Produto.quantidadeProduto }} </td>
             <td>{{ Produto.dataAlteracao }} </td>
+            <td>
+              {% if Produto.quantidadeProduto < 10 and Produto.quantidadeProduto > 0 %}
+              Quantidade Crítica
+              {% elif Produto.quantidadeProduto == 0 %}
+              Zerado
+              {% else %}
+              
+              {% endif %}
+            </td>
             <td style="width: 220px;">
               <table>
                 <tr>
@@ -124,16 +140,16 @@
                                   <tr>
                                     <td class="especial" style="width: 310px;">
                                       <h6 class="text-dark">Produto:</h6> 
-                                      <input type="text"  placeholder="{{Produto.nomeProduto}}" value="{{Produto.nomeProduto}}" class="form-control form-control-sm" name="nomeProduto" maxlength="30" required="nomeProduto" id="nomeProduto" autofocus style="width:300px;"> 
+                                      <input type="text"  placeholder="{{Produto.nomeProduto}}" value="{{Produto.nomeProduto}}" class="form-control form-control-sm" name="nomeProduto" maxlength="30" required="nomeProduto" id="nomeProduto" autofocus style="width:300px;" required> 
                                     </td>
                                     <td class="especial"style="width: 140px;" >
                                      <h6 class="text-dark">R$ V.U.</h6> 
                               
-                                    <input type="number" value="{{Produto.precoProduto}}" placeholder="{{Produto.precoProduto}}" class="form-control form-control-sm" size="50" name="precoProduto" step="0.01"  id="precoProduto"style="width: 130px;">
+                                    <input type="number" placeholder="{{Produto.precoProduto}}" value="{{Produto.precoProduto}}"  class="form-control form-control-sm"  name="precoProduto" step="0.01"  id="precoProduto" style="width: 130px;" required>
                                     </td>
                                     <td class="especial"style="width: 160px;">
                                       <h6 class="text-dark">Quantidade</h6> 
-                                      <input type="number" value="{{Produto.quantidadeProduto}}" class="form-control form-control-sm" name="quantidadeProduto"  min="0" max="9223372036854775807" id="quantidadeProduto" style="width: 150px;">
+                                      <input type="number" value="{{Produto.quantidadeProduto}}" class="form-control form-control-sm" name="quantidadeProduto"  min="0" max="9223372036854775807" id="quantidadeProduto" style="width: 150px;" required>
                                     </td>
                                   </tr>
                                 </table>

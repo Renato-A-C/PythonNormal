@@ -14,15 +14,16 @@
           <label for="nomeCliente">Nome do cliente:</label>
         <input type="text" name="nomeCliente" maxlength="30" required="nomeCliente" id="nomeCliente">
     </div>
-    <div>
+    <div style="">
     <label for="cadastro">Funcionario cadastrante</label>
     <select name="cadastro" id="cadastro">           
-        {% for funcionarios in func %}
-          {% if funcionarios.id == 1 %}
-          {% else %}
-          <option value="{{ funcionarios.id }}">{{ funcionarios.nome }}</option>
-          {% endif %}
-        {% endfor %}
+      {% for funcionarios in funci %}
+      {% if funcionarios.autor.id == user.id %}
+      <option selected value="{{ funcionarios.id }}">{{ funcionarios.nomeFuncionario }}</option>
+      {% else %}
+      <option value="{{ funcionarios.id }}">{{ funcionarios.nomeFuncionario }}</option>
+      {% endif %}
+      {% endfor %}
     </select>
     </div>
         <label for="cpf">cpf/cnpj:</label>

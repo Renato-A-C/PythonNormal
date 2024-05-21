@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required, permission_required
-from django.http import HttpResponse, FileResponse, HttpResponseRedirect
+from django.http import HttpResponse, FileResponse, HttpResponseRedirect, JsonResponse
 from django.template import loader
 from django.contrib import messages
 from django.contrib.auth import login,logout,authenticate
@@ -10,12 +10,13 @@ from django.forms import formset_factory
 from django.utils import timezone
 from .models import Produto, Venda, Funcionario, Funcionario1, Funcionario2, ItemVenda, Cliente
 from .forms import ProdutoForm,  VendaForm, FuncionarioForm, Funcionario1Form, Funcionario2Form, ClienteForm, ItemVendaForm, ItemVendaFormSet
+
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter, A4
-
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Table, Spacer
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib import colors
+# -*- coding: utf-8 -*-
 
 # Create your views here.
 def home(request):
@@ -322,6 +323,20 @@ def venda(request):
     }
     return render(request,"cruvenda/venda.html", context)
 
+def detalhes_venda(request):
+    venda_id = request.GET.get('venda_id')
+    venda = Venda.objects.get(pk=venda_id)
+    
+    # Obtemos os dados diretamente da variável 'venda'
+    funcionario_id = venda.funcionarioId.nomeFuncionario # Supondo que 'funcionarioId' seja uma ForeignKey
+    data_venda = venda.dataVenda.strftime('%d/%m/%Y às %H:%M')# Converta para string no formato desejado
+
+    response_data = {
+        'funcionarioId': funcionario_id,
+        'dataVenda': data_venda,
+    }
+    return JsonResponse(response_data)
+
 @login_required
 def exib_venda(request,id):
     
@@ -355,6 +370,8 @@ def criar_venda(request, id):
     funcionario = Funcionario1.objects.all()
     produto = Produto.objects.all()
     venda2 = ItemVenda.objects.filter(venda=id)
+    qtdProdutoBanco  = Produto.objects.filter(quantidadeProduto__gt=0).count()
+    maxqtd = ItemVenda.objects.filter(venda=id).count()
     print(ItemVenda.objects.count())
 
     if request.method == "POST":
@@ -441,7 +458,8 @@ def criar_venda(request, id):
         'Produto': produto,
         'LProduto':ItemVenda.objects.filter(venda=id),
         'Cliente': Cliente.objects.all(),
-       
+        'qtd':qtdProdutoBanco,
+        'max':maxqtd
     }
     return render(request, f'cruvenda/criar_venda.html', context)
 
@@ -604,7 +622,8 @@ def criar_cliente(request):
     
     context= {
         'cliente':cliente,
-        'func':Funcionario.objects.all()
+        'func':Funcionario.objects.all(),
+        'funci':Funcionario1.objects.all()
     }
     return render(request,"crucliente/criar_cliente.html", context)
 

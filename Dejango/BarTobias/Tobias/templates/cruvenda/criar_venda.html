@@ -5,124 +5,139 @@
 .especial{
   display: inline-block;
   max-width: 300px;
-  
 }
 h2{
   text-align: center;
-  font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
-  
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
 }
-
 {% endblock divEsp %}
 {% block active3 %}active{% endblock active3 %}{% block desativa3 %}disabled{% endblock desativa3 %}
-
 {% block content %}
-    <form method="POST">
-        {% csrf_token %}
-    
+<form method="POST">
+    {% csrf_token %}
     <!-- Campo para selecionar o cliente -->
-    <h2 >VENDAS</h2>
-
+    <h2>VENDAS</h2>
     <hr>
-    <table>
-      <tr>
+    <div class="container">
+      <table >
+      <tr style="text-align: center;"> 
         <td class="especial">
-        <label for="funcionarioId">Funcionario:</label>
-        <select class="form-control select2" name="funcionarioId" id="funcionarioId">
-
-        {% for funcionarios in Funcionario %}
-            {% if funcionarios.autor.id == user.id %}
-            <option selected value="{{ funcionarios.id }}">{{ funcionarios.nomeFuncionario }}</option>
-            {% else %}
-            <option value="{{ funcionarios.id }}">{{ funcionarios.nomeFuncionario }}</option>
-            {% endif %}
+          <label for="funcionarioId">Funcionario:</label>
+          <select class="form-control select2" name="funcionarioId" id="funcionarioId">
+            {% for funcionarios in Funcionario %}
+                {% if funcionarios.autor.id == user.id %}
+                <option selected value="{{ funcionarios.id }}">{{ funcionarios.nomeFuncionario }}</option>
+                {% else %}
+                <option value="{{ funcionarios.id }}">{{ funcionarios.nomeFuncionario }}</option>
+                {% endif %}
             {% endfor %}
-        </select>
-      </td>
-      <td class="especial">
-        <label for="clienteId">Cliente:</label>
-        <select class="form-control select2" name="clienteId" id="clienteId">
-        {% for cliente in Cliente %}
-          <option value="{{ cliente.id }}">{{ cliente.nomeCliente}}</option>
-        {% endfor %}
-      </td>
+          </select>
+        </td>
+        <td class="especial">
+          <label for="clienteId">Cliente:</label>
+          <select class="form-control select2" name="clienteId" id="clienteId">
+            {% for cliente in Cliente %}
+              <option value="{{ cliente.id }}">{{ cliente.nomeCliente }}</option>
+            {% endfor %}
+          </select>
+        </td>
       </tr>
-    </table>
+      </table>
 
-      <!-- Campo para selecionar o Funcionario -->
- 
-     
 
-    <!-- Campo para adicionar produtos -->
-   <br><br>
-  <div class="container">
-  <table class="table table-sm table-hover table-dark ">
-  <tr>
-    <td>Produto</td>
-    <td>Quantidade</td>
-    <td></td>
-  </tr>
-  {% for lproduto in LProduto %}
-  <tr>
-  
-    <td>
-      <select class="form-control select2" name="produtoId_{{lproduto.id}}" id="produtoId_{{lproduto.id}}" style="max-width: 300px;">      
-        {% for produto in Produto %}
-        {% if lproduto.produtoId.id == produto.id %}
-        <option  selected value="{{ produto.id }}" >{{produto.id}} | {{ produto.nomeProduto }} || {{produto.precoProduto}} || {{produto.quantidadeProduto}}</option>
-        {% else %}
-        <option value="{{ produto.id }}" >{{produto.id}} | {{ produto.nomeProduto }} || {{produto.precoProduto}} || {{produto.quantidadeProduto}}</option>
-        {% endif %}
-        {% endfor %}
-    </select>
-    </td>
-    <td>
-      <input type="number" name="quantidade_{{lproduto.id}}" class="form-control form-control-sm" id="quantidade_{{lproduto.id}}" min="1" value="{{lproduto.quantidade}}" required="quantidade_{{lproduto.id}}" style="width: 300px;">
-    </td>
-    <td>
-      <div>
-        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#a{{ lproduto.id }}">Excluir</button>
-        <!-- A modal -->
-        
-          <div class="modal" id="a{{ lproduto.id }}"> 
-          <div class="modal-dialog">
-            
-            <div class="modal-content">
-              
-              <div class="modal-header">
-                <h4 class="modal-title">Tem certeza? </h4>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-              </div>
-              <div class="modal-body">Deseja excluir? o {{ lproduto.Id }}?
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
-               
-                <a type="button" class="btn btn-danger" href="{% url 'removep' lproduto.id %}">Deletar</a>
+    </div>
+    
+    <br><br>
+    <div class="container">
+      <table class="table table-sm table-hover table-dark">
+        <tr>
+          <td>Produto</td>
+          <td>Quantidade</td>
+          <td></td>
+        </tr>
+        {% for lproduto in LProduto %}
+        <tr>
+          <td>
+            <select class="form-control select2" name="produtoId_{{lproduto.id}}" id="produtoId_{{lproduto.id}}" onchange="updateAvailableQuantity({{ lproduto.id }})" style="max-width: 300px;">
+              {% for produto in Produto %}
+              {% if produto.quantidadeProduto > 0 %}
+              <option value="{{ produto.id }}"  data-quantidade="{{ produto.quantidadeProduto }}">{{ produto.id }} | {{ produto.nomeProduto }} || {{ produto.precoProduto }} || {{ produto.quantidadeProduto }}</option>
+              {% endif %}
+              {% endfor %}
+            </select>
+          </td>
+          <td>
+            <input type="number" name="quantidade_{{lproduto.id}}" class="form-control form-control-sm" id="quantidade_{{lproduto.id}}" min="1" value="{{ lproduto.quantidade }}" required="quantidade_{{lproduto.id}}" oninput="validateQuantity({{ lproduto.id }})" step="1" style="width: 300px;">
+          </td>
+          <td>
+            <div>
+              <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#a{{ lproduto.id }}">Excluir</button>
+              <!-- Modal -->
+              <div class="modal" id="a{{ lproduto.id }}">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h4 class="modal-title text-danger">Tem certeza?</h4>
+                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body text-danger">Deseja excluir este produto?</div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                      <a type="button" class="btn btn-danger" href="{% url 'removep' lproduto.id %}">Deletar</a>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
-      </div>
-          
-    </td>
-  </tr>
-  {% endfor %}
-</table>
-</div>
-   
+          </td>
+        </tr>
+        {% endfor %}
+      </table>
+      <p id="warning-message" style="color: red;"></p>
+    </div>
 
-    <!-- Campo para quantidade -->
-
-    <!-- Botão para adicionar o item ao pedido -->
     <br>
-    <button name="addpV2" class="btn btn-success" type="submit" >adicionar v2</button>
-    <button type="submit">finalizar</button>
-  </form>
+    {% if max < qtd %}
+    <button name="addpV2" class="btn btn-success" type="submit">Adicionar v2</button>
+    {% else %}
+    <h4 class="text-danger" style="text-align: center;">  todos os produtos do estoque adicionados</h4>
+    {% endif %}
+    
+    <button type="submit" class="btn btn-primary">Finalizar</button>
+</form>
 
 <script>
     $(document).ready(function() {
         $('.select2').select2();
+    });
+
+    function updateAvailableQuantity(id) {
+        const selectElement = document.getElementById(`produtoId_${id}`);
+        const selectedOption = selectElement.options[selectElement.selectedIndex];
+        const availableQuantity = selectedOption.getAttribute('data-quantidade');
+        const quantityInput = document.getElementById(`quantidade_${id}`);
+        quantityInput.setAttribute('data-available', availableQuantity);
+    }
+
+    function validateQuantity(id) {
+        const quantityInput = document.getElementById(`quantidade_${id}`);
+        const quantityToSubtract = parseInt(quantityInput.value);
+        const availableQuantity = parseInt(quantityInput.getAttribute('data-available'));
+        const warningElement = document.getElementById('warning-message');
+
+        if (quantityToSubtract > availableQuantity) {
+            warningElement.textContent = 'A quantidade a ser subtraída não pode ser maior que a quantidade alocada!';
+            quantityInput.value = availableQuantity; // Opcional: definir o valor máximo permitido
+        } else {
+            warningElement.textContent = '';
+        }
+    }
+
+    // Atualizar todas as quantidades disponíveis ao carregar a página
+    document.addEventListener('DOMContentLoaded', function() {
+        {% for lproduto in LProduto %}
+            updateAvailableQuantity({{ lproduto.id }});
+        {% endfor %}
     });
 </script>
 {% endblock content %}
