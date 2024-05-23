@@ -4,30 +4,32 @@
 {% load static %}
 {% block content %}
 
-
-<div class="label align-content-sm-center " >
-    <div class="row justify-content-center"></div>
-    <h5>Cadastrar novo cliente</h5> 
+<h5 style="text-align: center;">Cadastrar novo cliente</h5> 
+<div class="container" >
+    
     <form method="POST">
     {% csrf_token %}
-    <div>
-          <label for="nomeCliente">Nome do cliente:</label>
-        <input type="text" name="nomeCliente" maxlength="30" required="nomeCliente" id="nomeCliente">
+    <div class="form-group">
+        <label for="cadastro">Funcionario cadastrante</label>
+        <select name="cadastro" id="cadastro" class="form-control">           
+          {% for funcionarios in funci %}
+          {% if funcionarios.autor.id == user.id %}
+          <option selected value="{{ funcionarios.id }}">{{ funcionarios.nomeFuncionario }}</option>
+          {% else %}
+          <option value="{{ funcionarios.id }}">{{ funcionarios.nomeFuncionario }}</option>
+          {% endif %}
+          {% endfor %}
+        </select>
+        </div>
+    <div class="form-group">
+        <label for="nomeCliente">Nome do cliente:</label>
+        <input type="text" name="nomeCliente" maxlength="30" required="nomeCliente" id="nomeCliente" class="form-control">
     </div>
-    <div style="">
-    <label for="cadastro">Funcionario cadastrante</label>
-    <select name="cadastro" id="cadastro">           
-      {% for funcionarios in funci %}
-      {% if funcionarios.autor.id == user.id %}
-      <option selected value="{{ funcionarios.id }}">{{ funcionarios.nomeFuncionario }}</option>
-      {% else %}
-      <option value="{{ funcionarios.id }}">{{ funcionarios.nomeFuncionario }}</option>
-      {% endif %}
-      {% endfor %}
-    </select>
-    </div>
+    
+
+    <div class="form-group">
         <label for="cpf">cpf/cnpj:</label>
-      <input type="number" size="15" name="cpf" step="1"  id="cpf" required="cpf">
+    <input class="form-control" type="number" min="0" size="15" name="cpf" id="cpf" required="cpf">
       
     </div>
     <button type="submit" class="btn btn-success">Criar cliente</button>

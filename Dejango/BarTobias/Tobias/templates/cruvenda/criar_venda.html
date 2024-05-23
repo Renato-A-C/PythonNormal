@@ -2,142 +2,214 @@
 {% load static %}
 {% block title %}Vamos vender{% endblock title %}
 {% block divEsp %}
-.especial{
+.especial {
   display: inline-block;
   max-width: 300px;
 }
-h2{
+h2 {
   text-align: center;
   font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
 }
 {% endblock divEsp %}
 {% block active3 %}active{% endblock active3 %}{% block desativa3 %}disabled{% endblock desativa3 %}
 {% block content %}
-<form method="POST">
-    {% csrf_token %}
-    <!-- Campo para selecionar o cliente -->
-    <h2>VENDAS</h2>
-    <hr>
-    <div class="container">
-      <table >
-      <tr style="text-align: center;"> 
-        <td class="especial">
-          <label for="funcionarioId">Funcionario:</label>
-          <select class="form-control select2" name="funcionarioId" id="funcionarioId">
-            {% for funcionarios in Funcionario %}
-                {% if funcionarios.autor.id == user.id %}
-                <option selected value="{{ funcionarios.id }}">{{ funcionarios.nomeFuncionario }}</option>
-                {% else %}
-                <option value="{{ funcionarios.id }}">{{ funcionarios.nomeFuncionario }}</option>
-                {% endif %}
-            {% endfor %}
-          </select>
-        </td>
-        <td class="especial">
-          <label for="clienteId">Cliente:</label>
-          <select class="form-control select2" name="clienteId" id="clienteId">
-            {% for cliente in Cliente %}
-              <option value="{{ cliente.id }}">{{ cliente.nomeCliente }}</option>
-            {% endfor %}
-          </select>
-        </td>
-      </tr>
-      </table>
-
-
-    </div>
-    
-    <br><br>
-    <div class="container">
-      <table class="table table-sm table-hover table-dark">
-        <tr>
-          <td>Produto</td>
-          <td>Quantidade</td>
-          <td></td>
-        </tr>
-        {% for lproduto in LProduto %}
-        <tr>
-          <td>
-            <select class="form-control select2" name="produtoId_{{lproduto.id}}" id="produtoId_{{lproduto.id}}" onchange="updateAvailableQuantity({{ lproduto.id }})" style="max-width: 300px;">
-              {% for produto in Produto %}
-              {% if produto.quantidadeProduto > 0 %}
-              <option value="{{ produto.id }}"  data-quantidade="{{ produto.quantidadeProduto }}">{{ produto.id }} | {{ produto.nomeProduto }} || {{ produto.precoProduto }} || {{ produto.quantidadeProduto }}</option>
-              {% endif %}
-              {% endfor %}
-            </select>
-          </td>
-          <td>
-            <input type="number" name="quantidade_{{lproduto.id}}" class="form-control form-control-sm" id="quantidade_{{lproduto.id}}" min="1" value="{{ lproduto.quantidade }}" required="quantidade_{{lproduto.id}}" oninput="validateQuantity({{ lproduto.id }})" step="1" style="width: 300px;">
-          </td>
-          <td>
-            <div>
-              <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#a{{ lproduto.id }}">Excluir</button>
-              <!-- Modal -->
-              <div class="modal" id="a{{ lproduto.id }}">
-                <div class="modal-dialog">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h4 class="modal-title text-danger">Tem certeza?</h4>
-                      <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    </div>
-                    <div class="modal-body text-danger">Deseja excluir este produto?</div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
-                      <a type="button" class="btn btn-danger" href="{% url 'removep' lproduto.id %}">Deletar</a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </td>
-        </tr>
-        {% endfor %}
-      </table>
-      <p id="warning-message" style="color: red;"></p>
-    </div>
-
-    <br>
-    {% if max < qtd %}
-    <button name="addpV2" class="btn btn-success" type="submit">Adicionar v2</button>
-    {% else %}
-    <h4 class="text-danger" style="text-align: center;">  todos os produtos do estoque adicionados</h4>
-    {% endif %}
-    
-    <button type="submit" class="btn btn-primary">Finalizar</button>
-</form>
-
+<div class="container">
+  <form method="POST" id="form-venda">
+      {% csrf_token %}
+      <h2>VENDAS</h2>
+      <hr>
+      <div class="container">
+          <table>
+              <tr style="text-align: center;"> 
+                  <td class="especial">
+                      <label for="funcionarioId">Funcionário:</label>
+                      <select class="form-control select2" name="funcionarioId" id="funcionarioId">
+                          {% for funcionario in Funcionario %}
+                              <option value="{{ funcionario.id }}" {% if funcionario.autor.id == user.id %}selected{% endif %}>{{ funcionario.nomeFuncionario }}</option>
+                          {% endfor %}
+                      </select>
+                  </td>
+                  <td class="especial">
+                      <label for="clienteId">Cliente:</label>
+                      <select class="form-control select2" name="clienteId" id="clienteId">
+                          {% for cliente in Cliente %}
+                              <option value="{{ cliente.id }}">{{ cliente.nomeCliente }}</option>
+                          {% endfor %}
+                      </select>
+                  </td>
+              </tr>
+          </table>
+      </div>
+      
+      <br><br>
+      <div class="container">
+          <table class="table table-sm table-hover table-dark">
+              <thead>
+                  <tr>
+                      <th style="width: 200px;">Código / Produto</th>
+                      <th>Quanto há</th>
+                      <th>Preço</th>
+                      <th>Quantidade</th>
+                      <th>Total</th>
+                      <th></th>
+                  </tr>
+              </thead>
+              <tbody>
+                  {% for lproduto in LProduto %}
+                  <tr>
+                      <td style="max-width: 250px;">
+                          <select class="form-control select2 produto-select" name="produtoId_{{ lproduto.id }}" id="produtoId_{{ lproduto.id }}" data-id="{{ lproduto.id }}" style="max-width: 200px;">
+                              {% for produto in Produto %}
+                                  {% if produto.quantidadeProduto > 0 %}
+                                  <option value="{{ produto.id }}" {% if lproduto.produtoId.id == produto.id %}selected{% endif %} data-quantidade="{{ produto.quantidadeProduto }}" data-preco="{{ produto.precoProduto }}">{{ produto.id }} | {{ produto.nomeProduto }}</option>
+                                  {% endif %}
+                              {% endfor %}
+                          </select>
+                      </td>
+                      <td id="qtd_{{ lproduto.id }}">{{ lproduto.produtoId.quantidadeProduto }}</td>
+                      <td id="preco_{{ lproduto.id }}">{{ lproduto.produtoId.precoProduto }}</td>
+                      <td>
+                          <input type="number" name="quantidade_{{ lproduto.id }}" min="1" class="form-control form-control-sm quantidade-input" id="quantidade_{{ lproduto.id }}" data-id="{{ lproduto.id }}" min="1" value="{{ lproduto.quantidade }}" required step="1" style="width: 100px;">
+                      </td>
+                      <td id="preco_total_{{ lproduto.id }}" class="preco-total">{{ lproduto.precoItem }}</td>
+                      <td style="text-align: right;">
+                          <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal_{{ lproduto.id }}">Excluir</button>
+                          <div class="modal" id="deleteModal_{{ lproduto.id }}">
+                              <div class="modal-dialog">
+                                  <div class="modal-content">
+                                      <div class="modal-header">
+                                          <h4 class="modal-title text-danger">Tem certeza?</h4>
+                                          <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                      </div>
+                                      <div class="modal-body text-danger">Deseja excluir este produto?</div>
+                                      <div class="modal-footer">
+                                          <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                                          <a type="button" class="btn btn-danger" href="{% url 'removep' lproduto.id %}">Deletar</a>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </td>
+                  </tr>
+                  {% endfor %}
+                  <tr>
+                      <td>Total da venda</td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td id="soma-total">0.00</td>
+                      <td></td>
+                  </tr>
+              </tbody>
+          </table>
+          <p id="warning-message" style="color: red;"></p>
+      </div>
+      <br>
+      <div style="text-align: right;">
+          {% if max < qtd %}
+          <button name="addpV2" class="btn btn-success" type="submit">OK</button>
+          {% else %}
+          <h4 class="text-danger" style="text-align: center;">Todos os produtos do estoque adicionados</h4>
+          {% endif %}
+          <button type="submit" class="btn btn-primary">Finalizar</button>
+      </div>
+  </form>
+</div>
 <script>
-    $(document).ready(function() {
-        $('.select2').select2();
-    });
+  $(document).ready(function() {
+      $('.select2').select2();
 
-    function updateAvailableQuantity(id) {
-        const selectElement = document.getElementById(`produtoId_${id}`);
-        const selectedOption = selectElement.options[selectElement.selectedIndex];
-        const availableQuantity = selectedOption.getAttribute('data-quantidade');
-        const quantityInput = document.getElementById(`quantidade_${id}`);
-        quantityInput.setAttribute('data-available', availableQuantity);
-    }
+      function updateAvailableQuantity(id) {
+          const selectElement = document.getElementById(`produtoId_${id}`);
+          const selectedOption = selectElement.options[selectElement.selectedIndex];
+          const availableQuantity = selectedOption.getAttribute('data-quantidade');
+          const quantityInput = document.getElementById(`quantidade_${id}`);
+          quantityInput.setAttribute('data-available', availableQuantity);
 
-    function validateQuantity(id) {
-        const quantityInput = document.getElementById(`quantidade_${id}`);
-        const quantityToSubtract = parseInt(quantityInput.value);
-        const availableQuantity = parseInt(quantityInput.getAttribute('data-available'));
-        const warningElement = document.getElementById('warning-message');
+          // Validar e ajustar a quantidade se necessário
+          validateQuantity(id);
+      }
 
-        if (quantityToSubtract > availableQuantity) {
-            warningElement.textContent = 'A quantidade a ser subtraída não pode ser maior que a quantidade alocada!';
-            quantityInput.value = availableQuantity; // Opcional: definir o valor máximo permitido
-        } else {
-            warningElement.textContent = '';
-        }
-    }
+      function validateQuantity(id) {
+          const quantityInput = document.getElementById(`quantidade_${id}`);
+          const quantityToSubtract = parseInt(quantityInput.value);
+          const availableQuantity = parseInt(quantityInput.getAttribute('data-available'));
+          const warningElement = document.getElementById('warning-message');
 
-    // Atualizar todas as quantidades disponíveis ao carregar a página
-    document.addEventListener('DOMContentLoaded', function() {
-        {% for lproduto in LProduto %}
-            updateAvailableQuantity({{ lproduto.id }});
-        {% endfor %}
-    });
+          if (quantityToSubtract > availableQuantity) {
+              warningElement.textContent = 'A quantidade a ser subtraída não pode ser maior que a quantidade disponível!';
+              quantityInput.value = availableQuantity; // Definir o valor máximo permitido
+          } else {
+              warningElement.textContent = '';
+          }
+
+          // Calcular o preço total após validar e ajustar a quantidade
+          calcularPrecoTotal(id);
+      }
+
+      $('.produto-select').on('change', function() {
+          var produtoId = $(this).val();
+          var elementId = $(this).data('id');
+
+          // Requisição AJAX para obter os detalhes do produto
+          $.ajax({
+              url: '{% url "detalhes_produto" %}',
+              type: 'GET',
+              data: {'produto_id': produtoId},
+              success: function(response) {
+                  $('#preco_' + elementId).text(response.preco);
+                  $('#qtd_' + elementId).text(response.quantidade);
+
+                  // Atualizar a quantidade disponível após selecionar o produto
+                  updateAvailableQuantity(elementId);
+                  calcularSomaTotal();  // Atualiza a soma total após a mudança
+              },
+              error: function(xhr, errmsg, err) {
+                  console.log(xhr.status + ": " + xhr.responseText); // Para debug
+                  // Trate o erro de acordo com sua necessidade
+              }
+          });
+      });
+
+      function calcularPrecoTotal(elementId) {
+          var precoUnitario = parseFloat($('#preco_' + elementId).text());
+          var quantidade = parseInt($('#quantidade_' + elementId).val());
+
+          if (!isNaN(precoUnitario) && !isNaN(quantidade)) {
+              var precoTotal = precoUnitario * quantidade;
+              $('#preco_total_' + elementId).text(precoTotal.toFixed(2)); // Exibindo o preço total com duas casas decimais
+          }
+
+          calcularSomaTotal(); // Atualiza a soma total ao calcular o preço total
+      }
+
+      function calcularSomaTotal() {
+          var somaTotal = 0;
+          $('.preco-total').each(function() {
+              var precoTotal = parseFloat($(this).text());
+              if (!isNaN(precoTotal)) {
+                  somaTotal += precoTotal;
+              }
+          });
+          $('#soma-total').text(somaTotal.toFixed(2)); // Exibindo a soma total com duas casas decimais
+      }
+
+      $('.quantidade-input').on('input', function() {
+          var elementId = $(this).data('id');
+          calcularPrecoTotal(elementId);
+
+          // Validar a quantidade ao inserir a entrada
+          validateQuantity(elementId);
+      });
+
+      // Atualizar todas as quantidades disponíveis ao carregar a página
+      document.addEventListener('DOMContentLoaded', function() {
+          {% for lproduto in LProduto %}
+              updateAvailableQuantity({{ lproduto.id }});
+              calcularPrecoTotal({{ lproduto.id }}); // Calcular o preço total para cada produto ao carregar a página
+          {% endfor %}
+          calcularSomaTotal(); // Atualiza a soma total ao carregar a página
+      });
+  });
 </script>
 {% endblock content %}

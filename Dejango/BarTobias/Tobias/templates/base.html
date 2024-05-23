@@ -29,7 +29,9 @@
     </style>
     <!-- CSS only -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous" />
-
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css?family=Raleway:300,400,600" rel="stylesheet" type="text/css">
+  
     <!-- JS, Popper.js, and jQuery -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
@@ -49,21 +51,13 @@
 
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav me-auto">
-          <li class="nav-item {% block active1 %}{% endblock %}">
-            <a class="nav-link {% block desativa1 %}{% endblock %}" href="{% url 'principal' %}">
-              Principal
-            </a>
-          </li>
+
           <li class="nav-item {% block active2 %}{% endblock %}">
             <a class="nav-link {% block desativa2 %}{% endblock %}" href="{% url 'lista_produto' %}">
               produtos
             </a>
           </li>
-          <li class="nav-item {% block active3 %} {% endblock %}">
-            <a class="nav-link {% block desativa3 %}{% endblock %}"href="{% url 'venda' %}">
-              venda 
-            </a>
-          </li>
+
           <li class="nav-item {% block active4 %} {% endblock %}">
             <a class="nav-link {% block desativa4 %}{% endblock %}"href="{% url 'lista_funcionario' %}">
               funcionario
@@ -74,9 +68,12 @@
               Cliente
             </a>
           </li>
-          
+          <li class="nav-item {% block active3 %} {% endblock %}">
+            <a class="nav-link {% block desativa3 %}{% endblock %}"href="{% url 'venda' %}">
+              venda 
+            </a>
+          </li>
           <li class="nav-item">
-            
             <a class="nav-link" href="{% url 'admin:index' %}">áreaAdmin</a>
           </li>
         </ul>

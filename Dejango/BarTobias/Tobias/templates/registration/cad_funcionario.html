@@ -7,9 +7,7 @@
     {% csrf_token %}
     <div class="container">
         <h2>Registrar</h2>
-        nome cpf endereco
 
-        'email','nome', 'sobreNome', 'password1', 'password2
         <div class="form-group">
             <label for="email">Email:</label>
             <input type="email" name="email" class="form-control" id="email" required="email" placeholder="Enter email">
@@ -19,14 +17,15 @@
             <label for="nome">Nome do usuario :</label>
             <input type="text" name="nome" class="form-control" id="nome" placeholder="Coloque o nome de usuario">
         </div>
-        <div class="form-group">
-            <label for=" sobreNome">Sobrenome:</label>
-            <input type="text" name="sobreNome" class="form-control" id=" sobreNome" placeholder="Coloque o sobrenome">
-        </div>
+        
 
         <div class="form-group">
             <label for=" nomeFuncionario">Nome do funcionario:</label>
             <input type="text" name="nomeFuncionario" class="form-control" id=" nomeFuncionario" placeholder="Coloque o nome do funcionario">
+        </div>
+        <div class="form-group">
+            <label for=" sobreNome">Sobrenome:</label>
+            <input type="text" name="sobreNome" class="form-control" id=" sobreNome" placeholder="Coloque o sobrenome">
         </div>
         <div class="form-group">
             <label for=" cpfFuncionario">CPF:</label>
@@ -53,5 +52,14 @@
 
 
         <button type="submit" class="btn btn-primary">Registrar</button>
+        {% for k, v in form.errors.items %}
+        <div class="alert alert-danger">{{ v }}</div>
+      {% endfor %}
+      {% for k, v in func1.errors.items %}
+        <div class="alert alert-danger">{{ v }}</div>
+      {% endfor %}
+      {% for k, v in func2.errors.items %}
+        <div class="alert alert-danger">{{ v }}</div>
+      {% endfor %}
     </div>
 {% endblock  %}

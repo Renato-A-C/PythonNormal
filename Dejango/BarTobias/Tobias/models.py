@@ -31,8 +31,7 @@ class Funcionario(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
     nome = models.CharField(max_length=30)
     sobreNome = models.CharField(max_length=30)
-    
-    
+
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     date_joined = models.DateTimeField(auto_now_add=True)
@@ -62,6 +61,7 @@ class Funcionario2(models.Model):
         return str(self.funcionario)    
     
 Funcionario = get_user_model()
+
 class Produto(models.Model):
     nomeProduto = models.CharField(db_column='nomeProduto', max_length = 50, blank=True)
     cadastro= models.ForeignKey(Funcionario, on_delete=models.PROTECT, related_name="produtoFuncionario", default=1)
@@ -92,16 +92,17 @@ class Venda(models.Model):
     dataVenda = models.DateTimeField(auto_now_add=True)
     status = models.BooleanField(default=True)
     excluido = models.BooleanField(default=False)
-    precoTotal= models.FloatField()
+    precoTotal= models.FloatField(default=0)
     def __str__(self):
-        return (f"{self.id} do {self.funcionarioId.nomeFuncionario}")
+        return f"{self.id} do {self.funcionarioId.nomeFuncionario}"
  
 class ItemVenda(models.Model):
     venda = models.ForeignKey(Venda, on_delete=models.CASCADE)
     produtoId = models.ForeignKey(Produto, on_delete=models.PROTECT, related_name="listagemProduto")
     quantidade = models.IntegerField()
     precoItem= models.FloatField()
+    
     def __str__(self):
-        return (f"{self.venda.id}, {self.produtoId}")
+        return f"{self.venda.id}, {self.produtoId}"
 
     

@@ -23,11 +23,6 @@ def home(request):
 
     return render(request,"home.html")
 
-@login_required
-def principal(request):
-    Produtos = Produto.objects.all()
-    return render(request,"principal.html", {'Produto': Produtos})
-
 # views para produtos
 # views para filtragem dos produtos
 #  nome
@@ -234,6 +229,7 @@ def lista_funcionario(request):
     return render(request,"crufunc/lista_funcionario.html", context)
 
 @login_required
+@login_required
 def cad_funcionario(request):
     if request.method == "POST":
         form = FuncionarioForm(request.POST)
@@ -245,24 +241,24 @@ def cad_funcionario(request):
             func.autor = user
             func.save()
             funcData = func2.save(commit=False)
-            funcData.funcionario = user
-            funcData.save()  
-            print("Validado e cadastrado")
+            funcData.funcionarioId = user
+            funcData.save()
             return redirect('lista_funcionario')
-            
-
+        else:
+            print(form.errors, func1.errors, func2.errors)
     else:
         form = FuncionarioForm()
         func1 = Funcionario1Form()
         func2 = Funcionario2Form()
+
     context = {
-        'form':form,
-        'func1':func1,
-        'func2':func2
+        'form': form,
+        'func1': func1,
+        'func2': func2,
     }
-        
-    return render(request,"registration/cad_funcionario.html", context)
- 
+    return render(request, "registration/cad_funcionario.html", context)
+
+
 @login_required
 def alterar_funcionario(request, id):
     modeloUser = Funcionario.objects.get(id=id)
@@ -337,18 +333,21 @@ def detalhes_venda(request):
     }
     return JsonResponse(response_data)
 
-@login_required
-def exib_venda(request,id):
+def detalhes_produto(request):
+    produto_id = request.GET.get('produto_id')
+    produto = Produto.objects.get(pk=produto_id)
     
-    venda = Venda.objects.get(id=id)
-    item = ItemVenda.objects.filter(venda=id).order_by('produtoId')
-    produto = Produto.objects.all()
+    # Obtemos os dados diretamente da variável 'venda'
+    preco = produto.precoProduto # Supondo que 'funcionarioId' seja uma ForeignKey
+    quantidadeRestante = produto.quantidadeProduto# Converta para string no formato desejado
 
-    context={
-        'Venda':venda,
-        'Item':item
-    } 
-    return render(request,"cruvenda/exib_venda.html",context)
+    response_data = {
+        'preco': preco,
+        'quantidade': quantidadeRestante,
+    }
+    return JsonResponse(response_data)
+
+
 
 @login_required
 def criar_venda2(request):
@@ -402,6 +401,8 @@ def criar_venda(request, id):
                 itemvenda.produtoId = produto1
                 itemvenda.save()
                 print('item corrigido')
+                
+        
 
         print("Aqui validou redirect")
         if "addpV2" in request.POST:
@@ -462,11 +463,12 @@ def criar_venda(request, id):
         'max':maxqtd
     }
     return render(request, f'cruvenda/criar_venda.html', context)
-
+"""
 @login_required
 def addp(request,id):
     print
-
+"""
+# Atualmente inutilizado
 @login_required
 def addpV2(request,id):
     venda1 = Venda.objects.get(id=id)
@@ -487,7 +489,9 @@ def addpV2(request,id):
             itemvenda.produtoId = produto1
             itemvenda.save()
             print('item corrigido') 
-   
+        itemvenda.tot = venda2.produtoId.precoProduto * venda2.quantidade
+        print(f"{venda2.tot} o preco aq é")
+        venda2.save()
     return redirect(request.META.get('HTTP_REFERER', '/'))
 
  
@@ -498,7 +502,18 @@ def removep(request,id):
     
     return redirect(request.META.get('HTTP_REFERER', '/'))
 
+@login_required
+def exib_venda(request,id):
+    
+    venda = Venda.objects.get(id=id)
+    item = ItemVenda.objects.filter(venda=id).order_by('produtoId')
+    produto = Produto.objects.all()
 
+    context={
+        'Venda':venda,
+        'Item':item
+    } 
+    return render(request,"cruvenda/exib_venda.html",context)
 """
 @login_required
 def deletar_produto(request,id):

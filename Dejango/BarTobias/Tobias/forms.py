@@ -1,5 +1,5 @@
 from django import forms
-from django.forms import Form, ModelForm, inlineformset_factory
+from django.forms import Form, ModelForm, inlineformset_factory, modelformset_factory
 from .models import Produto, Venda, Funcionario1, Funcionario2, Funcionario, Cliente, ItemVenda
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
@@ -9,21 +9,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
 CustomUser = get_user_model()
 
-class ProdutoForm(ModelForm):
-    class Meta:
-        model = Produto
-        fields = '__all__'  
 
-class ClienteForm(ModelForm):
-    class Meta:
-        model = Cliente
-        fields = '__all__'  
-        
-
-class VendaForm(ModelForm):
-    class Meta:
-        model = Venda
-        fields = ['funcionarioId','clienteId']  
 
 class FuncionarioForm(UserCreationForm):
     password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
@@ -40,11 +26,26 @@ class Funcionario1Form(ModelForm):
 class Funcionario2Form(ModelForm):
     class Meta:
         model = Funcionario2
-        fields = '__all__'  
+        fields = ['descricao']  
         
-class ItemVendaForm(ModelForm):
+class ProdutoForm(forms.ModelForm):
     class Meta:
-        model = ItemVenda 
+        model = Produto
+        fields = '__all__'
+
+class ClienteForm(forms.ModelForm):
+    class Meta:
+        model = Cliente
+        fields = '__all__'
+
+class VendaForm(forms.ModelForm):
+    class Meta:
+        model = Venda
+        fields = ['funcionarioId', 'clienteId']
+
+class ItemVendaForm(forms.ModelForm):
+    class Meta:
+        model = ItemVenda
         fields = ['produtoId', 'quantidade']
         
 ItemVendaFormSet = inlineformset_factory(
