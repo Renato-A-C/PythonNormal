@@ -1,7 +1,7 @@
 from django.urls import path, include
 from django.conf import settings
 from . import views
-from .views import relatorio_pdf
+
 
 urlpatterns = [
     # Janelas principais
@@ -56,7 +56,8 @@ urlpatterns = [
     path("crucliente/deletar_cliente", views.deletar_cliente, name="deletar_cli"),
     path("crucliente/deletar_cliente/<int:id>", views.deletar_cliente, name="deletar_cliente"),
     # Views gerais
-    path('relatorios/relatorio/', relatorio_pdf.as_view(), name='relatorio_pdf'),
+    path('itens_venda/<int:id>/', views.generate_items_pdf, name='pdf'),
+
     
     #janela de administração geral
     path('accounts/', include('django.contrib.auth.urls')) 

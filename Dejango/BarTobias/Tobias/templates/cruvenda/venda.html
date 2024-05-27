@@ -24,8 +24,8 @@
                 </select>
             </td>
             <td id="funcionario_info"></td>
-            <td id="data_info"></td>
-            <td>  </td>
+            <td id="data_info" style="width: 300px;"></td>
+            <td></td>
 
               
         </tr>
@@ -35,7 +35,10 @@
             <td>{{venda.id}}  </td>
             <td> {{venda.funcionarioId}} </td>
             <td> {{venda.dataVenda}} </td>
-            <td> <a type="button" class="btn btn-primary" href="{% url 'exib_venda' venda.id %}">visualizar</a> </td>
+            <td style="text-align: right; width: 300px;"> 
+                <a type="button" class="btn btn-primary" href="{% url 'exib_venda' venda.id %}">visualizar</a> 
+                <a type="button" class="btn btn-primary" href="{% url 'pdf' venda.id %}">PDF</a> 
+            </td>
         </tr> 
         {% endfor %}
     </table>
