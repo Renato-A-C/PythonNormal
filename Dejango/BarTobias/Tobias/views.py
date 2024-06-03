@@ -1,16 +1,20 @@
+from django.contrib.auth.models import Group
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required, permission_required
-from django.http import HttpResponse, FileResponse, HttpResponseRedirect, JsonResponse
+from django.http import HttpResponse, FileResponse, HttpResponseRedirect, JsonResponse, HttpResponseForbidden
 from django.template import loader
 from django.contrib import messages
+from django.contrib.auth.models import User
 from django.contrib.auth import login,logout,authenticate
 from django.views.generic import View
 from django.forms import formset_factory
 from django.utils import timezone
 from .models import Produto, Venda, Funcionario, Funcionario1, Funcionario2, ItemVenda, Cliente
 from .forms import ProdutoForm,  VendaForm, FuncionarioForm, Funcionario1Form, Funcionario2Form, ClienteForm, ItemVendaForm, ItemVendaFormSet
+from .utils import is_chefe, is_funcionario
 
+import re
 from reportlab.pdfgen import canvas
 from django.template.loader import render_to_string
 from reportlab.lib.pagesizes import letter, A4
@@ -150,7 +154,7 @@ def criar_produto(request):
     else:
         form = ProdutoForm()
         print("não funfo")
-        return redirect(request.META.get('HTTP_REFERER', '/'))
+        return render(request, 'cruproduto/lista_produto.html', {'form': form})
 
      
 
@@ -173,13 +177,8 @@ def alterar_produto(request,id):
     else:
         print("nao é post")
         return redirect(request.META.get('HTTP_REFERER', '/'))
-"""
-    context = {
-        'Produto': produto,
-               
-    }
-    return render(request,'cruproduto/alterar_produto.html',context)
-"""
+
+
 @login_required
 def lancar_produto(request,id):
     produto = Produto.objects.get(id=id)
@@ -218,47 +217,91 @@ def consulta_produto(request):
 """ 
 
 @login_required
+def verif(request):
+    grupo = Group.objects.get(id=1)
+    permissoes = grupo.permissions.all()
+    for permissao in permissoes:
+        print(f'Permissão: {permissao.name} (codename: {permissao.codename})')
+    
+    return redirect(request.META.get('HTTP_REFERER', '/'))
+
+@login_required
+def promover(request,id):
+    
+    if not request.user.is_superuser:
+        return HttpResponseForbidden("Você não tem permissão para acessar esta página.")
+    func = get_object_or_404(Funcionario, id=id)
+    grupo = get_object_or_404(Group, id=1)
+    func.groups.add(grupo)
+    func.save()  # Salva a instância do usuário após a modificação
+    
+    return redirect("lista_funcionario")
+    
+@permission_required('Tobias.view_funcionario')
+@login_required
+
 def lista_funcionario(request):
-    funcionario = Funcionario.objects.all().order_by('nome')
+    #funcionario = Funcionario.objects.all().order_by('nome')
+    funcionario = Funcionario.objects.filter(excluido=False).order_by('nome')
     funcionario1 = Funcionario1.objects.all()
     desc = Funcionario2.objects.all()
+    for funcionarios in funcionario:
+        funcionarios.e_chefe = funcionarios.groups.filter(id=1).exists()
+     
     context={
         'funcionario': funcionario,
         'funcionario1': funcionario1,
         'desc': desc,
+        
+
     } 
     return render(request,"crufunc/lista_funcionario.html", context)
 
-@login_required
+# Verifica se o usuário pertence ao grupo 'chefe'
+@permission_required('Tobias.view_funcionario')
 @login_required
 def cad_funcionario(request):
     if request.method == "POST":
         form = FuncionarioForm(request.POST)
-        func1 = Funcionario1Form(request.POST)
-        func2 = Funcionario2Form(request.POST)
-        if form.is_valid() and func1.is_valid() and func2.is_valid():
+        func1_form = Funcionario1Form(request.POST)
+        func2_form = Funcionario2Form(request.POST)
+        if form.is_valid() and func1_form.is_valid() and func2_form.is_valid():
             user = form.save()
-            func = func1.save(commit=False)
-            func.autor = user
-            func.save()
-            funcData = func2.save(commit=False)
-            funcData.funcionarioId = user
-            funcData.save()
+            func1 = func1_form.save(commit=False)
+            func1.autor = user
+            func1.save()
+            func2 = func2_form.save(commit=False)
+            func2.funcionarioId = user
+            func2.save()
+
+            # Verifica o grupo do usuário atual
+            grupo_name = 'Funcionario'
+
+            # Adiciona o usuário ao grupo correspondente
+            try:
+                grupo = Group.objects.get(name='Funcionario')
+                user.groups.add(grupo)
+            except Group.DoesNotExist:
+                # Lidar com o caso em que o grupo não existe
+                print("O grupo 'Funcionario' não existe.")
+            except Exception as e:
+                # Lidar com outros erros
+                print(f"Erro ao adicionar usuário ao grupo: {e}")
+
             return redirect('lista_funcionario')
         else:
-            print(form.errors, func1.errors, func2.errors)
+            print(form.errors, func1_form.errors, func2_form.errors)
     else:
         form = FuncionarioForm()
-        func1 = Funcionario1Form()
-        func2 = Funcionario2Form()
+        func1_form = Funcionario1Form()
+        func2_form = Funcionario2Form()
 
     context = {
         'form': form,
-        'func1': func1,
-        'func2': func2,
+        'func1_form': func1_form,
+        'func2_form': func2_form,
     }
     return render(request, "registration/cad_funcionario.html", context)
-
 
 @login_required
 def alterar_funcionario(request, id):
@@ -272,7 +315,7 @@ def alterar_funcionario(request, id):
         modeloUser.nome = request.POST.get('nome')
         modeloUser.sobreNome = request.POST.get('sobreNome')
         linhaFuncionario.nomeFuncionario = request.POST.get('nomeFuncionario')
-        linhaFuncionario.cpfFuncionario = request.POST.get('cpfFuncionario')
+        linhaFuncionario.cpfFuncionario = request.POST.get('cpf')
         linhaFuncionario.enderecoFuncionario = request.POST.get('enderecoFuncionario')
         
             
@@ -300,11 +343,12 @@ def alterar_funcionario(request, id):
 
 @login_required
 def deletar_funcionario(request,id):
-    funcionario = Funcionario1.objects.get(id=id)
-    try:
-        funcionario.delete()
-    except:
-        pass
+    funcionario = Funcionario.objects.get(id=id)
+    funcionario.excluido = True
+    funcionario.save()
+    print("DELETADO")
+        
+
     return redirect('lista_funcionario')
 
 
@@ -370,7 +414,7 @@ def criar_venda(request, id):
     funcionario = Funcionario1.objects.all()
     produto = Produto.objects.all()
     venda2 = ItemVenda.objects.filter(venda=id)
-    qtdProdutoBanco  = Produto.objects.filter(quantidadeProduto__gt=0).count()
+    qtdProdutoBanco  = Produto.objects.filter(quantidadeProduto__gt=0, excluido=False).count()
     maxqtd = ItemVenda.objects.filter(venda=id).count()
     print(ItemVenda.objects.count())
 
@@ -443,14 +487,14 @@ def criar_venda(request, id):
                 venda1.precoTotal = pTotal
                 venda1.save()
             
-            for index in ItemVenda.objects.filter(venda= venda1):
+            for index in ItemVenda.objects.filter(venda= venda1 ):
                 prod = Produto.objects.get(id = index.produtoId.id)
-                qtd = prod.quantidadeProduto
+                qtd = prod.quantidadeProduto 
                 prod.quantidadeProduto = qtd - index.quantidade
                 momento = timezone.now()
                 prod.dataAlteracao = momento
                 prod.save()
-                print(f"{qtd}, {index.quantidade}")
+                print(f"{qtd-1}, {index.quantidade}")
 
             return redirect('venda')
             
@@ -635,6 +679,13 @@ def generate_items_pdf(request, id):
         'Total',  # Texto 'Total'
         f"R$ {venda.precoTotal:.2f}"  # Valor total da venda
     ])
+    data.append([
+        '',  # Coluna vazia para o índice
+        f'Funcionario: {venda.funcionarioId.nomeFuncionario} ',  # Coluna vazia para a descrição
+        f'Cliente {venda.clienteId.nomeCliente}',  # Coluna vazia para a quantidade
+          # Texto 'Total'
+          # Valor total da venda
+    ])
     table = Table(data, colWidths=[40, 200, 70, 90, 90])
     table.setStyle(TableStyle([
         ('BACKGROUND', (0, 0), (-1, 0), colors.lightgrey),  # Fundo do cabeçalho
@@ -650,3 +701,4 @@ def generate_items_pdf(request, id):
     doc.build(elements)  # Constrói o PDF com os elementos
     
     return response 
+

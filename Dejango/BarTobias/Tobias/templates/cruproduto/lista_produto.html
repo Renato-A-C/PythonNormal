@@ -81,7 +81,7 @@
             <td>{{ Produto.dataAlteracao }} </td>
             <td>
               {% if Produto.quantidadeProduto < 10 and Produto.quantidadeProduto > 0 %}
-              Quantidade Crítica
+              Baixo Estoque
               {% elif Produto.quantidadeProduto == 0 %}
               Zerado
               {% else %}

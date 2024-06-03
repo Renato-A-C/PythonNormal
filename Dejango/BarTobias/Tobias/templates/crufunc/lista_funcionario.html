@@ -11,86 +11,119 @@
         <tr>
             <th>Nome do Funcionario</th>
             <th>Sobrenome</th>
-            <th></th>
+            <th scope="col">Ações</th>
+            
         </tr>
         
         {% for funcionario in funcionario %}
-
-        
+        {% if funcionario.excluido == True %}
+        {% else %}
         <tr>
           
-            <td>{{ funcionario.nome }} | {{funcionario.funcionario1.nomeFuncionario}} </td>
-            <td>{{ funcionario.sobreNome }}</td>
-            <td><a type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#b{{ funcionario.id }}">Alterar</a>
-                <div>
-                  <div class="modal fade" id="b{{ funcionario.id }}" tabindex="-1" role="dialog">
-                    <form action="{% url 'alterar_funcionario' funcionario.id %}" method="POST">
-                      {% csrf_token %} 
-                      <div class="modal-dialog modal-lg">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <h4 class="modal-title text-danger">Alterar {{funcionario.nome}} {{ funcionario.sobreNome }}</h4>
-                          </div>
-                          <div class="modal-body text-dark">
-                            <table class="text-dark">
-                              <tr>
-                                <td class="especial" style="width: 310px;">
-                                  <h6 class="text-dark">Usuario:</h6> 
-                                  <input type="text"  placeholder="{{funcionario.nome}}" value="{{funcionario.nome}}" class="form-control form-control-sm" name="nome" maxlength="30" required id="nome" autofocus style="width:300px;"> 
-                                </td>
-                                <td class="especial"style="width: 140px;" >
-                                  <h6 class="text-dark">Nome Funcionario</h6> 
-                           
-                                  <input type="text" value="{{ funcionario.funcionario1.nomeFuncionario }}" class="form-control form-control-sm" name="nomeFuncionario"   id="nomeFuncionario"  required style="width: 150px;">
-                                </td>
-                                <td class="especial"style="width: 140px;" >
-                                 <h6 class="text-dark">Sobrenome</h6> 
-                          
-                                <input type="text" value="{{ funcionario.sobreNome }}" placeholder="{{ funcionario.sobreNome }}" class="form-control form-control-sm" size="50" name="sobreNome" step="0.01" required id="sobreNome" style="width: 130px;">
-                                </td>
+          <td style="width: 400px;">{{ funcionario.nome }} | {{funcionario.funcionario1.nomeFuncionario}} </td>
+          <td style="width: 400px;">{{ funcionario.sobreNome }}</td>
+          <td style="width: 300px; ">
+            {% if user.is_superuser %}
+            {% if not funcionario.e_chefe %}
+            <!-- Exibir o botão "Promover" apenas se o grupo com ID 1 não estiver associado ao funcionário -->
+            <a type="button" class='btn btn-outline-success btn-sm' href="{% url "promover" funcionario.id %}">promover</a>
+            {% endif %}
+            {% endif %}
+            <a type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#b{{ funcionario.id }}">Alterar</a>
+            <div class="modal fade" id="b{{ funcionario.id }}" tabindex="-1" role="dialog">
+              <form action="{% url 'alterar_funcionario' funcionario.id %}" method="POST">
+                {% csrf_token %} 
+                <div class="modal-dialog modal-lg">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h4 class="modal-title text-danger">Alterar {{funcionario.nome}} {{ funcionario.sobreNome }}</h4>
+                    </div>
+                    <div class="modal-body text-dark">
+                      <table class="text-dark">
+                        <tr>
+                          <td class="especial" style="width: 310px;">
+                            <h6 class="text-dark">Usuario:</h6> 
+                            <input type="text"  placeholder="{{funcionario.nome}}" value="{{funcionario.nome}}" class="form-control form-control-sm" name="nome" maxlength="30" required id="nome" autofocus style="width:300px;"> 
+                          </td>
+                          <td class="especial"style="width: 140px;" >
+                            <h6 class="text-dark">Nome Funcionario</h6> 
+                     
+                            <input type="text" value="{{ funcionario.funcionario1.nomeFuncionario }}" class="form-control form-control-sm" name="nomeFuncionario"   id="nomeFuncionario"  required style="width: 150px;">
+                          </td>
+                          <td class="especial"style="width: 140px;" >
+                           <h6 class="text-dark">Sobrenome</h6> 
+                    
+                          <input type="text" value="{{ funcionario.sobreNome }}" placeholder="{{ funcionario.sobreNome }}" class="form-control form-control-sm" size="50" name="sobreNome" step="0.01" required id="sobreNome" style="width: 130px;">
+                          </td>
 
-                              </tr>
-                              <tr>
-                                <td class="especial"style="width: 160px;">
-                                    <h6 class="text-dark">Cpf</h6> 
-                                    <input type="number" value="{{ funcionario.funcionario1.cpfFuncionario }}" class="form-control form-control-sm" name="cpfFuncionario"   id="cpfFuncionario"  required style="width: 150px;">
-                                </td>
-                                <td class="especial"style="width: 160px;">
-                                    <h6 class="text-dark">Endereco</h6> 
-                                    <input type="text" value="{{ funcionario.funcionario1.enderecoFuncionario }}" class="form-control form-control-sm" name="enderecoFuncionario"   id="enderecoFuncionario"  required style="width: 150px;">
-                                </td>
-                                
-                                
-                               
-                              </tr>
-                              <tr>
-                                <td>
-                                  <h6 class="text-dark">Descrição adicional</h6>
-                                  {% for desc in desc %}
-                                  {% if desc.funcionarioId.id == funcionario.id %}
-                                  
-                                  <input type="text" value="{{ desc.descricao }}" class="form-control form-control-sm" name="descricao"   id="descricao"  required style="width: 150px;">
-
-                                  {% endif %}
-                                  {% endfor %}
-                                  </td>
-                                  <td></td>
-                                </tr>
-                            </table>
-                          </div>
+                        </tr>
+                        <tr>
+                          <td class="especial"style="width: 160px;">
+                              <h6 class="text-dark">Cpf</h6> 
+                              <input type="number" value="{{ funcionario.cpf }}" class="form-control form-control-sm" name="cpfFuncionario"   id="cpfFuncionario"  required style="width: 150px;">
+                          </td>
+                          <td class="especial"style="width: 160px;">
+                              <h6 class="text-dark">Endereco</h6> 
+                              <input type="text" value="{{ funcionario.funcionario1.enderecoFuncionario }}" class="form-control form-control-sm" name="enderecoFuncionario"   id="enderecoFuncionario"  required style="width: 150px;">
+                          </td>
                           
-                          <div class="modal-footer">
-                            <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
-                   
-                            <button type="submit" class="btn btn-primary ">Alterar</button>
-                          </div>
-                          </div>
-                        </div>
-                      </div>
-                    </form>
+
+                        </tr>
+                        <tr>
+                          <td>
+                            <h6 class="text-dark">Descrição adicional</h6>
+                            {% for desc in desc %}
+                            {% if desc.funcionarioId.id == funcionario.id %}
+                            
+                            <input type="text" value="{{ desc.descricao }}" class="form-control form-control-sm" name="descricao"   id="descricao"  required style="width: 150px;">
+
+                            {% endif %}
+                            {% endfor %}
+                            </td>
+                            <td></td>
+                          </tr>
+                      </table>
+                    </div>
+                    
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+             
+                      <button type="submit" class="btn btn-primary ">Alterar</button>
+                    </div>
+                    </div>
                   </div>
-        </tr>
+                </div>
+              </form>
+            </div> 
 
+                <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#a{{ funcionario.id }}">Excluir</button>
+                <div class="modal " id="a{{ funcionario.id }}">
+                  <div class="modal-dialog ">
+                      <div class="modal-content">
+                          <div class="modal-header">
+                              <h4 class="modal-title text-danger">Tem certeza? </h4>
+                          </div>
+                          <div class="modal-body text-dark">Deseja excluir? o {{funcionario.funcionario1.nomeFuncionario}}?</div>
+                          <div class="modal-footer">
+                              <table>
+                                  <tr>
+                                      <td><button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button></td>
+                                      <td><a type="button" class="btn btn-danger" href="{% url 'deletar_funcionario' funcionario.id %}">Deletar</a></td>
+                                  </tr>
+                              </table>
+                          </div>
+                      </div>  
+                  </div>
+              </div>
+
+                <td>
+      </tr>
+        {% endif %}
+        
+       
+
+    
+        
         {% endfor %}
         <tr>
             <td><a href="{% url 'cad_funcionario' %}" class="btn btn-primary btn-sm">Cadastrar novo</a></td>
@@ -99,4 +132,6 @@
         </tr>
     </table>
 </div>
+
+
 {% endblock content %}

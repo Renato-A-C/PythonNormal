@@ -9,7 +9,7 @@
     </title>
     <style>
       label {
-        width: 5000px;
+        width: 500px;
         display: inline-block;
       }
       .fundo {
@@ -34,6 +34,7 @@
   
     <!-- JS, Popper.js, and jQuery -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
     <!-- CSS do Select2 -->
@@ -57,12 +58,13 @@
               produtos
             </a>
           </li>
-
+          {% if perms.Tobias.view_funcionario %}
           <li class="nav-item {% block active4 %} {% endblock %}">
             <a class="nav-link {% block desativa4 %}{% endblock %}"href="{% url 'lista_funcionario' %}">
               funcionario
             </a>
           </li>
+          {% endif %}
           <li class="nav-item {% block active5 %} {% endblock %}">
             <a class="nav-link {% block desativa5 %}{% endblock %}"href="{% url 'lista_cliente' %}">
               Cliente
@@ -73,18 +75,26 @@
               venda 
             </a>
           </li>
+          {% if user.is_superuser %}
           <li class="nav-item">
             <a class="nav-link" href="{% url 'admin:index' %}">áreaAdmin</a>
           </li>
+          {% endif %}
         </ul>
 
       </div>
       <ul class="navbar-nav me-auto">
-      {% if user.is_authenticated %}
-        <span class="navbar-text">Logado como {{user.nome}} ||  </span>
-        
-      <a class="nav-link" href="{% url 'logout' %}">deslogar</a>
-      {% endif %}
+        {% if user.is_authenticated %}
+          <span class="navbar-text">Logado como {{ user.funcionario1.nomeFuncionario }} ||  </span>
+          
+          <!-- Formulário de logout oculto -->
+          <form id="logout-form" method="post" action="{% url 'logout' %}" style="display: none;">
+            {% csrf_token %}
+          </form>
+      
+          <!-- Botão de logout que envia o formulário de logout quando clicado -->
+          <a class="nav-link" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Deslogar</a>
+        {% endif %}
       </ul>
     </nav>
 

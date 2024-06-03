@@ -36,6 +36,7 @@ urlpatterns = [
     path("crufunc/alterar_funcionario/<int:id>", views.alterar_funcionario, name="alterar_funcionario"),
     path("crufunc/deletar_funcionario", views.deletar_funcionario, name="deletar_func"),
     path("crufunc/deletar_funcionario/<int:id>", views.deletar_funcionario, name="deletar_funcionario"),
+    path("crufunc/promover/<int:id>", views.promover, name="promover"),
      
     # Crud para vendas
     path("cruvenda/venda", views.venda, name="venda"),
@@ -58,6 +59,7 @@ urlpatterns = [
     # Views gerais
     path('itens_venda/<int:id>/', views.generate_items_pdf, name='pdf'),
 
+    path('verif', views.verif, name="verif"),
     
     #janela de administração geral
     path('accounts/', include('django.contrib.auth.urls')) 

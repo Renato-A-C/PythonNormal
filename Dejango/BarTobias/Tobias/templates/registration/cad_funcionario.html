@@ -1,65 +1,86 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load crispy_forms_tags %}
-{% block title %} Cadastrar novos Funcionarios{% endblock %}{% block active4 %} active{% endblock %}{% block desativa4%} disabled{% endblock %}
+{% block title %}Cadastrar novos Funcionarios{% endblock %}
+{% block active4 %}active{% endblock %}
+{% block desativa4 %}disabled{% endblock %}
 {% block content %}
-<form method="post">
-    {% csrf_token %}
-    <div class="container">
-        <h2>Registrar</h2>
-
-        <div class="form-group">
-            <label for="email">Email:</label>
-            <input type="email" name="email" class="form-control" id="email" required="email" placeholder="Enter email">
-        </div>
-
-        <div class="form-group">
-            <label for="nome">Nome do usuario :</label>
-            <input type="text" name="nome" class="form-control" id="nome" placeholder="Coloque o nome de usuario">
-        </div>
+<div class="container">
+    <h2>Registrar</h2>
+    <form method="post">
+        {% csrf_token %}
         
-
         <div class="form-group">
-            <label for=" nomeFuncionario">Nome do funcionario:</label>
-            <input type="text" name="nomeFuncionario" class="form-control" id=" nomeFuncionario" placeholder="Coloque o nome do funcionario">
-        </div>
-        <div class="form-group">
-            <label for=" sobreNome">Sobrenome:</label>
-            <input type="text" name="sobreNome" class="form-control" id=" sobreNome" placeholder="Coloque o sobrenome">
-        </div>
-        <div class="form-group">
-            <label for=" cpfFuncionario">CPF:</label>
-            <input type="number" step="1" name="cpfFuncionario" class="form-control" max="10000000000" id=" cpfFuncionario" placeholder="Coloque o cpf funcionario">
-        </div>
-        <div class="form-group">
-            <label for=" enderecoFuncionario">ENDERECO:</label>
-            <input type="text" name="enderecoFuncionario" class="form-control" id=" enderecoFuncionario" placeholder="Coloque o endereco do funcionario">
-        </div>
-        <div class="form-group">
-            <label for=" descricao">Descricao:</label>
-            <input type="text" name="descricao" class="form-control" id=" descricao" placeholder="Enter description">
-        </div>
-        <div class="form-group">
-            <label for=" password1">Digite a senha</label>
-            <input type="password" name="password1" class="form-control" id=" password1" placeholder="Digite a senha">
-
+            <label for="id_email">Email:</label>
+            <input type="email" name="email" class="form-control" id="id_email" required placeholder="Enter email">
         </div>
 
         <div class="form-group">
-            <label for=" password2">Confirme a senha</label>
-            <input type="password" name="password2" class="form-control" id=" password2" placeholder="Confirme a senha">
+            <label for="id_nome">Nome do usuário:</label>
+            <input type="text" name="nome" class="form-control" id="id_nome" required placeholder="Coloque o nome de usuário">
         </div>
 
+        <div class="form-group">
+            <label for="id_nomeFuncionario">Nome do funcionário:</label>
+            <input type="text" name="nomeFuncionario" class="form-control" id="id_nomeFuncionario" required placeholder="Coloque o nome do funcionário">
+        </div>
+
+        <div class="form-group">
+            <label for="id_sobreNome">Sobrenome do funcionário:</label>
+            <input type="text" name="sobreNome" class="form-control" id="id_sobreNome" required placeholder="Coloque o sobrenome">
+        </div>
+
+        <div class="form-group">
+            <label for="id_cpf">CPF do Funcionário:</label>
+            <input type="text" name="cpf" class="form-control" id="id_cpf" required placeholder="Digite o CPF">
+            {% for error in form.cpf.errors %}
+                <div class="alert alert-danger">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <div class="form-group">
+            <label for="id_enderecoFuncionario">Endereço do funcionário:</label>
+            <input type="text" name="enderecoFuncionario" class="form-control" id="id_enderecoFuncionario" required placeholder="Coloque o endereço do funcionário">
+        </div>
+
+        <div class="form-group">
+            <label for="id_descricao">Descrição do funcionário:</label>
+            <input type="text" name="descricao" class="form-control" id="id_descricao" required placeholder="Enter description">
+        </div>
+
+        <div class="form-group">
+            <label for="id_password1">Digite a senha:</label>
+            <input type="password" name="password1" class="form-control" id="id_password1" required placeholder="Digite a senha">
+        </div>
+
+        <div class="form-group">
+            <label for="id_password2">Confirme a senha:</label>
+            <input type="password" name="password2" class="form-control" id="id_password2" required placeholder="Confirme a senha">
+        </div>
 
         <button type="submit" class="btn btn-primary">Registrar</button>
+        
         {% for k, v in form.errors.items %}
         <div class="alert alert-danger">{{ v }}</div>
-      {% endfor %}
-      {% for k, v in func1.errors.items %}
+        {% endfor %}
+        {% for k, v in func1.errors.items %}
         <div class="alert alert-danger">{{ v }}</div>
-      {% endfor %}
-      {% for k, v in func2.errors.items %}
+        {% endfor %}
+        {% for k, v in func2.errors.items %}
         <div class="alert alert-danger">{{ v }}</div>
-      {% endfor %}
-    </div>
-{% endblock  %}
+        {% endfor %}
+    </form>
+</div>
+
+<!-- Add jQuery and jQuery Mask Plugin -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+<script>
+$(document).ready(function(){
+    $('#id_cpf').mask('000.000.000-00', {reverse: true});
+    $('#id_cpf').on('change', function(){
+        $(this).val($(this).val().replace(/[^\d]/g, '')); // Remove todos os caracteres não numéricos
+    });
+});
+</script>
+{% endblock %}

@@ -3,17 +3,18 @@
 {% block active3 %}active{% endblock active3 %}{% block desativa3 %}disabled{% endblock desativa3 %}
 {% load static %}
 {% block content %}
-<a type="button" class="btn btn-success" href="{% url 'criar_venda2' %}">Criar nova venda</a>
+
 
 
 <div class="container mt-5">
     <h1 style="text-align: center;">Listar Vendas</h1>
+    <a type="button" class="btn btn-success" href="{% url 'criar_venda2' %}">Criar nova venda</a>
     <table class="table table-sm table-hover table-dark ">
         <tr>
             <th scope="col">ID</th>
             <th scope="col">Usuario</th>
             <th scope="col">Data</th>
-            
+            <th scope="col"></th>
         </tr>        
         <tr>
             <td>
@@ -23,7 +24,7 @@
                     {% endfor %}
                 </select>
             </td>
-            <td id="funcionario_info"></td>
+            <td id="funcionario_info">Pesquisar Venda</td>
             <td id="data_info" style="width: 300px;"></td>
             <td></td>
 

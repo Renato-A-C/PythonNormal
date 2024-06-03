@@ -23,16 +23,30 @@
         </div>
     <div class="form-group">
         <label for="nomeCliente">Nome do cliente:</label>
-        <input type="text" name="nomeCliente" maxlength="30" required="nomeCliente" id="nomeCliente" class="form-control">
+        <input type="text" name="nomeCliente" maxlength="30" required="nomeCliente" id="nomeCliente" class="form-control" placeholder="Digite o Nome">
     </div>
     
 
     <div class="form-group">
-        <label for="cpf">cpf/cnpj:</label>
-    <input class="form-control" type="number" min="0" size="15" name="cpf" id="cpf" required="cpf">
-      
+        <label for="id_cpf">CPF do Cliente:</label>
+        <input type="text" name="cpf" class="form-control" id="id_cpf" required placeholder="Digite o CPF">
+        {% for error in cliente.cpf.errors %}
+            <div class="alert alert-danger">{{ error }}</div>
+        {% endfor %}
     </div>
     <button type="submit" class="btn btn-success">Criar cliente</button>
     </form>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+
+<script>
+    $(document).ready(function(){
+        $('#id_cpf').mask('000.000.000-00', {reverse: true});
+        $('#id_cpf').on('change', function(){
+            $(this).val($(this).val().replace(/[^\d]/g, '')); // Remove todos os caracteres não numéricos
+        });
+    });
+    </script>
 {% endblock content %}
