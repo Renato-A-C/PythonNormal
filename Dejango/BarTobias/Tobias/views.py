@@ -10,8 +10,8 @@ from django.contrib.auth import login,logout,authenticate
 from django.views.generic import View
 from django.forms import formset_factory
 from django.utils import timezone
-from .models import Produto, Venda, Funcionario, Funcionario1, Funcionario2, ItemVenda, Cliente
-from .forms import ProdutoForm,  VendaForm, FuncionarioForm, Funcionario1Form, Funcionario2Form, ClienteForm, ItemVendaForm, ItemVendaFormSet
+from .models import Produto, Venda, Funcionario, Funcionario1, Funcionario2, ItemVenda, Cliente, Estoque
+from .forms import ProdutoForm,  VendaForm, FuncionarioForm, Funcionario1Form, Funcionario2Form, ClienteForm, ItemVendaForm, ItemVendaFormSet, EstoqueForm
 from .utils import is_chefe, is_funcionario
 
 import re
@@ -33,10 +33,11 @@ def home(request):
 #  nome
 @login_required
 def lista_produto(request):
-    Produtos = Produto.objects.all().order_by("nomeProduto")
-
+    produto = Produto.objects.all().order_by('nomeProduto')
+    produto1 = Estoque.objects.all()
     context ={
-        'Produto':Produtos,
+        'Produto':produto,
+        'produto1':produto1,
         'func':Funcionario1.objects.all(),
     }    
     return render(request,"cruproduto/lista_produto.html", context)
@@ -44,12 +45,13 @@ def lista_produto(request):
 @login_required
 def lista_produtod(request):
     Produtos = Produto.objects.all().order_by("-nomeProduto")
-
+    
+    estoque = Estoque.objects.all()
     context ={
         'Produto':Produtos,
+        'estoque':estoque,
         'func':Funcionario1.objects.all(),
-    }
-    
+    }    
     return render(request,"cruproduto/lista_produto.html", context)
 
 # preco
@@ -57,21 +59,24 @@ def lista_produtod(request):
 def lista_produtopa(request):
     Produtos = Produto.objects.all().order_by("precoProduto")
 
+    estoque = Estoque.objects.all()
     context ={
         'Produto':Produtos,
+        'estoque':estoque,
         'func':Funcionario1.objects.all(),
-    }
-
+    }    
     return render(request,"cruproduto/lista_produto.html", context)
 
 @login_required
 def lista_produtopd(request):
     Produtos = Produto.objects.all().order_by("-precoProduto")
 
+    estoque = Estoque.objects.all()
     context ={
         'Produto':Produtos,
+        'estoque':estoque,
         'func':Funcionario1.objects.all(),
-    }
+    }  
     return render(request,"cruproduto/lista_produto.html", context)
 
 # data
@@ -79,100 +84,136 @@ def lista_produtopd(request):
 def lista_produtoda(request): 
     Produtos = Produto.objects.all().order_by("dataAlteracao")
 
+    estoque = Estoque.objects.all()
     context ={
         'Produto':Produtos,
+        'estoque':estoque,
         'func':Funcionario1.objects.all(),
-    }
+    }  
     return render(request,"cruproduto/lista_produto.html", context)
 
 @login_required
 def lista_produtodd(request):
     Produtos = Produto.objects.all().order_by("-dataAlteracao")
 
+    estoque = Estoque.objects.all()
     context ={
         'Produto':Produtos,
+        'estoque':estoque,
         'func':Funcionario1.objects.all(),
-    }
-    
-
+    }     
     return render(request,"cruproduto/lista_produto.html", context)
 
 # quantidade
 @login_required
 def lista_produtoqa(request):
-    Produtos = Produto.objects.all().order_by("quantidadeProduto")
+    Produtos = Produto.objects.all().order_by("estoque")
 
+    estoque = Estoque.objects.all()
     context ={
         'Produto':Produtos,
+        'estoque':estoque,
         'func':Funcionario1.objects.all(),
-    }
+    }   
     return render(request,"cruproduto/lista_produto.html", context)
 
 @login_required
 def lista_produtoqd(request):
-    Produtos = Produto.objects.all().order_by("-quantidadeProduto")
+    Produtos = Produto.objects.all().order_by("-estoque")
 
+    estoque = Estoque.objects.all()
     context ={
         'Produto':Produtos,
+        'estoque':estoque,
         'func':Funcionario1.objects.all(),
-    }
+    }    
     return render(request,"cruproduto/lista_produto.html", context)
 # id
 @login_required
 def lista_produtoia(request):
     Produtos = Produto.objects.all().order_by("id")
 
+    estoque = Estoque.objects.all()
     context ={
         'Produto':Produtos,
+        'estoque':estoque,
         'func':Funcionario1.objects.all(),
-    }
+    }    
     return render(request,"cruproduto/lista_produto.html", context)
 
 @login_required
 def lista_produtoid(request):
     Produtos = Produto.objects.all().order_by("-id")
 
+    estoque = Estoque.objects.all()
     context ={
         'Produto':Produtos,
+        'estoque':estoque,
         'func':Funcionario1.objects.all(),
-    }
+    }   
     return render(request,"cruproduto/lista_produto.html", context)
 
 # resto do crud produto
+
+"""
+    produto = models.OneToOneField(Produto, on_delete=models.CASCADE, related_name="produtoId")
+    categoria = models.CharField(db_column='categoria', max_length = 50, blank=True, choices=CATEGORIA_CHOICES)
+    tamanho = models.CharField(db_column='tamanho', max_length = 10, blank=True)
+    tipo_peso = models.CharField(db_column='tipo_peso', max_length = 50, blank=True, choices=TIPO_PESO_CHOICES)
+    quantidadeProduto = models.BigIntegerField(db_column='quantidadeProduto', blank=True, default=1)
+ 
+"""
 @login_required
 def criar_produto(request):
     if request.method == "POST":
         form = ProdutoForm(request.POST)
+        
         if form.is_valid():
-            print("funciounou")
-            try:
-                print(f"salvo ")
-                form.save()
-                return redirect(request.META.get('HTTP_REFERER', '/'))
-            except:
-                pass
+            produto = form.save(commit=False)  # Salva o produto sem commit
+            produto.save()  # Agora salva o produto de fato
+            
+            form1 = EstoqueForm(request.POST)
+            print(f"Dados do estoque antes da validação: {request.POST}")
+            if form1.is_valid():
+                estoque = form1.save(commit=False)
+                estoque.produtoId = produto  # Vincula o estoque ao produto salvo
+                estoque.save()  # Agora salva o estoque
+                
+                return redirect('lista_produto')
+            else:
+                print("Estoque form errors:", form1.errors)
+        else:
+            print("Produto form errors:", form.errors)
     else:
         form = ProdutoForm()
-        print("não funfo")
-        return render(request, 'cruproduto/lista_produto.html', {'form': form})
+        form1 = EstoqueForm()
+    
+    context = {
+        'form': form,
+        'form1': form1,  # Certifique-se de que ambos os formulários sejam passados ao template
+    }
+    return render(request, 'cruproduto/lista_produto.html', context)
+     
 
      
 
 @login_required
 def alterar_produto(request,id):
     produto = Produto.objects.get(id=id)
+    estoque = Estoque.objects.get(produtoId_id=produto)
     if request.method == "POST":
-        
-     
+        print(f"{request.POST}")
         produto.nomeProduto = request.POST.get('nomeProduto')
-        
         produto.precoProduto = request.POST.get('precoProduto')
       
-        produto.quantidadeProduto = request.POST.get('quantidadeProduto')
+        estoque.quantidadeProduto = request.POST.get('quantidadeProduto')
+        estoque.tamanho = request.POST.get('tamanho')
+        estoque.tipo_peso = request.POST.get('tipo_peso')
+        estoque.categoria = request.POST.get('categoria')
         #momento = timezone.now()
         #produto.dataAlteracao = momento
         produto.save()
-        
+        estoque.save()
         return redirect(request.META.get('HTTP_REFERER', '/'))
     else:
         print("nao é post")
@@ -182,14 +223,17 @@ def alterar_produto(request,id):
 @login_required
 def lancar_produto(request,id):
     produto = Produto.objects.get(id=id)
+    estoque = Estoque.objects.get(produtoId=id)
     if request.method == "POST":
-        qtd = produto.quantidadeProduto
+        qtd = produto.estoque.quantidadeProduto
         print(qtd)
 
-        produto.quantidadeProduto = produto.quantidadeProduto + int(request.POST.get('quantidadeProduto'))
+        qtd = produto.estoque.quantidadeProduto + int(request.POST.get('quantidadeProduto'))
+        estoque.quantidadeProduto = qtd
         momento = timezone.now()
         produto.dataAlteracao = momento
         produto.save()
+        estoque.save()
         print('produto lancado')
         return redirect(request.META.get('HTTP_REFERER', '/'))
     
@@ -369,7 +413,7 @@ def detalhes_venda(request):
     venda = Venda.objects.get(pk=venda_id)
     
     # Obtemos os dados diretamente da variável 'venda'
-    funcionario_id = venda.funcionarioId.nomeFuncionario # Supondo que 'funcionarioId' seja uma ForeignKey
+    funcionario_id = venda.funcionarioId.funcionario1.nomeFuncionario # Supondo que 'funcionarioId' seja uma ForeignKey
     data_venda = venda.dataVenda.strftime('%d/%m/%Y às %H:%M')# Converta para string no formato desejado
 
     response_data = {
@@ -384,7 +428,7 @@ def detalhes_produto(request):
     
     # Obtemos os dados diretamente da variável 'venda'
     preco = produto.precoProduto # Supondo que 'funcionarioId' seja uma ForeignKey
-    quantidadeRestante = produto.quantidadeProduto# Converta para string no formato desejado
+    quantidadeRestante = produto.estoque.quantidadeProduto# Converta para string no formato desejado
 
     response_data = {
         'preco': preco,
@@ -413,15 +457,16 @@ def criar_venda(request, id):
     venda1 = Venda.objects.get(id=id)
     funcionario = Funcionario1.objects.all()
     produto = Produto.objects.all()
+    estoque = Estoque.objects.all()
     venda2 = ItemVenda.objects.filter(venda=id)
-    qtdProdutoBanco  = Produto.objects.filter(quantidadeProduto__gt=0, excluido=False).count()
+    qtdProdutoBanco  = Estoque.objects.filter(quantidadeProduto__gt=0, excluido=False).count()
     maxqtd = ItemVenda.objects.filter(venda=id).count()
     print(ItemVenda.objects.count())
 
     if request.method == "POST":
         # = request.POST.get('')
         funcI = request.POST.get('funcionarioId')
-        func = Funcionario1.objects.get(id=funcI)
+        func = Funcionario.objects.get(id=funcI)
         venda1.funcionarioId = func
         cliE = request.POST.get('clienteId')
         cli = Cliente.objects.get(id=cliE)
@@ -488,7 +533,7 @@ def criar_venda(request, id):
                 venda1.save()
             
             for index in ItemVenda.objects.filter(venda= venda1 ):
-                prod = Produto.objects.get(id = index.produtoId.id)
+                prod = Estoque.objects.get(produtoId = index.produtoId.id)
                 qtd = prod.quantidadeProduto 
                 prod.quantidadeProduto = qtd - index.quantidade
                 momento = timezone.now()
@@ -681,7 +726,7 @@ def generate_items_pdf(request, id):
     ])
     data.append([
         '',  # Coluna vazia para o índice
-        f'Funcionario: {venda.funcionarioId.nomeFuncionario} ',  # Coluna vazia para a descrição
+        f'Funcionario: {venda.funcionarioId.funcionario1.nomeFuncionario} ',  # Coluna vazia para a descrição
         f'Cliente {venda.clienteId.nomeCliente}',  # Coluna vazia para a quantidade
           # Texto 'Total'
           # Valor total da venda

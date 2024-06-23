@@ -61,8 +61,8 @@ h2 {
                         <select class="form-control select2 produto-select" name="produtoId_{{ lproduto.id }}" id="produtoId_{{ lproduto.id }}" data-id="{{ lproduto.id }}" style="max-width: 200px;">
                             <option value="" disabled selected>Selecione...</option>
                             {% for produto in Produto %}
-                                {% if produto.quantidadeProduto > 0 and produto.excluido == False %}
-                                <option value="{{ produto.id }}" {% if lproduto.produtoId.id == produto.id %}selected{% endif %} data-quantidade="{{ produto.quantidadeProduto }}" data-preco="{{ produto.precoProduto }}">{{ produto.id }} | {{ produto.nomeProduto }}</option>
+                                {% if produto.estoque.quantidadeProduto > 0 and produto.excluido == False %}
+                                <option value="{{ produto.id }}" {% if lproduto.produtoId.id == produto.id %} selected {% endif %} data-quantidade="{{ produto.estoque.quantidadeProduto }}" data-preco="{{ produto.precoProduto }}">{{ produto.id }} | {{ produto.nomeProduto }}</option>
                                 {% endif %}
                             {% endfor %}
                         </select>

@@ -55,13 +55,13 @@
 
           <li class="nav-item {% block active2 %}{% endblock %}">
             <a class="nav-link {% block desativa2 %}{% endblock %}" href="{% url 'lista_produto' %}">
-              produtos
+              Produtos
             </a>
           </li>
           {% if perms.Tobias.view_funcionario %}
           <li class="nav-item {% block active4 %} {% endblock %}">
             <a class="nav-link {% block desativa4 %}{% endblock %}"href="{% url 'lista_funcionario' %}">
-              funcionario
+              Funcionário
             </a>
           </li>
           {% endif %}
@@ -72,12 +72,12 @@
           </li>
           <li class="nav-item {% block active3 %} {% endblock %}">
             <a class="nav-link {% block desativa3 %}{% endblock %}"href="{% url 'venda' %}">
-              venda 
+              Venda 
             </a>
           </li>
           {% if user.is_superuser %}
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'admin:index' %}">áreaAdmin</a>
+            <a class="nav-link" href="{% url 'admin:index' %}">Área-admin</a>
           </li>
           {% endif %}
         </ul>

@@ -1,0 +1,26 @@
+pwd "local" (-L | -P) # encontra diretório
+cd "local"(.. | -) # navega por diretórios
+ls "local" (-R | -a | -lh) # r: Lista todos os arquivos, inclusive no diretorio | a: Lista os ocultos | lh: Lista tamanho dos arquivos
+cat > "arquivo.ext" # cria arquivo
+cat "texto1.txt" "texto21.txt" > "texto3.txt" # concatena 2 arquivos para virar um terceiro
+tac "texto1.txt" # escreve os dados em ordem reversa
+cp "texto1.txt" "local/random/bait" # comando de cópia de arquivo para diretório
+cp -R local1 local2 # cópia de diretório para outro. Aninhado.
+mv "texto1.txt" "local/random/bait" # comando de recorte de arquivo para diretorio
+mv "texto1.txt" "texto2.txt" # Também renomeia arquivos
+mkdir (mod) Pasta # serve par criar diretórios, tem vários modificadores
+rmdir -p local # serve pra apagar diretórios, vazios. Precisa  de sudo
+rm arquivo.txt # Para apagar arquivos dentro de um diretório selecionado, pode apagar varios arquivos de uma vez
+touch "diretório/arquivo.extensao" # Cria um arquivo. Pode alterar alguns registros, mas não é eficiente pra isso
+locate "arquivo" # Localiza arquivos. se tiver o modificador -i , se torna insensitive case.
+find "arquivo" # localiza arquivos em um diretório específico
+grep arroz "texto.txt" # Permite filtrar conteúdo em documentos. Retorna as linhas de filtro
+Sudo, o comando que concede permissões. Deve estar sempre em inicio de comandos desejados
+df (-m | -k| -T) "arquivo" # Comando para listar o espaço que falta nu mdiretório e no disco, respectivamente, em megabyte, em kilobyte e tipo de sistema de arquivo (Mbr / gpt)
+du "diretorio ou arquivo" # verifica espaço ocupado.
+head (modificador) "arquivo" # comando para Obter primeiras linhas de um texto. -n para quantidade especificada
+tail (modificador) "arquivo" # similar ao anterior, mas mostra as linhas finais
+tar (modificador) (arquivos) (local final) # Comando para commprimir arquivos, em formato TAR, similar ao RAR ou ZIP
+jobs (modificador) jobID # é basicamente o gerenciador de tarefas listando serviços, mostra todos os processos em execução
+kill [SIGTERM (15) | SIGKILL (9)] Finaliza processos, o primeiro dá um tempo, o segundo força
+clear # limpa o terminal

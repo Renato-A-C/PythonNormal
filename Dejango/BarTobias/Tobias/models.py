@@ -7,6 +7,7 @@ from django.contrib.auth.models import User, AbstractBaseUser, BaseUserManager, 
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.contrib.auth import get_user_model
 from django.core.validators import RegexValidator
+from django.core.exceptions import ValidationError
 import re
 
 
@@ -104,23 +105,35 @@ class Funcionario2(models.Model):
 
     def __str__(self):
         return str(self.funcionarioId)
-
+    
 class Produto(models.Model):
-    nomeProduto = models.CharField(db_column='nomeProduto', max_length = 50, blank=True)
-    cadastro= models.ForeignKey(Funcionario, on_delete=models.PROTECT, related_name="produtoFuncionario", default=1)
+    nomeProduto = models.CharField(db_column='nomeProduto', max_length = 50, unique=True)
+    
     dataCadastro = models.DateTimeField(auto_now_add=True)
-    dataAlteracao = models.DateTimeField(blank=True)
+    dataAlteracao = models.DateTimeField(auto_now=True)
     precoProduto = models.FloatField(db_column = 'precoProduto', blank= True)
-    quantidadeProduto = models.BigIntegerField(db_column='quantidadeProduto', blank=True, default=1)
+    # quantidadeProduto = models.BigIntegerField(db_column='quantidadeProduto', blank=True, default=1)
     status = models.BooleanField(default=True)
     excluido = models.BooleanField(default=False)
  
     def __str__(self):
         return str(self.nomeProduto)
 
-
+class Estoque(models.Model):
+    produtoId = models.OneToOneField(Produto, on_delete=models.CASCADE)
+    cadastro= models.ForeignKey(Funcionario, on_delete=models.PROTECT, related_name="produtoFuncionario", default=1)
+    categoria = models.CharField(db_column='categoria', max_length = 50, blank=True)
+    tamanho = models.CharField(db_column='tamanho', max_length = 10, blank=True)
+    tipo_peso = models.CharField(db_column='tipo_peso', max_length = 50, blank=True)
+    quantidadeProduto = models.BigIntegerField(db_column='quantidadeProduto', blank=True, default=1)
+    dataCadastro = models.DateTimeField(auto_now_add=True)
+    status = models.BooleanField(default=True)
+    excluido = models.BooleanField(default=False)
+    def __str__(self):
+        return str(self.produtoId.nomeProduto)
+    
 class Cliente(models.Model):
-    nomeCliente= models.CharField(db_column='nomeCliente', max_length=50, blank=False)
+    nomeCliente= models.CharField(db_column='nomeCliente', max_length=50, blank=False )
     cadastro= models.ForeignKey(Funcionario, on_delete=models.PROTECT, related_name="cadastroFuncionario", default=1)
     cpf = models.CharField(max_length=11, unique=True)
     status = models.BooleanField(default=True)
@@ -128,9 +141,12 @@ class Cliente(models.Model):
     def __str__(self):
         return str(self.nomeCliente)
   
+class Saida(models.Model):
+    acontecimento = models.CharField(db_column='acontecimento', max_length=50 )  
+  
 class Venda(models.Model):
  
-    funcionarioId = models.ForeignKey(Funcionario1, on_delete=models.PROTECT, related_name="listagemFuncionario", null=True, blank=True)
+    funcionarioId = models.ForeignKey(Funcionario, on_delete=models.PROTECT, related_name="listagemFuncionario", null=True, blank=True)
     clienteId= models.ForeignKey(Cliente, on_delete=models.PROTECT, related_name="listagemCliente", null=True, blank=True )
     dataVenda = models.DateTimeField(auto_now_add=True)
     status = models.BooleanField(default=True)
@@ -138,7 +154,7 @@ class Venda(models.Model):
     precoTotal= models.FloatField(default=0, null=True, blank=True)
     def __str__(self):
         return f"{self.id} do {self.funcionarioId.nomeFuncionario}"
- 
+
 class ItemVenda(models.Model):
     venda = models.ForeignKey(Venda, on_delete=models.CASCADE)
     produtoId = models.ForeignKey(Produto, on_delete=models.PROTECT, related_name="listagemProduto", null=True, blank=True)

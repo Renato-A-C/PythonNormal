@@ -28,7 +28,7 @@
       
       <div>
         <label for="quantidadeProduto" size="50">Quantidade de Produtos:</label>
-        <input type="number" name="quantidadeProduto" value="{{Produto.quantidadeProduto}}" min="0" max="9223372036854775807" id="quantidadeProduto" placeholder="valor atual é: {{ Produto.quantidadeProduto }}"/>
+        <input type="number" name="quantidadeProduto" value="{{Produto.Estoque.quantidadeProduto}}" min="0" max="9223372036854775807" id="quantidadeProduto" placeholder="valor atual é: {{ Produto.Estoque.quantidadeProduto }}"/>
       </div>
       <button type="submit" class="btn btn-success">Alterar produto</button>
     </form>

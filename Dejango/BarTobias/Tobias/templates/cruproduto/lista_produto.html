@@ -14,42 +14,65 @@
 <hr style="margin-top: 5px; margin-bottom: 5px;">
 
   
-<form  method="post" action="{% url 'criar_produto' %}">
+<form method="post" action="{% url 'criar_produto' %}">
   {% csrf_token %}
-    <table>
-      <tr>
-        <td class="especial" style="width: 150px; padding-top: 0px;" >
-          Funcionario <br>
-          <select class="form-control select2" name="cadastro" id="cadastro" style="width: 140px;">
-            {% for funcionarios in func %}
-            {% if funcionarios.autor.id == user.id %}
-            <option selected value="{{ funcionarios.id }}">{{ funcionarios.nomeFuncionario }}</option>
-            {% else %}
-            <option value="{{ funcionarios.id }}">{{ funcionarios.nomeFuncionario }}</option>
-            {% endif %}
-            {% endfor %}
-            </select>
-        </td>
-        <td class="especial" style="width: 310px;">
-          Produto: <br>
-          <input type="text" class="form-control form-control-sm" name="nomeProduto" maxlength="30" required="nomeProduto" id="nomeProduto" autofocus style="width:300px;"> 
-        </td>
-        <td class="especial"style="width: 140px;" >
-          R$ V.U. <br>
-  
-          <input type="number" class="form-control form-control-sm" size="50" name="precoProduto" step="0.01"  id="precoProduto"style="width: 130px;">
-        </td>
-        <td class="especial"style="width: 160px;">
-          Quantidade <br>
-          <input type="number" class="form-control form-control-sm" name="quantidadeProduto"  min="0" max="9223372036854775807" id="quantidadeProduto" style="width: 150px;">
-        </td>
-        <td class="especial"style="width: 110px;" style="position:;">
-          <br>
-          <button type="submit" class="btn btn-primary btn-sm">Cadastrar</button>
-        </td>
-      </tr>
-    </table>
+  <table>
+    <tr>
+      <td class="especial" style="width: 150px; padding-top: 0px;">
+        Funcionario <br>
+        <select class="form-control select2" name="cadastro" id="cadastro" style="width: 140px;">
+          {% for funcionarios in func %}
+          {% if funcionarios.autor.id == user.id %}
+          <option selected value="{{ funcionarios.id }}">{{ funcionarios.nomeFuncionario }}</option>
+          {% else %}
+          <option value="{{ funcionarios.id }}">{{ funcionarios.nomeFuncionario }}</option>
+          {% endif %}
+          {% endfor %}
+        </select>
+      </td>
+      <td class="especial" style="width: 220px;">
+        Produto: <br>
+        <input type="text" class="form-control form-control-sm" name="nomeProduto" maxlength="30" required="nomeProduto" id="nomeProduto" autofocus style="width:200px;">
+      </td>
+      <td class="especial" style="width: 160px;">
+        Categoria: <br>
+        <select class="form-control select2" name="categoria" id="categoria" style="width: 150px;">
+          <option value="Alcolico">Alcólico</option>
+          <option value="Bebidas">Bebida</option>
+          <option value="Mercearia">Mercearia</option>
+          <option value="Alimento">Alimento</option>
+        </select>
+      </td>
+      <td class="especial" style="width: 110px;">
+        Tamanho: <br>
+        <input type="text" class="form-control form-control-sm" name="tamanho" maxlength="30" required="tamanho" id="tamanho" style="width:100px;">
+      </td>
+      <td class="especial" style="width: 100px;">
+        Tipo do Peso <br>
+        <select class="form-control select2" name="tipo_peso" id="tipo_peso" style="width: 75px;">
+          <option value="Grama">G</option>
+          <option value="Kilograma">KG</option>
+          <option value="Mililitro">ML</option>
+          <option value="Litro">L</option>
+          <option value="Unidade">UN</option>
+        </select>
+      </td>
+      <td class="especial" style="width: 140px;">
+        R$ V.U. <br>
+        <input type="number" class="form-control form-control-sm" size="50" name="precoProduto" step="0.01" required id="precoProduto" style="width: 130px;">
+      </td>
+      <td class="especial" style="width: 160px;">
+        Quantidade <br>
+        <input type="number" class="form-control form-control-sm" name="quantidadeProduto" required min="0" max="9223372036854775807" id="quantidadeProduto" style="width: 150px;">
+      </td>
+      <td class="especial" style="width: 110px;">
+        <br>
+        <button type="submit" class="btn btn-primary btn-sm">Cadastrar</button>
+      </td>
+    </tr>
+  </table>
 </form>
+
 <hr style="margin-top: 5px; margin-bottom: 5px;">
 <div class="card-body" style="margin-top: 5px; margin-bottom: 5px;" >
     <table class="table table-sm table-hover table-dark ">
@@ -57,9 +80,11 @@
         <tr>
           <th scope="col"> Código <a href="{% url 'lista_produtoia' %}">↑</a> | <a href="{% url 'lista_produtoid' %}">↓</a></th>
           <th scope="col">Nome do produto <a href="{% url 'lista_produto' %}">↑</a> | <a href="{% url 'lista_produtod' %}">↓</a></th>
+          <th scope="col"> tamanho</th>
           <th scope="col">Preço <a href="{% url 'lista_produtopa' %}">↑</a> | <a href="{% url 'lista_produtopd' %}">↓</a></th>
-          <th scope="col">Qtd. Estoque <a href="{% url 'lista_produtoqa' %}">↑</a> | <a href="{% url 'lista_produtoqd' %}">↓</a></th>
+          <th scope="col">Estoque <a href="{% url 'lista_produtoqa' %}">↑</a> | <a href="{% url 'lista_produtoqd' %}">↓</a></th>
           <th scope="col">Ultimo Lançamento <a href="{% url 'lista_produtoda' %}">↑</a> | <a href="{% url 'lista_produtodd' %}">↓</a></th>
+          <th scope="col"> categoria</th>
           <th scope="col"> Estado</th>
           <th scope="col"> Ações</th>
         </tr>
@@ -67,6 +92,7 @@
       <tbody>
         
         {% for Produto in Produto %}
+        
         {% if Produto.excluido == False %}
           {% if Produto.quantidadeProduto < 10 %}
           <tr class="text-danger">
@@ -76,13 +102,17 @@
            
             <td>{{ Produto.id }}  </td>
             <td>{{ Produto.nomeProduto }} </td>
-            <td>R${{ Produto.precoProduto }} </td>
-            <td>{{ Produto.quantidadeProduto }} </td>
+            <td> {{ Produto.estoque.tamanho }}
+              
+              {{Produto.estoque.tipo_peso}}s </td>
+            <td>R$ {{ Produto.precoProduto }} </td>
+            <td> {{Produto.estoque.quantidadeProduto}} </td>
             <td>{{ Produto.dataAlteracao }} </td>
+            <td> {{Produto.estoque.categoria}} </td>
             <td>
-              {% if Produto.quantidadeProduto < 10 and Produto.quantidadeProduto > 0 %}
-              Baixo Estoque
-              {% elif Produto.quantidadeProduto == 0 %}
+              {% if Produto.Estoque.quantidadeProduto < 10 and Produto.Estoque.quantidadeProduto > 0 %}
+              Pouco
+              {% elif Produto.Estoque.quantidadeProduto == 0 %}
               Zerado
               {% else %}
               
@@ -106,7 +136,7 @@
                                   <tr>
                                     <td class="especial"style="width: 160px;">
                                       <h6 class="text-dark">Quantidade</h6> 
-                                      <input type="number" class="form-control form-control-sm" name="quantidadeProduto"  min="0" max="9223372036854775807" id="quantidadeProduto" style="width: 150px;">
+                                      <input type="number" class="form-control form-control-sm" placeholder="Lançando..." name="quantidadeProduto"  min="0" max="9223372036854775807" id="quantidadeProduto" style="width: 150px;">
                                     </td>
                                   </tr>
                                 </table>
@@ -149,8 +179,57 @@
                                     </td>
                                     <td class="especial"style="width: 160px;">
                                       <h6 class="text-dark">Quantidade</h6> 
-                                      <input type="number" value="{{Produto.quantidadeProduto}}" class="form-control form-control-sm" name="quantidadeProduto"  min="0" max="9223372036854775807" id="quantidadeProduto" style="width: 150px;" required>
+                                      <input type="number" value="{{Produto.estoque.quantidadeProduto}}" class="form-control form-control-sm" name="quantidadeProduto"  min="0" max="9223372036854775807" id="quantidadeProduto" style="width: 150px;" required>
                                     </td>
+                                  </tr>
+                                  <tr>
+                                    <td class="especial" style="width: 110px;">
+                                      <h6 class="text-dark">Tamanho: <br></h6>  
+                                      <input type="text" value="{{Produto.estoque.tamanho}}" class="form-control form-control-sm" name="tamanho" maxlength="30" required="tamanho" id="tamanho" style="width:100px;"> 
+                                    </td>
+                                    <td class="especial" style="width: 150px;">
+                                      <h6 class="text-dark">Tipo do Peso <br></h6>
+                                      <select class="form-control select2" name="tipo_peso" id="tipo_peso" style="width: 75px;">
+                                        {% if Produto.estoque.categoria == Grama %} 
+                                        <option value='Grama' selected>G</option>
+                                        {% else %}
+                                        <option value='Grama' >G</option>
+                                        {% endif %}
+                                        {% if Produto.estoque.categoria == Kilograma %} 
+                                        <option value='kilograma' selected>KG</option>
+                                        {% else %}
+                                        <option value='kilograma' >KG</option>
+                                        {% endif %}
+                                        {% if Produto.estoque.categoria == "Mililitro" %} 
+                                        <option value='MiliLitro' selected>ML</option>
+                                        {% else %}
+                                        <option value='MiliLitro' >ML</option>
+                                        {% endif %}
+                                        {% if Produto.estoque.categoria == Litro %} 
+                                        <option value='Litro' selected>L</option>
+                                        {% else %}
+                                        <option value='Litro' >L</option>
+                                        {% endif %}
+                                        {% if Produto.estoque.categoria == Unidade %} 
+                                        <option value='Unidade' selected>UN</option>
+                                        {% else %}
+                                        <option value='Unidade' >UN</option>
+                                        {% endif %}
+
+                                      </select>
+                                    </td>
+                                    
+                                    <td class="especial" style="width: 160px;">
+                                      <h6 class="text-dark">Categoria: <br></h6>
+                                      <select class="form-control select2" name="categoria" id="categoria" style="width: 150px;">
+                                        <option value='Alcolico'>Alcólico</option>
+                                        <option value='Bebidas'>Bebiba</option>
+                                        <option value='Mercearia'>Mercearia</option>
+                                        <option value='alimento'>Alimento</option>
+                                      </select>
+                                    </td>
+
+                                    
                                   </tr>
                                 </table>
                               </div>

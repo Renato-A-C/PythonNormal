@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import Form, ModelForm, inlineformset_factory, modelformset_factory
-from .models import Produto, Venda, Funcionario1, Funcionario2, Funcionario, Cliente, ItemVenda
+from .models import Produto, Venda, Funcionario1, Funcionario2, Funcionario, Cliente, ItemVenda, Estoque
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
 from django.contrib.auth.forms import UserCreationForm
@@ -59,12 +59,51 @@ class Funcionario2Form(ModelForm):
         fields = ['descricao']
         
         
-        
+"""
+class Produto(models.Model):
+    nomeProduto = models.CharField(db_column='nomeProduto', max_length = 50, unique=True)
+    cadastro= models.ForeignKey(Funcionario, on_delete=models.PROTECT, related_name="produtoFuncionario", default=1)
+    dataCadastro = models.DateTimeField(auto_now_add=True)
+    dataAlteracao = models.DateTimeField(blank=True)
+    precoProduto = models.FloatField(db_column = 'precoProduto', blank= True)
+    # quantidadeProduto = models.BigIntegerField(db_column='quantidadeProduto', blank=True, default=1)
+    status = models.BooleanField(default=True)
+    excluido = models.BooleanField(default=False)
+ 
+    def __str__(self):
+        return str(self.nomeProduto)
+    
+    class Meta:
+        unique_together = ['nomeProduto']
+    
+class Estoque(models.Model):
+    produto = models.OneToOneField(Produto, on_delete=models.CASCADE, related_name='estoque')
+
+    categoria = models.CharField(db_column='categoria', max_length = 50, blank=True)
+    tamanho = models.CharField(db_column='tamanho', max_length = 50, blank=True)
+    quantidadeProduto = models.BigIntegerField(db_column='quantidadeProduto', blank=True, default=1)
+    dataCadastro = models.DateTimeField(auto_now_add=True)
+    dataAlteracao = models.DateTimeField(blank=True)
+    
+    def __str__(self):
+        return str(self.categoria)
+"""
                 
 class ProdutoForm(forms.ModelForm):
     class Meta:
         model = Produto
         fields = '__all__'
+        
+    def clean_nomeProduto(self):
+        nomeProduto = self.cleaned_data.get('nomeProduto')
+        if Produto.objects.filter(nomeProduto=nomeProduto).exists():
+            raise forms.ValidationError("Um produto com este nome já existe.")
+        return nomeProduto
+        
+class EstoqueForm(forms.ModelForm):
+    class Meta:
+        model = Estoque
+        fields = ['categoria', 'tamanho', 'tipo_peso', 'quantidadeProduto']
 
 class ClienteForm(forms.ModelForm):
     cpf = forms.CharField(max_length=14, required=True, validators=[validar_cpf])
