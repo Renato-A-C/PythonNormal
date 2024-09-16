@@ -13,7 +13,7 @@
 <h2>LISTAGEM DE PRODUTOS</h2>
 <hr style="margin-top: 5px; margin-bottom: 5px;">
 
-  
+<div style="padding-left: 10px;">
 <form method="post" action="{% url 'criar_produto' %}">
   {% csrf_token %}
   <table>
@@ -36,7 +36,7 @@
       </td>
       <td class="especial" style="width: 160px;">
         Categoria: <br>
-        <select class="form-control select2" name="categoria" id="categoria" style="width: 150px;">
+        <select class="form-control form-control-sm" name="categoria" id="categoria" style="width: 150px;">
           <option value="Alcolico">Alcólico</option>
           <option value="Bebidas">Bebida</option>
           <option value="Mercearia">Mercearia</option>
@@ -49,7 +49,7 @@
       </td>
       <td class="especial" style="width: 100px;">
         Tipo do Peso <br>
-        <select class="form-control select2" name="tipo_peso" id="tipo_peso" style="width: 75px;">
+        <select class="form-control form-control-sm" name="tipo_peso" id="tipo_peso" style="width: 75px;">
           <option value="Grama">G</option>
           <option value="Kilograma">KG</option>
           <option value="Mililitro">ML</option>
@@ -72,7 +72,7 @@
     </tr>
   </table>
 </form>
-
+</div>
 <hr style="margin-top: 5px; margin-bottom: 5px;">
 <div class="card-body" style="margin-top: 5px; margin-bottom: 5px;" >
     <table class="table table-sm table-hover table-dark ">
@@ -94,25 +94,32 @@
         {% for Produto in Produto %}
         
         {% if Produto.excluido == False %}
-          {% if Produto.quantidadeProduto < 10 %}
+          {% if Produto.estoque.quantidadeProduto < 10 %}
           <tr class="text-danger">
           {% else %}
           <tr>
           {% endif %}
            
-            <td>{{ Produto.id }}  </td>
+            <td style="width: 100px;">{{ Produto.id }}  </td>
             <td>{{ Produto.nomeProduto }} </td>
             <td> {{ Produto.estoque.tamanho }}
               
-              {{Produto.estoque.tipo_peso}}s </td>
+              {{Produto.estoque.tipo_peso}}s  </td>
             <td>R$ {{ Produto.precoProduto }} </td>
             <td> {{Produto.estoque.quantidadeProduto}} </td>
-            <td>{{ Produto.dataAlteracao }} </td>
-            <td> {{Produto.estoque.categoria}} </td>
+            <td style="width: 235px;">{{ Produto.dataAlteracao }} </td>
             <td>
-              {% if Produto.Estoque.quantidadeProduto < 10 and Produto.Estoque.quantidadeProduto > 0 %}
+              {% if Produto.estoque.categoria == "Alcolico" %} Alcoólico
+              {% elif Produto.estoque.categoria == "Bebidas" %} Bebida
+              {% else %}
+              {{Produto.estoque.categoria}}
+              {% endif %}
+            
+            </td>
+            <td>
+              {% if Produto.estoque.quantidadeProduto < 10 and Produto.estoque.quantidadeProduto > 0 %}
               Pouco
-              {% elif Produto.Estoque.quantidadeProduto == 0 %}
+              {% elif Produto.estoque.quantidadeProduto == 0 %}
               Zerado
               {% else %}
               
